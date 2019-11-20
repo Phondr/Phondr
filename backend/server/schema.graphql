@@ -1,14 +1,24 @@
 type Query {
   info: String!
-  feed: [Link!]!
+  feed: [Messages!]!
 }
 
 type Mutation {
-  post(url: String!, description: String!): Link!
+  post(url: String!, description: String!): Messages!
 }
 
-type Link {
+type Messages {
   id: ID!
-  description: String!
-  url: String!
+  content: String!
+  length: String!
+  postedBy: User
+  chat: String
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+  messages: [Messages!]!
 }
