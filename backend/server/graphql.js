@@ -1,5 +1,6 @@
 const {GraphQLServer} = require('graphql-yoga')
 const {prisma} = require('./src/generated/prisma-client')
+const {feed} = require('./resolvers/Query')
 
 let links = [
   {
@@ -22,7 +23,7 @@ let idCount = links.length
 const resolvers = {
   Query: {
     info: () => `This is the API of Phondr`,
-    feed: (root, args, context, info) => context.prisma.messages()
+    feed
     // id: ()=>
   },
   Mutation: {
@@ -39,6 +40,11 @@ console.log('ggjdk')
 const server = new GraphQLServer({
   typeDefs: './schema.graphql',
   resolvers,
-  context: {prisma}
+  context: request => {
+    return {
+      ...request,
+      prisma
+    }
+  }
 })
 server.start(() => console.log(`Server is running on http://localhost:4000`))
