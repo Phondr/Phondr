@@ -5,11 +5,17 @@ import * as Font from 'expo-font'
 import React, { useState } from 'react'
 import { Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-
 import AppNavigator from './navigation/AppNavigator'
 import AnatomyExample from './components/hellowworld'
+
 import AllChats from './components/Allchat'
 import Profile from './components/Profile'
+import MapView from './components/MapView'
+import Meetview from './components/Meetview'
+import Sendmeeting from './components/Sendmeeting'
+import SingleChat from './components/SingleChat'
+import { ScrollView } from 'react-native-gesture-handler'
+
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
 
@@ -23,12 +29,16 @@ export default function App(props) {
     )
   } else {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
+
         {Platform.OS === 'ios' && <StatusBar barStyle='default' />}
         {/* <AppNavigator /> */}
         {/* <AnatomyExample /> */}
         <AllChats />
-      </View>
+        <MapView />
+        <Meetview />
+        <Profile />
+      </ScrollView>
     )
   }
 }

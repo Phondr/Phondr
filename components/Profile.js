@@ -28,7 +28,7 @@ export default class Profile extends Component {
           <Right />
         </Header>
         <Content>
-          <View>picture</View>
+          <View><Text>picture</Text></View>
           <View>
             <Text>name</Text>
             <Text>age</Text>
