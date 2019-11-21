@@ -46,7 +46,7 @@ export default class SingleChats extends Component {
                   {/* only unlock at 25%. a mic icon? */}
                 </Button>
               </Left>
-              <Item>
+              <Item regular>
                 <Input placeholder={'/type text in here/'} />
               </Item>
             </Form>
