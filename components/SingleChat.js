@@ -13,6 +13,7 @@ import {
   Icon,
   Text,
   Form,
+  Item,
   Input
 } from 'native-base'
 import {ScrollView, View} from 'react-native'
@@ -20,7 +21,7 @@ import {ScrollView, View} from 'react-native'
 export default class SingleChats extends Component {
   render() {
     return (
-      <Container>
+      <Container >
         <Header>
           <Left>
             <Button transparent>
@@ -39,17 +40,15 @@ export default class SingleChats extends Component {
         </Content>
         <Footer>
           <FooterTab>
-            <Form>
               <Left>
                 <Button transparent>
                   <Icon />
                   {/* only unlock at 25%. a mic icon? */}
                 </Button>
               </Left>
-              <Item regular>
+              <Item rounded style={{alignSelf:"center"}}>
                 <Input placeholder={'/type text in here/'} />
               </Item>
-            </Form>
           </FooterTab>
         </Footer>
       </Container>

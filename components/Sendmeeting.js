@@ -11,6 +11,9 @@ import {
   Right,
   Body,
   Icon,
+  Form,
+  Item,
+  Input,
   Text
 } from 'native-base'
 import {View} from 'react-native'
