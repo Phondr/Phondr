@@ -44,7 +44,6 @@ class Home extends Component {
     },
   }
   render() {
-    console.log('ngrok safs', this.props.ngrok)
     const { data } = useQuery(Query)
     console.log('data', data)
     return (
@@ -63,4 +62,4 @@ class Home extends Component {
   }
 }
 
-export default connect(({ ngrok }) => ({ ngrok }))(Home)
+export default Home

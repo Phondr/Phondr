@@ -23,13 +23,8 @@ import New from './components/route'
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { connect, Provider } from 'react-redux'
-import ngrok from 'ngrok'
-let url = ''
-const startNgrok = async function() {
-  url = await ngrok.connect()
-}
 import store from './store'
-startNgrok()
+const {url} = require( './secrets')
 const drawer = createDrawerNavigator(
   {
     Home: {
@@ -61,7 +56,7 @@ function App(props) {
         uri: url,
       })
     )
-    store.dispatch({ type: 'SET_NGROK', url })
+    
   }, [])
   if ((!isLoadingComplete && !props.skipLoadingScreen) || !apClient) {
     return (
