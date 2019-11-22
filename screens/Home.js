@@ -21,6 +21,19 @@ import { Platform } from '@unimodules/core'
 
 import { withNavigation } from 'react-navigation'
 import CustomHeader from '../components/CustomHeader'
+import { connect } from 'react-redux'
+import { useQuery } from '@apollo/react-hooks'
+import { gql } from 'apollo-boost'
+
+const Query = gql`
+  query RootQueryType {
+    allUsers {
+      id
+      email
+      fullName
+    }
+  }
+`
 
 class Home extends Component {
   static navigationOptions = {
@@ -31,6 +44,9 @@ class Home extends Component {
     },
   }
   render() {
+    console.log('ngrok safs', this.props.ngrok)
+    const { data } = useQuery(Query)
+    console.log('data', data)
     return (
       <Container>
         <StatusBar barStyle='light-content' />
@@ -47,4 +63,4 @@ class Home extends Component {
   }
 }
 
-export default Home
+export default connect(({ ngrok }) => ({ ngrok }))(Home)

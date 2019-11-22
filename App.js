@@ -2,7 +2,7 @@
 import { AppLoading } from 'expo'
 import { Asset } from 'expo-asset'
 import * as Font from 'expo-font'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Platform,
   StatusBar,
@@ -20,6 +20,16 @@ import AppNavigator from './navigation/AppNavigator'
 import CustomDrawer from './components/CustomDrawer'
 import AnatomyExample from './components/hellowworld'
 import New from './components/route'
+import ApolloClient from 'apollo-boost'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { connect, Provider } from 'react-redux'
+import ngrok from 'ngrok'
+let url = ''
+const startNgrok = async function() {
+  url = await ngrok.connect()
+}
+import store from './store'
+startNgrok()
 const drawer = createDrawerNavigator(
   {
     Home: {
@@ -42,10 +52,18 @@ const drawer = createDrawerNavigator(
 )
 const DrawerContainer = createAppContainer(drawer)
 
-export default function App(props) {
+function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
-
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+  const [apClient, setApClient] = useState({})
+  useEffect(() => {
+    setApClient(
+      new ApolloClient({
+        uri: url,
+      })
+    )
+    store.dispatch({ type: 'SET_NGROK', url })
+  }, [])
+  if ((!isLoadingComplete && !props.skipLoadingScreen) || !apClient) {
     return (
       <AppLoading
         startAsync={loadResourcesAsync}
@@ -55,17 +73,22 @@ export default function App(props) {
     )
   } else {
     return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle='default' />}
-        {/* <AppNavigator /> */}
-        {/* <AnatomyExample /> */}
+      <Provider store={store}>
+        <ApolloProvider client={apClient}>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle='default' />}
+            {/* <AppNavigator /> */}
+            {/* <AnatomyExample /> */}
 
-        <DrawerContainer />
-        {/* <New /> */}
-      </View>
+            <DrawerContainer />
+            {/* <New /> */}
+          </View>
+        </ApolloProvider>
+      </Provider>
     )
   }
 }
+export default App
 
 async function loadResourcesAsync() {
   await Promise.all([
