@@ -19,13 +19,15 @@ import drawerStyles from './styles/drawerStyle'
 import AppNavigator from './navigation/AppNavigator'
 import CustomDrawer from './components/CustomDrawer'
 import AnatomyExample from './components/hellowworld'
-import { New } from './components/route'
+import New from './components/route'
 const drawer = createDrawerNavigator(
   {
     Home: {
       screen: Home,
     },
-    New,
+    New: {
+      screen: New,
+    },
   },
   {
     initialRouteName: 'New',
