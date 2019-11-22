@@ -1,54 +1,48 @@
 const faker = require('faker')
-const db = require('../server/db')
-const {users, Chat, Messages, Meeting} = require('/')
+const db = require('./db')
+const {User, Chat, Message, Meeting} = require('./models')
 
 const createUser = async () => {
   try {
     const gen = Math.ceil(Math.random() * 1)
-    let user = await users.create({
+    let user = await User.create({
       full_name: `${faker.name.firstName()} ${faker.name.lastName()}`,
-      gender: gen ? 'M' : 'F',
       age: faker.random.number(),
       homeLocation: faker.address.streetAddress(),
       incentivePoints: faker.random.number(),
       created_at: faker.date.recent(),
-      profilePicture: faker.random.image()
+      profilePicture: faker.random.image(),
+      email: faker.internet.email(),
+      password: faker.internet.password()
     })
     return user
   } catch (err) {
-    next(err)
+    console.log(err)
   }
-// }
-// const createUserMessage =async () =>{
-//   try {
-
-//   } catch (err) {
-//     next(err)
-//   }
-// }
+}
 const createMessages = async () => {
   try {
-    let message = await Messages.create({
-      content: faker.random.number(),
+    let message = await Message.create({
+      content: faker.random.words(),
       length: faker.random.number(),
-      userId: faker.random.number(),
-      chatId: faker.random.number()
     })
     return message
   } catch (err) {
-    next(err)
+    console.log(err)
   }
 }
 const createChat = async () => {
   try {
+    const status= ['pending', 'active', 'closed']
     let chat = await Chat.create({
-      experationDate: faker.random.words(),
-      progress: faker.random.number(),
+      expirationDate: faker.random.words(),
+      progress: parseFloat((Math.random()*100).toFixed(2)),
       created_at: faker.random.words(),
-      status: faker.random.number()
+      status: status[Math.floor(Math.random()*2)]
     })
+    return chat
   } catch (err) {
-    next(err)
+    console.log(err)
   }
 }
 
@@ -57,11 +51,10 @@ const createMeetings = async () => {
     let meeting = await Meeting.create({
       location: faker.address.streetAddress(),
       date: faker.random.words(),
-      // chatId: faker.random.number()
     })
     return meeting
   } catch (err) {
-    next(err)
+    console.log(err)
   }
 }
 
@@ -69,8 +62,27 @@ async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
   console.log(`seeded successfully`)
-  for(let i = 0; i<100;i++){
+  for(let i = 0; i<10;i++){
     await createUser()
+    await createChat()
+    await createMeetings()
+    await createMessages()
   }
+}
+async function runSeed() {
+  console.log('seeding...')
+  try {
+    await seed()
+  } catch (err) {
+    console.error(err)
+    process.exitCode = 1
+  } finally {
+    console.log('closing db connection')
+    await db.close()
+    console.log('db connection closed')
+  }
+}
+if (module === require.main) {
+  runSeed()
 }
 module.exports = seed
