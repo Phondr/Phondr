@@ -2,8 +2,8 @@ const faker = require('faker')
 const db = require('./db')
 const {User, Chat, Message, Meeting, userChats} = require('./models')
 
-// const SEED = 42070
-// faker.seed(SEED)
+const SEED = 42070
+faker.seed(SEED)
 const createUser = async () => {
   try {
     let user = await User.create({
