@@ -1,6 +1,6 @@
 const faker = require('faker')
 const db = require('./db')
-const {User, Chat, Message, Meeting} = require('./models')
+const {User, Chat, Message, Meeting, userChats} = require('./models')
 
 // const SEED = 42070
 // faker.seed(SEED)
@@ -25,7 +25,7 @@ const createMessages = async () => {
   try {
     let message = await Message.create({
       content: faker.random.words(),
-      length: faker.random.number(),
+      length: faker.random.number()
     })
     return message
   } catch (err) {
@@ -34,14 +34,38 @@ const createMessages = async () => {
 }
 const createChat = async () => {
   try {
-    const status= ['pending', 'active', 'closed']
+    // const status = ['pending', 'active', 'closed']
     let chat = await Chat.create({
       expirationDate: faker.random.words(),
-      progress: parseFloat((Math.random()*100).toFixed(2)),
+      progress: parseFloat((Math.random() * 100).toFixed(2)),
       created_at: faker.random.words(),
-      status: status[Math.floor(Math.random()*2)]
+      status: 'pending'
     })
     return chat
+  } catch (err) {
+    console.log(err)
+  }
+}
+const createuserChats = async num => {
+  try {
+    let CI = Math.ceil(Math.random() * 10)
+    const data = await Chat.findByPk(CI)
+    let count = data.count
+    console.log('cout',count)
+    if (data.status === 'pending') {
+      await userChats.create({
+        userId: num,
+        chatId: CI
+      })
+      console.log(CI)
+      if((count + 1)!==2){
+        await data.update({count:count+1},{where:{chatId:CI}})
+      }
+      else{
+        await data.update({status:'active',count:count+1}, {where:{chatId:CI}})
+      }
+    }
+    console.log(data.status)
   } catch (err) {
     console.log(err)
   }
@@ -51,7 +75,7 @@ const createMeetings = async () => {
   try {
     let meeting = await Meeting.create({
       location: faker.address.streetAddress(),
-      date: faker.random.words(),
+      date: faker.random.words()
     })
     return meeting
   } catch (err) {
@@ -63,11 +87,14 @@ async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
   console.log(`seeded successfully`)
-  for(let i = 0; i<100;i++){
+  for (let i = 1; i < 11; i++) {
     await createUser()
     await createChat()
     await createMeetings()
     await createMessages()
+  }
+  for (let i = 1; i < 11; i++) {
+    await createuserChats(i)
   }
 }
 async function runSeed() {

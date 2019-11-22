@@ -17,6 +17,12 @@ const Chat = db.define('chat', {
     type: Sequelize.ENUM('pending', 'active', 'closed'),
     allowNull: false,
     defaultValue: 'pending',
+  },
+  count:{
+    type:Sequelize.INTEGER,
+    defaultValue:0,
+    max:2,
+    min:0
   }
 })
 
