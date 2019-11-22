@@ -27,12 +27,5 @@ const EntryStack = createSwitchNavigator(
   config
 );
 
-// const SignupStack = createSwitchNavigator(
-//   {
-//     Signup: Signup
-//   },
-//   config
-// );
-
 const AuthPages = createAppContainer(EntryStack);
 export default AuthPages;
