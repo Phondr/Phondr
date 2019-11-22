@@ -12,17 +12,14 @@ import {
   Image,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import {
-  createDrawerNavigator,
-  createAppContainer,
-  DrawerItems,
-} from 'react-navigation'
+import { createDrawerNavigator, createAppContainer } from 'react-navigation'
 import Home from './screens/Home'
 import { Container, Content, Header, Body, Drawer } from 'native-base'
 import drawerStyles from './styles/drawerStyle'
 import AppNavigator from './navigation/AppNavigator'
 import CustomDrawer from './components/CustomDrawer'
-
+import AnatomyExample from './components/hellowworld'
+import { New } from './components/route'
 const drawer = createDrawerNavigator(
   {
     Home: {
@@ -57,7 +54,11 @@ export default function App(props) {
     return (
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle='default' />}
+        {/* <AppNavigator /> */}
+        {/* <AnatomyExample /> */}
+
         <DrawerContainer />
+        <New />
       </View>
     )
   }

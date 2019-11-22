@@ -18,6 +18,7 @@ import {
   Right,
 } from 'native-base'
 import { Platform } from '@unimodules/core'
+import { New } from '../components/route'
 
 class Home extends Component {
   static navigationOptions = {
@@ -44,13 +45,14 @@ class Home extends Component {
           <Right />
         </Header>
         <Content
-          contentContainerStyle={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+        // contentContainerStyle={{
+        //   flex: 1,
+        //   alignItems: 'center',
+        //   justifyContent: 'center',
+        // }}
         >
           <Text>Home</Text>
+          <New />
         </Content>
       </Container>
     )
