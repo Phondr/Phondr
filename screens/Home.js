@@ -18,8 +18,22 @@ import {
   Right,
 } from 'native-base'
 import { Platform } from '@unimodules/core'
-import { New } from '../components/route'
+
 import { withNavigation } from 'react-navigation'
+import CustomHeader from '../components/CustomHeader'
+import { connect } from 'react-redux'
+import { useQuery } from '@apollo/react-hooks'
+import { gql } from 'apollo-boost'
+
+const Query = gql`
+  query RootQueryType {
+    allUsers {
+      id
+      email
+      fullName
+    }
+  }
+`
 
 class Home extends Component {
   static navigationOptions = {
@@ -30,40 +44,22 @@ class Home extends Component {
     },
   }
   render() {
+    const { data } = useQuery(Query)
+    console.log('data', data)
     return (
       <Container>
         <StatusBar barStyle='light-content' />
-        <Header style={styles.header}>
-          <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.openDrawer()}
-            >
-              <Icon name='menu' />
-            </Button>
-          </Left>
-          <Body />
-          <Right />
-        </Header>
+        <CustomHeader />
         <Content
           contentContainerStyle={{
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
           }}
-        >
-          <New />
-        </Content>
+        ></Content>
       </Container>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  header: {
-    marginTop: Platform.OS !== 'ios' ? 15 : 0,
-    justifyContent: 'flex-end',
-  },
-})
 
 export default Home

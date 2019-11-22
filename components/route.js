@@ -13,8 +13,10 @@ import {
   Left,
   Right,
   Body,
+  Container,
+  Content,
 } from 'native-base'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, StatusBar } from 'react-native'
 import AllChats from './Allchat'
 import Profile from './Profile'
 import MapView from './MapView'
@@ -22,29 +24,12 @@ import Meetview from './Meetview'
 import Sendmeetings from './Sendmeeting'
 import SingleChats from './SingleChat'
 import { Platform } from '@unimodules/core'
+import CustomHeader from '../components/CustomHeader'
+
 class Stack extends React.Component {
-  static navigationOptions = {
-    drawerIcon: ({ tintColor }) => {
-      return (
-        <Icon name='home' style={{ fontSize: 24, color: tintColor }}></Icon>
-      )
-    },
-  }
   render() {
     return (
       <View>
-        <Header style={styles.header}>
-          <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.openDrawer()}
-            >
-              <Icon name='menu' />
-            </Button>
-          </Left>
-          <Body />
-          <Right />
-        </Header>
         <Button
           onPress={() => {
             this.props.navigation.navigate('allchat')
@@ -91,12 +76,7 @@ class Stack extends React.Component {
     )
   }
 }
-const styles = StyleSheet.create({
-  header: {
-    marginTop: Platform.OS !== 'ios' ? 15 : 0,
-    justifyContent: 'flex-end',
-  },
-})
+
 const Temp = createStackNavigator(
   {
     stack: {
@@ -123,4 +103,23 @@ const Temp = createStackNavigator(
   },
   { initialRouteName: 'stack' }
 )
-export const New = createAppContainer(Temp)
+const StackContainer = createAppContainer(Temp)
+//export default StackContainer
+class New extends React.Component {
+  static navigationOptions = {
+    drawerIcon: ({ tintColor }) => {
+      return (
+        <Icon name='home' style={{ fontSize: 24, color: tintColor }}></Icon>
+      )
+    },
+  }
+  render() {
+    return (
+      <>
+        <CustomHeader />
+        <StackContainer />
+      </>
+    )
+  }
+}
+export default New

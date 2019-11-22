@@ -2,7 +2,7 @@
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Platform,
   StatusBar,
@@ -18,18 +18,23 @@ import { Container, Content, Header, Body, Drawer } from "native-base";
 import drawerStyles from "./styles/drawerStyle";
 import CustomDrawer from "./components/CustomDrawer";
 import AnatomyExample from "./components/hellowworld";
-import { New } from "./components/route";
+import New from "./components/route";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "@apollo/react-hooks";
+import { connect, Provider } from "react-redux";
 import store from "./client/store";
 import AppNavigator from "./navigation/AppNavigator";
 import AuthPages from "./navigation/MainLoginNavigator";
-import { Provider } from "react-redux";
 
+const { url } = require("./secrets");
 const drawer = createDrawerNavigator(
   {
     Home: {
       screen: Home
     },
-    New
+    New: {
+      screen: New
+    }
   },
   {
     initialRouteName: "New",
@@ -44,10 +49,17 @@ const drawer = createDrawerNavigator(
 );
 const DrawerContainer = createAppContainer(drawer);
 
-export default function App(props) {
+function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+  const [apClient, setApClient] = useState({});
+  useEffect(() => {
+    setApClient(
+      new ApolloClient({
+        uri: url
+      })
+    );
+  }, []);
+  if ((!isLoadingComplete && !props.skipLoadingScreen) || !apClient) {
     return (
       <AppLoading
         startAsync={loadResourcesAsync}
@@ -58,18 +70,21 @@ export default function App(props) {
   } else {
     return (
       <Provider store={store}>
-        <View style={styles.container}>
-          {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-          {/* <AppNavigator /> */}
-          {/* <AnatomyExample /> */}
-          <AuthPages />
-          {/* <DrawerContainer /> */}
-          {/* <New /> */}
-        </View>
+        <ApolloProvider client={apClient}>
+          <View style={styles.container}>
+            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+            {/* <AppNavigator /> */}
+            {/* <AnatomyExample /> */}
+            <AuthPages />
+            {/* <DrawerContainer /> */}
+            {/* <New /> */}
+          </View>
+        </ApolloProvider>
       </Provider>
     );
   }
 }
+export default App;
 
 async function loadResourcesAsync() {
   await Promise.all([

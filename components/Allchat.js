@@ -39,6 +39,7 @@ export default class AllChats extends Component {
               </Text>
             </View>
           </ScrollView>
+            <Button small primary style={{width: '30%', alignSelf:'center'}}><Text>Test me</Text></Button>
         </Content>
         <Footer>
           <FooterTab>
