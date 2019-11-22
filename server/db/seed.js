@@ -97,7 +97,7 @@ async function seed() {
   }
   let UC = await userChats.findAll()
   for (let i = 1; i < 50; i++) {
-    const num = Math.ceil(Math.random() * 45)
+    const num = Math.ceil(Math.random() * UC.length)
     let U = await User.findByPk(UC[num].userId)
     let C = await Chat.findByPk(UC[num].chatId)
     let M = await Message.findByPk(i)
