@@ -10,10 +10,12 @@ import {
   Body,
   Icon,
   Text,
-  View
+  View,
+  Thumbnail,
 } from 'native-base'
 export default class Profile extends Component {
   render() {
+    const uri = "https://facebook.github.io/react-native/docs/assets/favicon.png"
     return (
       <Container>
         <Header>
@@ -28,7 +30,7 @@ export default class Profile extends Component {
           <Right />
         </Header>
         <Content>
-          <View><Text>picture</Text></View>
+          <View><Thumbnail source={{uri: uri}} /></View>
           <View>
             <Text>name</Text>
             <Text>age</Text>
