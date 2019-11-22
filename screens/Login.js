@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, Button } from "react-native";
 import t from "tcomb-form-native";
 import { connect } from "react-redux";
 import { fetchUserLogin } from "../client/redux/user";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 
 const User = t.struct({
   email: t.String,
@@ -21,6 +23,15 @@ const options = {
     }
   }
 };
+
+// const query = gql`
+//   {
+//     userLogin(email: "test@test.com") {
+//       id
+//       email
+//     }
+//   }
+// `;
 
 const Form = t.form.Form;
 
@@ -51,7 +62,16 @@ export class Login extends Component {
             options={options}
             style={styles.formcontainer}
           />
+
           <Button title="Submit" onPress={this.login} />
+          {/* <Query query={query}>
+            {({ loading, error, data }) => {
+              // console.log("loading", loading);
+              // console.log("error", error);
+              console.log(data);
+              return <Text>hiiii</Text>;
+            }}
+          </Query> */}
         </View>
       </View>
     );

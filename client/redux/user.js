@@ -1,5 +1,8 @@
 import axios from "axios";
 
+const { url } = require("../../secrets");
+console.log("URL", url);
+
 //action type
 const GETUSER = "GETUSER";
 const ADDUSER = "ADDUSER";
@@ -16,33 +19,38 @@ export const fetchUserLogin = values => async dispatch => {
   try {
     const email = values.email;
     const password = values.password;
-    //console.log("Email: ", email, "Password: ", password);
-    // const { data } = await axios.get({
-    //   url: "/graphql",
-    //   method: "get",
+    console.log("Email: ", email, "Password: ", password);
+    // Struct {
+    //   "email": "test@test.com",
+    //   "password": "gch",
+    // }
+
+    console.log(`${url}/graphql`);
+    // let { data } = await axios({
+    //   url: `${url}/graphql`,
+    //   method: "POST",
     //   data: {
     //     query: `
-    //   {
-    //     login(email: ${email}, password: ${password}) {
-    //       id,
-    //       email,
-    //       fullname
-    //     }
-    //   }
-    //   `
+    //     {
+    //       allUsers() {
+    //         id
+    //       }
+    //     } `
     //   }
     // });
+
+    console.log(`${url}/graphql`);
     let { data } = await axios({
-      url: "/graphql",
+      url: `${url}/graphql`,
       method: "POST",
       data: {
         query: `
         {
-          user(id: ${2}) {
-            id, 
-            email,
-            fullName
-          }
+          userLogin(email: "${email}", password: "${password}") {
+              id
+              email
+              fullName
+            }
         }
         `
       }

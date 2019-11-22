@@ -55,7 +55,7 @@ function App(props) {
   useEffect(() => {
     setApClient(
       new ApolloClient({
-        uri: url
+        uri: url + "/graphql"
       })
     );
   }, []);

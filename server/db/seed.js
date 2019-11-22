@@ -21,6 +21,7 @@ const createUser = async () => {
     console.log(err);
   }
 };
+
 const createMessages = async () => {
   try {
     let message = await Message.create({
@@ -63,6 +64,16 @@ async function seed() {
   await db.sync({ force: true });
   console.log("db synced!");
   console.log(`seeded successfully`);
+  await User.create({
+    fullName: `Avaree Warrick`,
+    age: 24,
+    homeLocation: faker.address.streetAddress(),
+    incentivePoints: faker.random.number(),
+    created_at: faker.date.recent(),
+    profilePicture: faker.random.image(),
+    email: "test@test.com",
+    password: "test"
+  });
   for (let i = 0; i < 100; i++) {
     await createUser();
     await createChat();

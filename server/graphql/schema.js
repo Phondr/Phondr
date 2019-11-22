@@ -76,19 +76,17 @@ const rootQuery = new GraphQLObjectType({
         });
       }
     },
-    login: {
+    userLogin: {
       type: UserType,
       args: {
         email: { type: GraphQLString },
         password: { type: GraphQLString }
       },
-      resolve(parent, args) {
-        return db.models.user.findOne({
-          where: {
-            email: args.email,
-            password: args.password
-          }
+      async resolve(parent, args) {
+        let use = await db.models.user.findOne({
+          where: { email: args.email, password: args.password }
         });
+        return use;
       }
     }
   }
