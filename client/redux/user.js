@@ -17,12 +17,39 @@ export const fetchUserLogin = values => async dispatch => {
     const email = values.email;
     const password = values.password;
     //console.log("Email: ", email, "Password: ", password);
-    const {data} = await axios.get({ url :'/graphql' , method: 'get', data:{ 
-      query:`
-        query rootQuery{
-          
-        } `}})
+    // const { data } = await axios.get({
+    //   url: "/graphql",
+    //   method: "get",
+    //   data: {
+    //     query: `
+    //   {
+    //     login(email: ${email}, password: ${password}) {
+    //       id,
+    //       email,
+    //       fullname
+    //     }
+    //   }
+    //   `
+    //   }
+    // });
+    let { data } = await axios({
+      url: "/graphql",
+      method: "POST",
+      data: {
+        query: `
+        {
+          user(id: ${2}) {
+            id, 
+            email,
+            fullName
+          }
+        }
+        `
+      }
+    });
+    console.log("DATA", data);
   } catch (error) {
+    alert("COULD NOT LOGIN");
     console.log(error);
   }
 };
