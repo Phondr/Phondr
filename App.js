@@ -25,9 +25,10 @@ const drawer = createDrawerNavigator(
     Home: {
       screen: Home,
     },
+    New,
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'New',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange',
@@ -58,7 +59,7 @@ export default function App(props) {
         {/* <AnatomyExample /> */}
 
         <DrawerContainer />
-        <New />
+        {/* <New /> */}
       </View>
     )
   }
