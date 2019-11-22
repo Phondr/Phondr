@@ -2,9 +2,10 @@ const faker = require('faker')
 const db = require('./db')
 const {User, Chat, Message, Meeting} = require('./models')
 
+const SEED = 42070
+faker.seed(SEED)
 const createUser = async () => {
   try {
-    const gen = Math.ceil(Math.random() * 1)
     let user = await User.create({
       full_name: `${faker.name.firstName()} ${faker.name.lastName()}`,
       age: faker.random.number(),
@@ -62,7 +63,7 @@ async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
   console.log(`seeded successfully`)
-  for(let i = 0; i<10;i++){
+  for(let i = 0; i<100;i++){
     await createUser()
     await createChat()
     await createMeetings()
