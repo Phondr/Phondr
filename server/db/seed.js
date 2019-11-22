@@ -48,24 +48,23 @@ const createChat = async () => {
 }
 const createuserChats = async num => {
   try {
-    let CI = Math.ceil(Math.random() * 10)
+    let CI = Math.ceil(Math.random() * 49)
     const data = await Chat.findByPk(CI)
     let count = data.count
-    console.log('cout',count)
     if (data.status === 'pending') {
       await userChats.create({
         userId: num,
         chatId: CI
       })
-      console.log(CI)
-      if((count + 1)!==2){
-        await data.update({count:count+1},{where:{chatId:CI}})
-      }
-      else{
-        await data.update({status:'active',count:count+1}, {where:{chatId:CI}})
+      if (count + 1 !== 2) {
+        await data.update({count: count + 1}, {where: {chatId: CI}})
+      } else {
+        await data.update(
+          {status: 'active', count: count + 1},
+          {where: {chatId: CI}}
+        )
       }
     }
-    console.log(data.status)
   } catch (err) {
     console.log(err)
   }
@@ -87,14 +86,23 @@ async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
   console.log(`seeded successfully`)
-  for (let i = 1; i < 11; i++) {
+  for (let i = 1; i < 50; i++) {
     await createUser()
     await createChat()
     await createMeetings()
     await createMessages()
   }
-  for (let i = 1; i < 11; i++) {
+  for (let i = 1; i < 50; i++) {
     await createuserChats(i)
+  }
+  let UC = await userChats.findAll()
+  for (let i = 1; i < 50; i++) {
+    const num = Math.ceil(Math.random() * 45)
+    let U = await User.findByPk(UC[num].userId)
+    let C = await Chat.findByPk(UC[num].chatId)
+    let M = await Message.findByPk(i)
+    await U.addMessages(M)
+    await C.addMessages(M)
   }
 }
 async function runSeed() {
