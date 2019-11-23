@@ -72,6 +72,15 @@ const rootQuery = new GraphQLObjectType({
         return db.models.user.findByPk(args.id, {include:[{model: db.models.chat}]})
       }
     },
+    userTest: {
+      type: UserType,
+      args: {
+        email: {type: GraphQLString}
+      },
+       resolve(parent, args) {
+        return db.models.user.findOne({where:{email: args.email}})
+      }
+    },
   }
 })
 

@@ -49,11 +49,11 @@ const DrawerContainer = createAppContainer(drawer)
 
 function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
-  const [apClient, setApClient] = useState({})
+  const [apClient, setApClient] = useState(null)
   useEffect(() => {
     setApClient(
       new ApolloClient({
-        uri: url,
+        uri: url + '/graphql',
       })
     )
     
