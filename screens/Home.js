@@ -44,12 +44,6 @@ class Home extends Component {
     },
   }
   render() {
-<<<<<<< HEAD
-    console.log('dsfsf', process.env.TUNNEL)
-=======
-    const { data } = useQuery(Query)
-    console.log('data', data)
->>>>>>> b1e6434051f2522f2dc339a1d7b9fbcd7d5607c4
     return (
       <Container>
         <StatusBar barStyle='light-content' />
