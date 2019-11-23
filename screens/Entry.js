@@ -13,8 +13,8 @@ export class Entry extends Component {
     this.props.navigation.navigate("Login");
   }
 
-  goToSignUp() {
-    this.props.navigation.navigate("Signup");
+  goToSignUpMapView() {
+    this.props.navigation.navigate("SignupMapView");
   }
 
   render() {
@@ -25,7 +25,7 @@ export class Entry extends Component {
             style={styles.phonderimage}
             source={{
               uri:
-                "https://github.com/Phondr/Phondr/blob/login/assets/images/PhondrLogos/Phondr.png?raw=true"
+                "https://github.com/Phondr/Phondr/blob/login/assets/images/PhondrLogos/PhondrLarge.png?raw=true"
             }}
           />
         </View>
@@ -39,7 +39,7 @@ export class Entry extends Component {
         <Button
           title="Sign Up"
           onPress={() => {
-            this.goToSignUp();
+            this.goToSignUpMapView();
           }}
         />
       </View>
@@ -50,14 +50,14 @@ export class Entry extends Component {
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 45,
+    paddingTop: 25,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F5FCFF"
   },
   phonderimage: {
-    width: 200,
-    height: 200,
+    width: 350,
+    height: 350,
     position: "relative",
     justifyContent: "center"
   },

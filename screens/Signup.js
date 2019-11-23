@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Button } from "react-native";
 import { connect } from "react-redux";
 import { userSignUp } from "../client/redux/user";
 
+
 import t from "tcomb-form-native";
 
 const User = t.struct({
