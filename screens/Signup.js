@@ -8,7 +8,7 @@ import t from "tcomb-form-native";
 const User = t.struct({
   fullname: t.String,
   age: t.Integer,
-  gender: t.String,
+  // gender: t.String,
   email: t.String,
   password: t.String
 });
@@ -21,9 +21,9 @@ const options = {
     age: {
       error: "You need a valid age to sign up"
     },
-    gender: {
-      error: "You need a valid gender to sign up"
-    },
+    // gender: {
+    //   error: "You need a valid gender to sign up"
+    // },
     email: {
       error: "You need a valid email to sign up"
     },

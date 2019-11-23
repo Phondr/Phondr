@@ -21,7 +21,13 @@ export class Entry extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.title}>
-          <Image style={styles.phonderimage} />
+          <Image
+            style={styles.phonderimage}
+            source={{
+              uri:
+                "https://github.com/Phondr/Phondr/blob/login/assets/images/PhondrLogos/Phondr.png?raw=true"
+            }}
+          />
         </View>
 
         <Button

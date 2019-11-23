@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { fetchUserLogin } from "../client/redux/user";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import { throwServerError } from "apollo-link-http-common";
+import { navigate } from "react-navigation";
 
 const User = t.struct({
   email: t.String,
@@ -45,7 +47,10 @@ export class Login extends Component {
   async login() {
     const values = this._form.getValue();
     try {
-      await this.props.getUser(values);
+      let data = await this.props.getUser(values);
+      if (data.fullName) {
+        this.props.navigate();
+      }
     } catch (error) {
       alert("COULD NOT LOGIN");
       console.log(error);

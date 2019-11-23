@@ -88,6 +88,19 @@ const rootQuery = new GraphQLObjectType({
         });
         return use;
       }
+    },
+    userSignup: {
+      type: UserType,
+      args: {
+        fullName: { type: GraphQLString },
+        age: { type: GraphQLInt },
+        email: { type: GraphQLString },
+        password: { type: GraphQLString }
+      },
+      async resolve(parent, args) {
+        let use = await db.models.user.create(args);
+        return use;
+      }
     }
   }
 });

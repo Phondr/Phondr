@@ -19,27 +19,6 @@ export const fetchUserLogin = values => async dispatch => {
   try {
     const email = values.email;
     const password = values.password;
-    console.log("Email: ", email, "Password: ", password);
-    // Struct {
-    //   "email": "test@test.com",
-    //   "password": "gch",
-    // }
-
-    console.log(`${url}/graphql`);
-    // let { data } = await axios({
-    //   url: `${url}/graphql`,
-    //   method: "POST",
-    //   data: {
-    //     query: `
-    //     {
-    //       allUsers() {
-    //         id
-    //       }
-    //     } `
-    //   }
-    // });
-
-    console.log(`${url}/graphql`);
     let { data } = await axios({
       url: `${url}/graphql`,
       method: "POST",
@@ -50,12 +29,15 @@ export const fetchUserLogin = values => async dispatch => {
               id
               email
               fullName
+              homeLocation
+              incentivePoints
+              profilePicture
             }
         }
         `
       }
     });
-    console.log("DATA", data);
+    dispatch(setUser(data));
   } catch (error) {
     alert("COULD NOT LOGIN");
     console.log(error);
@@ -66,11 +48,25 @@ export const userSignUp = values => async dispatch => {
   try {
     const fullname = values.fullname;
     const age = values.age;
-    const gender = values.gender;
     const password = values.password;
-    console.log(values);
-    //const {data} = await axios.get({ url :'/graphql' , method: 'post', data:{}})
+
+    let { data } = await axios({
+      url: `${url}/graphql`,
+      method: "POST",
+      data: {
+        query: `
+        {
+          userSignup(email: "${email}", password: "${password}",  fullname: "${fullname}",  age: "${age}") {
+            id
+            }
+        }
+        `
+      }
+    });
+    console.log("DATA", data);
+    dispatch(setUser(data));
   } catch (error) {
+    alert("COULD NOT SIGN-UP");
     console.log(error);
   }
 };
