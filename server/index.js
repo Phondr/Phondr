@@ -117,10 +117,6 @@ const startListening = () => {
   const io = socketio(server)
   require('./socket')(io)
 }
-;(async function() {
-  const url = await ngrok.connect(8080)
-  console.log('ngrok url: ', url)
-})()
 
 const syncDb = () => db.sync()
 

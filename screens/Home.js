@@ -31,6 +31,7 @@ class Home extends Component {
     },
   }
   render() {
+    console.log('dsfsf', process.env.TUNNEL)
     return (
       <Container>
         <StatusBar barStyle='light-content' />
