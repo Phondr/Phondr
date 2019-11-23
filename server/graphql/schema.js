@@ -75,10 +75,23 @@ const rootQuery = new GraphQLObjectType({
       args: {
         id: { type: GraphQLInt },
       },
-      resolve(parent, args) {
-        return db.models.user.findByPk(args.id, {
+      async resolve(parent, args) {
+        return await db.models.user.findByPk(args.id, {
           include: [{ model: db.models.chat }],
         })
+      },
+    },
+    userLogin: {
+      type: UserType,
+      args: {
+        email: { type: GraphQLString },
+        password: { type: GraphQLString },
+      },
+      async resolve(parent, args) {
+        let use = await db.models.user.findOne({
+          where: { email: args.email, password: args.password },
+        })
+        return use
       },
     },
   },
@@ -88,16 +101,14 @@ const rootMutation = new GraphQLObjectType({
   name: 'RootMutationType',
   type: 'Mutation',
   fields: {
-    createUser: {
+    userSignup: {
       type: UserType,
       args: {
         email: { type: GraphQLString },
         fullName: { type: GraphQLString },
-        googleId: { type: GraphQLString },
         gender: { type: GraphQLString },
         age: { type: GraphQLString },
         homeLocation: { type: new GraphQLList(GraphQLFloat) },
-        incentivePoints: { type: GraphQLInt },
         profilePicture: { type: GraphQLString },
       },
       async resolve(parent, args) {
@@ -105,18 +116,21 @@ const rootMutation = new GraphQLObjectType({
         return data
       },
     },
+
     findOrCreateChat: {
       type: ChatType,
       args: {
         userId: { type: GraphQLInt },
       },
       async resolve(parent, args) {
-        console.log('turf', turf)
         let chosen
         const user = await db.models.user.findByPk(args.userId)
-        //console.log(user.__proto__)
+        console.log(user.fullName)
 
         const chats = await db.models.chat.findAll({
+          where: {
+            status: 'pending',
+          },
           include: {
             model: db.models.user,
           },
@@ -124,28 +138,30 @@ const rootMutation = new GraphQLObjectType({
         let filtered = []
         if (chats.length) {
           filtered = chats.filter(cur => {
-            console.log('cur', cur.users[0])
-            const to = point(user.homeLocation)
-            const from = point(cur.users[0].homeLocation)
-            console.log('dsfs', to)
-            const options = { units: 'miles' }
-            // const location2 = {
-            //   lat: cur.users[0].homeLocation[0],
-            //   lon: cur.users[0].homeLocation[1],
-            // }
-            // const distance = Distance.between(
-            //   location1,
-            //   location2
-            // ).human_readable()
-            const distance = turf.distance(from, to, options)
-            console.log('distance human readable', distance)
-            if (distance < 10100134 && !cur.users.includes(user)) {
-              return cur
+            if (cur.users[0]) {
+              const to = point(user.homeLocation)
+              const from = point(cur.users[0].homeLocation)
+
+              const options = { units: 'miles' }
+              // const location2 = {
+              //   lat: cur.users[0].homeLocation[0],
+              //   lon: cur.users[0].homeLocation[1],
+              // }
+              // const distance = Distance.between(
+              //   location1,
+              //   location2
+              // ).human_readable()
+              const distance = turf.distance(from, to, options)
+              console.log('distance human readable', distance)
+              if (distance < 10100134 && !cur.users.includes(user)) {
+                return cur
+              }
             }
           })
         }
         if (filtered.length) {
           chosen = filtered[Math.floor(Math.random() * filtered.length)]
+          chosen = await chosen.update({ status: 'active' })
         } else {
           chosen = await db.models.chat.create({
             expirationDate: '12-25-2019',
