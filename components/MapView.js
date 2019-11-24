@@ -11,41 +11,76 @@ import {
   Right,
   Body,
   Icon,
-  Text
+  Text,
+  View
 } from 'native-base'
-import {View} from 'react-native'
+import {StyleSheet} from 'react-native'
+import MapView, {Marker} from 'react-native-maps'
 
 export default class Sendingmeetings extends Component {
+  constructor() {
+    super()
+    this.state = {
+      region: {
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      },
+      Location: {},
+      marker: {
+        latitude: 0,
+        longitude: 0,
+      },
+      flag: false
+    }
+    this.selectLocation = this.selectLocation.bind(this)
+    this.dragMarker = this.dragMarker.bind(this)
+  }
+
+  selectLocation() {
+    navigator.geolocation.getCurrentPosition(position =>
+      this.setState({
+        region: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+        }
+      })
+    )
+  }
+  componentDidMount() {
+    this.selectLocation()
+  }
+  dragMarker(e) {
+    this.setState({marker: e.nativeEvent.coordinate, flag: true})
+  }
   render() {
+    const styles = StyleSheet.create({
+      map: {
+        ...StyleSheet.absoluteFill
+      }
+    })
     return (
-      <Container>
-        <Header>
-          <Left>
-            <Button transparent>
-              <Icon name="menu" />
-            </Button>
-          </Left>
-          <Body />
-          <Right />
-        </Header>
-        <Content>
-          <View>
-            {/* MAP */}
-          </View>
-          <Right>
-            {/* ternary to show or hide the yelp review */}
-            <Button></Button>
-          </Right>
-        </Content>
-        {/* if a marker exist in map render */}
-        <Footer>
-          <FooterTab>
-            <Button full>
-              <Text>Submit</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
-      </Container>
+      <View style={styles.map}>
+        <MapView
+          style={styles.map}
+          region={this.state.region}
+          onPress={this.dragMarker}
+        >
+          <Marker
+            coordinate={this.state.marker}
+            draggable
+            onDragEnd={this.dragMarker}
+          />
+        </MapView>
+        {this.state.flag ? (
+          <Button style={{position: 'absolute'}}>
+            <Text>CLICK ME</Text>
+          </Button>
+        ) : null}
+      </View>
     )
   }
 }
