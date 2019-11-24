@@ -1,6 +1,6 @@
 import axios from 'axios'
-
 const { url } = require('../secrets')
+import gql from 'graphql-tag'
 console.log('URL', url)
 
 //action type

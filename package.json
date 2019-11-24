@@ -1,6 +1,7 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "startall": "npm run start-dev && npm start",
     "start": "expo start",
     "start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
     "start-dev": "NODE_ENV='development' & npm run start-server ",
@@ -10,7 +11,7 @@
     "eject": "expo eject",
     "test": "jest --watchAll",
     "seed": "node server/db/seed.js",
-    "debug": "open ‘rndebugger://set-debugger-loc?host=localhost&port=19001’ && npm start"
+    "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=19001' && npm start"
   },
   "jest": {
     "preset": "jest-expo"

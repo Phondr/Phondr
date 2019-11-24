@@ -41,7 +41,7 @@ const drawer = createDrawerNavigator(
     },
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Home',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange',

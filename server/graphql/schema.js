@@ -88,10 +88,27 @@ const rootQuery = new GraphQLObjectType({
         password: { type: GraphQLString },
       },
       async resolve(parent, args) {
-        let use = await db.models.user.findOne({
+        let user = await db.models.user.findOne({
           where: { email: args.email, password: args.password },
         })
-        return use
+        return user
+      },
+    },
+    myChats: {
+      type: new GraphQLList(ChatType),
+      args: {
+        userId: { type: GraphQLInt },
+      },
+      async resolve(parent, args) {
+        try {
+          let user = await db.models.user.findByPk(args.userId)
+          console.log('TCL: user', user)
+          const chats = await user.getChats({ include: [db.models.user] })
+          console.log('TCL: chats.users', chats[0].users)
+          return chats
+        } catch (e) {
+          console.error(e)
+        }
       },
     },
   },
