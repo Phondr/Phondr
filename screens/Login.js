@@ -1,33 +1,29 @@
-import React, {Component} from 'react'
-<<<<<<< HEAD
-import {Text, View, StyleSheet, Button, AsyncStorage} from 'react-native'
-=======
-import {Text, View, StyleSheet, Button, TouchableOpacity} from 'react-native'
->>>>>>> 707a2936fde71b417132197aeb061453781a1050
+import React, { Component } from 'react'
+import { Text, View, StyleSheet, Button, TouchableOpacity } from 'react-native'
 import t from 'tcomb-form-native'
-import {connect} from 'react-redux'
-import {fetchUserLogin} from '../redux/user'
-import {Query} from 'react-apollo'
+import { connect } from 'react-redux'
+import { fetchUserLogin } from '../redux/user'
+import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
-import {throwServerError} from 'apollo-link-http-common'
-import {navigate} from 'react-navigation'
+import { throwServerError } from 'apollo-link-http-common'
+import { navigate } from 'react-navigation'
 
 const User = t.struct({
   email: t.String,
-  password: t.String
+  password: t.String,
 })
 
 const options = {
   fields: {
     email: {
-      error: 'You need a valid email to login to your account'
+      error: 'You need a valid email to login to your account',
     },
     password: {
       password: true,
       secureTextEntry: true,
-      error: 'You need a valid password to login to your account'
-    }
-  }
+      error: 'You need a valid password to login to your account',
+    },
+  },
 }
 
 // const query = gql`
@@ -48,7 +44,7 @@ export class Login extends Component {
     this.login = this.login.bind(this)
   }
   static navigationOptions = {
-    drawerLabel: () => null
+    drawerLabel: () => null,
   }
 
   async login() {
@@ -57,10 +53,7 @@ export class Login extends Component {
       await this.props.getUser(values)
       const user = this.props.user
       if (user.data.userLogin.fullName) {
-<<<<<<< HEAD
         console.log('go home')
-=======
->>>>>>> 707a2936fde71b417132197aeb061453781a1050
         this.props.navigation.navigate('Home')
       }
     } catch (error) {
@@ -80,14 +73,10 @@ export class Login extends Component {
             style={styles.formcontainer}
           />
 
-<<<<<<< HEAD
-          <Button title="Submit" onPress={this.login} />
-=======
           <TouchableOpacity style={styles.submitButton} onPress={this.login}>
             <Text style={styles.submitButtonText}>Login</Text>
           </TouchableOpacity>
 
->>>>>>> 707a2936fde71b417132197aeb061453781a1050
           {/* <Query query={query}>
             {({ loading, error, data }) => {
               // console.log("loading", loading);
@@ -107,66 +96,47 @@ export const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     // alignItems: "center",
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#F5FCFF',
   },
   input: {
     margin: 15,
     height: 40,
     borderColor: 'black',
-    borderWidth: 1
+    borderWidth: 1,
   },
   submitButton: {
     backgroundColor: 'black',
     padding: 10,
-<<<<<<< HEAD
-    backgroundColor: '#F5FCFF'
-=======
     margin: 15,
     alignItems: 'center',
-    height: 40
+    height: 40,
   },
   submitButtonText: {
-    color: 'white'
->>>>>>> 707a2936fde71b417132197aeb061453781a1050
+    color: 'white',
   },
   phonderimage: {
     width: 200,
     height: 200,
     position: 'relative',
-    justifyContent: 'center'
-<<<<<<< HEAD
-  },
-  textInput: {
-    //borderBottomColor: "#CCCCCC",
-    // borderTopWidth: 1,
-    //borderBottomWidth: 1,
-    // height: 50,
-    // width: 400,
-    // fontSize: 25,
-    // paddingLeft: 10,
-    // paddingRight: 10,
-    // textAlign: "center",
-    // margin: 5
-=======
->>>>>>> 707a2936fde71b417132197aeb061453781a1050
+    justifyContent: 'center',
   },
   logintext: {
     margin: 2,
-    fontSize: 30
+    fontSize: 30,
   },
   formcontainer: {
     justifyContent: 'center',
     width: '100%',
-    backgroundColor: '#ffffff'
-  }
+    backgroundColor: '#ffffff',
+  },
 })
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user,
 })
 
 const mapDispatchToProps = dispatch => ({
-  getUser: values => dispatch(fetchUserLogin(values))
+  getUser: values => dispatch(fetchUserLogin(values)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
