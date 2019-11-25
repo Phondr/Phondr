@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Button, Text, View, Container, Footer, FooterTab} from 'native-base'
+import {Button, Text, View, Container, Footer, FooterTab, Title} from 'native-base'
 import {StyleSheet} from 'react-native'
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'
 import googlePlaceApiKey from '../secrets'
@@ -97,6 +97,8 @@ export default class Mapv extends Component {
                     latitude: x.geometry.location.lat,
                     longitude: x.geometry.location.lng
                   }}
+                  Title={`${x.name}(${x.rating} rating)`}
+                  description={x.vicinity}
                 />
               ))
             : null}
