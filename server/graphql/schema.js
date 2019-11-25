@@ -38,7 +38,8 @@ const ChatType = new GraphQLObjectType({
     progress: {type: GraphQLFloat},
     status: {type: GraphQLString},
     meeting: {type: MeetingType},
-    users: {type: new GraphQLList(UserType)}
+    users: {type: new GraphQLList(UserType)},
+    sinceCreation: {type: GraphQLFloat}
   })
 })
 const MessageType = new GraphQLObjectType({

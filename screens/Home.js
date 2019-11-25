@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {ImageBackground, View, StatusBar, StyleSheet, Text} from 'react-native'
-import {Container, Button, Icon, Content, Left} from 'native-base'
+import {Container, Button, Icon, Content, Left, Right} from 'native-base'
 import {Platform} from '@unimodules/core'
 
 import {withNavigation} from 'react-navigation'
@@ -10,6 +10,8 @@ import {useQuery} from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import {fetchMyChats, findOrCreateChat} from '../redux/myChats'
 import ActiveChats from '../components/ActiveChats'
+import PendingChats from '../components/PendingChats'
+import {ScrollView} from 'react-native-gesture-handler'
 
 class Home extends Component {
   constructor() {
@@ -25,32 +27,44 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchMyChats(this.state.user.id)
+    this.props.fetchMyChats(1)
+    console.log('home mounted')
   }
 
   render() {
     return (
       <Container>
-        <StatusBar barStyle="light-content" />
-        <CustomHeader />
-        <Content
-          contentContainerStyle={{
-            flex: 1
-          }}
-        >
-          {this.props.myChats.length ? (
-            <ActiveChats user={this.state.user} />
-          ) : (
-            <Text>user has no chats</Text>
-          )}
+        <ScrollView>
+          <StatusBar barStyle="light-content" />
+          <CustomHeader />
+          <Content
+            contentContainerStyle={{
+              flex: 1
+            }}
+          >
+            {this.props.myChats.length ? (
+              <>
+                <ActiveChats user={this.state.user} />
+                <PendingChats user={this.state.user} />
+              </>
+            ) : (
+              <Text>user has no chats</Text>
+            )}
 
-          <Button onPress={() => this.props.findOrCreateChat(1)}>
-            <Left>
-              <Icon color="blue" name="pluscircle" type="AntDesign" />
-            </Left>
-            <Text>New Chat</Text>
-          </Button>
-        </Content>
+            <Right>
+              <Button
+                bordered
+                rounded
+                info
+                onPress={() => this.props.findOrCreateChat(1)}
+              >
+                <Icon name="pluscircle" type="AntDesign">
+                  <Text>New Chat</Text>
+                </Icon>
+              </Button>
+            </Right>
+          </Content>
+        </ScrollView>
       </Container>
     )
   }

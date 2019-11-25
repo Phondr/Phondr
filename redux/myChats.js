@@ -16,7 +16,7 @@ export const findOrCreateChat = uid => {
       const {data} = await client.mutate({
         mutation: gql`mutation{
                     findOrCreateChat(userId:${uid}){
-                        id
+                      id
                         status
                         users{
                             id
@@ -41,6 +41,7 @@ export const fetchMyChats = uid => {
               myChats(userId: ${uid}) {
                 id
                 status
+                sinceCreation
                 users {
                   id
                   fullName

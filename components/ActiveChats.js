@@ -1,19 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {
-  Container,
-  Button,
-  H3,
-  Icon,
-  Header,
-  Content,
-  Left,
-  Body,
-  Right,
-  Card,
-  CardItem,
-  Text
-} from 'native-base'
+import {Icon, Left, Card, CardItem, Text} from 'native-base'
 const ActiveChats = ({myChats, user}) => {
   const active = myChats.filter(chat => chat.status === 'active')
   console.log('active', active, 'user', user)
