@@ -4,12 +4,16 @@ const { User, Chat, Message, Meeting } = require('./models')
 const axios = require('axios')
 const round = require('lodash.round')
 
-const SEED = 42070
-faker.seed(SEED)
+// const SEED = 42070
+// faker.seed(SEED)
 const createUser = async () => {
   try {
     let user = await User.create({
+<<<<<<< HEAD
       fullName: `${faker.name.firstName()} ${faker.name.lastName()}`,
+=======
+      fullName: `${faker.name.firstName()}` + ` ${faker.name.lastName()}`,
+>>>>>>> d78df24e3565c18898e666e685d3c4a222fd7e69
       age: faker.random.number(),
       homeLocation: [
         round(faker.address.latitude()),
