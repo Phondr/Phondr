@@ -90,7 +90,9 @@ async function seed() {
   }
   for (let i = 1; i < 10; i++) {
     const {
-      data: { data: actual },
+      data: {
+        data: { findOrCreateChat },
+      },
     } = await axios.post('http://localhost:8080/graphql', {
       query: `
         mutation{
@@ -105,7 +107,7 @@ async function seed() {
           `,
     })
 
-    console.log(`chat ${i}: ${JSON.stringify(actual)}`)
+    console.log(`chat ${i}: ${JSON.stringify(findOrCreateChat)}`)
   }
   console.log(`seeded successfully`)
 }
