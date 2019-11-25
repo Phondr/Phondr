@@ -1,11 +1,5 @@
-import React, { Component } from 'react'
-import {
-  ImageBackground,
-  View,
-  StatusBar,
-  StyleSheet,
-  Text,
-} from 'react-native'
+import React, {Component} from 'react'
+import {ImageBackground, View, StatusBar, StyleSheet, Text} from 'react-native'
 import {
   Container,
   Button,
@@ -17,16 +11,16 @@ import {
   Body,
   Right,
   Card,
-  CardItem,
+  CardItem
 } from 'native-base'
-import { Platform } from '@unimodules/core'
+import {Platform} from '@unimodules/core'
 
-import { withNavigation } from 'react-navigation'
+import {withNavigation} from 'react-navigation'
 import CustomHeader from '../components/CustomHeader'
-import { connect } from 'react-redux'
-import { useQuery } from '@apollo/react-hooks'
+import {connect} from 'react-redux'
+import {useQuery} from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import { fetchMyChats } from '../redux/myChats'
+// import {fetchMyChats} from '../redux/myChats'
 
 // const Query = gql`
 //   query RootQueryType {
@@ -42,29 +36,27 @@ class Home extends Component {
   constructor() {
     super()
     this.state = {
-      user: { fullName: 'Avaree Warrick', id: 1 },
+      user: {fullName: 'Avaree Warrick', id: 1}
     }
   }
   static navigationOptions = {
-    drawerIcon: ({ tintColor }) => {
-      return (
-        <Icon name='home' style={{ fontSize: 24, color: tintColor }}></Icon>
-      )
-    },
+    drawerIcon: ({tintColor}) => {
+      return <Icon name="home" style={{fontSize: 24, color: tintColor}}></Icon>
+    }
   }
 
   componentDidMount() {
-    this.props.fetchMyChats(this.state.user.id)
+    //this.props.fetchMyChats(this.state.user.id)
   }
 
   render() {
     return (
       <Container>
-        <StatusBar barStyle='light-content' />
+        <StatusBar barStyle="light-content" />
         <CustomHeader />
         <Content
           contentContainerStyle={{
-            flex: 1,
+            flex: 1
             // alignItems: 'center',
             // justifyContent: 'center',
           }}
@@ -75,7 +67,7 @@ class Home extends Component {
                 return (
                   <CardItem key={cur.id}>
                     <Left>
-                      <Icon name='person' />
+                      <Icon name="person" />
                     </Left>
                     <Text>
                       {
@@ -97,4 +89,5 @@ class Home extends Component {
   }
 }
 
-export default connect(({ myChats }) => ({ myChats }), { fetchMyChats })(Home)
+export default connect(({myChats}) => ({myChats}))(Home)
+// export default connect(({myChats}) => ({myChats}), {fetchMyChats})(Home)

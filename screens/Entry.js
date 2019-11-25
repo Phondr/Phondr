@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { Text, View, StyleSheet, Image, Button } from "react-native";
-import { navigation } from "react-navigation";
-import Login from "./Login";
-import Signup from "./Signup";
+import React, {Component} from 'react'
+import {Text, View, StyleSheet, Image, Button} from 'react-native'
+import {navigation} from 'react-navigation'
+import Login from './Login'
+import Signup from './Signup'
 // import mainimage from "../assets/Images/PhondrLogos/EntryLogo/Phondr.png";
 // const image = {
 //   entryimage: require("../assets/Images/PhondrLogos/EntryLogo/Phondr.png")
@@ -10,11 +10,12 @@ import Signup from "./Signup";
 
 export class Entry extends Component {
   gotToLogin() {
-    this.props.navigation.navigate("Login");
+    this.props.navigation.navigate('Login')
   }
 
-  goToSignUpMapView() {
-    this.props.navigation.navigate("SignupMapView");
+  goToSignUp() {
+    console.log('navigate to signup')
+    this.props.navigation.navigate('Signup')
   }
 
   render() {
@@ -25,7 +26,7 @@ export class Entry extends Component {
             style={styles.phonderimage}
             source={{
               uri:
-                "https://github.com/Phondr/Phondr/blob/login/assets/images/PhondrLogos/PhondrLarge.png?raw=true"
+                'https://github.com/Phondr/Phondr/blob/login/assets/images/PhondrLogos/PhondrLarge.png?raw=true'
             }}
           />
         </View>
@@ -33,17 +34,17 @@ export class Entry extends Component {
         <Button
           title="Login"
           onPress={() => {
-            this.gotToLogin();
+            this.gotToLogin()
           }}
         />
         <Button
           title="Sign Up"
           onPress={() => {
-            this.goToSignUpMapView();
+            this.goToSignUp()
           }}
         />
       </View>
-    );
+    )
   }
 }
 
@@ -51,15 +52,15 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF"
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF'
   },
   phonderimage: {
     width: 350,
     height: 350,
-    position: "relative",
-    justifyContent: "center"
+    position: 'relative',
+    justifyContent: 'center'
   },
   textInput: {
     //borderBottomColor: "#CCCCCC",
@@ -78,12 +79,12 @@ export const styles = StyleSheet.create({
     fontSize: 30
   },
   formcontainer: {
-    justifyContent: "center",
+    justifyContent: 'center',
     marginTop: 50,
     padding: 20,
     margin: 10,
-    backgroundColor: "#ffffff"
+    backgroundColor: '#ffffff'
   }
-});
+})
 
-export default Entry;
+export default Entry

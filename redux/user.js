@@ -1,6 +1,8 @@
 import axios from 'axios'
 const {url} = require('../secrets')
 import gql from 'graphql-tag'
+import {AsyncStorage} from 'react-native'
+import AsyncUtils from '../server/AsyncUtils'
 console.log('URL', url)
 
 //action type
@@ -13,6 +15,30 @@ export const addUser = user => ({type: ADDUSER, user})
 
 //state
 const initialState = {}
+
+export const storeData = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, value)
+    const data = await getData(key)
+    console.log('DATA', data)
+  } catch (e) {
+    // saving error
+    console.log(e)
+  }
+}
+
+export const getData = async key => {
+  try {
+    const value = await AsyncStorage.getItem(key)
+    if (value) {
+      // value previously stored
+      return value
+    }
+  } catch (e) {
+    // error reading value
+    console.log(e)
+  }
+}
 
 //thunk
 export const fetchUserLogin = values => async dispatch => {
@@ -37,6 +63,11 @@ export const fetchUserLogin = values => async dispatch => {
         `
       }
     })
+
+    if (data.data.userLogin) {
+      //console.log('USERLOGIN', data.data.userLogin.email)
+      storeData(data.data.userLogin.email, JSON.stringify(data.data.userLogin))
+    }
 
     dispatch(setUser(data))
   } catch (error) {

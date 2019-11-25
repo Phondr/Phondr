@@ -1,25 +1,24 @@
-import React from "react";
-import { createAppContainer, createSwitchNavigator } from "react-navigation";
-import { Platform } from "react-native";
-import Login from "../screens/Login";
-import Signup from "../screens/Signup";
-import SignupMapView from "../screens/SignupMapView";
-import Entry from "../screens/Entry";
+import React from 'react'
+import {createAppContainer, createSwitchNavigator} from 'react-navigation'
+import {Platform} from 'react-native'
+import Login from '../screens/Login'
+import Signup from '../screens/Signup'
+import SignupMapView from '../screens/SignupMapView'
+import Entry from '../screens/Entry'
 
 const config = Platform.select({
-  web: { headerMode: "screen" },
+  web: {headerMode: 'screen'},
   default: {}
-});
+})
 
 const EntryStack = createSwitchNavigator(
   {
     Entry: Entry,
     Login: Login,
-    Signup: Signup,
-    SignupMapView: SignupMapView
+    Signup: Signup
   },
   {
-    initialRouteName: "Entry"
+    initialRouteName: 'Entry'
   },
   {
     navigationOptions: {
@@ -27,7 +26,7 @@ const EntryStack = createSwitchNavigator(
     }
   },
   config
-);
+)
 
-const AuthPages = createAppContainer(EntryStack);
-export default AuthPages;
+const AuthPages = createAppContainer(EntryStack)
+export default AuthPages
