@@ -16,15 +16,18 @@ import { createDrawerNavigator, createAppContainer } from 'react-navigation'
 import Home from './screens/Home'
 import { Container, Content, Header, Body, Drawer } from 'native-base'
 import drawerStyles from './styles/drawerStyle'
-import AppNavigator from './navigation/AppNavigator'
 import CustomDrawer from './components/CustomDrawer'
 import AnatomyExample from './components/hellowworld'
 import New from './components/route'
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { connect, Provider } from 'react-redux'
-import store from './store'
-const {url} = require( './secrets')
+import store from './redux/store'
+import AppNavigator from './navigation/AppNavigator'
+import AuthPages from './navigation/MainLoginNavigator'
+import Login from './screens/Login'
+
+const { url } = require('./secrets')
 const drawer = createDrawerNavigator(
   {
     Home: {
@@ -33,9 +36,12 @@ const drawer = createDrawerNavigator(
     New: {
       screen: New,
     },
+    Login: {
+      screen: Login,
+    },
   },
   {
-    initialRouteName: 'New',
+    initialRouteName: 'Home',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange',
@@ -56,7 +62,6 @@ function App(props) {
         uri: url + '/graphql',
       })
     )
-    
   }, [])
   if ((!isLoadingComplete && !props.skipLoadingScreen) || !apClient) {
     return (
@@ -74,7 +79,7 @@ function App(props) {
             {Platform.OS === 'ios' && <StatusBar barStyle='default' />}
             {/* <AppNavigator /> */}
             {/* <AnatomyExample /> */}
-
+            {/* <AuthPages /> */}
             <DrawerContainer />
             {/* <New /> */}
           </View>
