@@ -22,9 +22,10 @@ import New from "./components/route";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { connect, Provider } from "react-redux";
-import store from "./client/store";
+import store from "./redux/store";
 import AppNavigator from "./navigation/AppNavigator";
 import AuthPages from "./navigation/MainLoginNavigator";
+import Login from "./screens/Login";
 
 const { url } = require("./secrets");
 const drawer = createDrawerNavigator(
@@ -34,10 +35,13 @@ const drawer = createDrawerNavigator(
     },
     New: {
       screen: New
+    },
+    Login: {
+      screen: Login
     }
   },
   {
-    initialRouteName: "New",
+    initialRouteName: "Login",
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: "orange"
@@ -75,8 +79,8 @@ function App(props) {
             {Platform.OS === "ios" && <StatusBar barStyle="default" />}
             {/* <AppNavigator /> */}
             {/* <AnatomyExample /> */}
-            <AuthPages />
-            {/* <DrawerContainer /> */}
+            {/* <AuthPages /> */}
+            <DrawerContainer />
             {/* <New /> */}
           </View>
         </ApolloProvider>

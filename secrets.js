@@ -1,2 +1,2 @@
-let url = "https://ed3721ef.ngrok.io";
+let url = "https://adb3af67.ngrok.io";
 module.exports = { url };

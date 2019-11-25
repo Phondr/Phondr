@@ -75,8 +75,8 @@ const rootQuery = new GraphQLObjectType({
       args: {
         id: { type: GraphQLInt }
       },
-      resolve(parent, args) {
-        return db.models.user.findByPk(args.id, {
+      async resolve(parent, args) {
+        return await db.models.user.findByPk(args.id, {
           include: [{ model: db.models.chat }]
         });
       }
@@ -88,23 +88,39 @@ const rootQuery = new GraphQLObjectType({
         password: { type: GraphQLString }
       },
       async resolve(parent, args) {
-        let use = await db.models.user.findOne({
-          where: { email: args.email, password: args.password }
+        let usermodel = await db.models.user.findOne({
+          where: { email: args.email }
+          // where: { email: args.email, password: args.password },
         });
-        return use;
+        if (!usermodel) {
+          console.log("No such user found:", args.email);
+          alert("Wrong username and/or password");
+        } else if (!usermodel.correctPassword(args.password)) {
+          console.log("Incorrect password for user:", args.email);
+          alert("Wrong username and/or password");
+        } else {
+          let user = await db.models.user.findOne({
+            where: { email: args.email, password: args.password }
+          });
+          return user;
+        }
       }
     },
-    userSignup: {
-      type: UserType,
+    myChats: {
+      type: new GraphQLList(ChatType),
       args: {
-        fullName: { type: GraphQLString },
-        age: { type: GraphQLInt },
-        email: { type: GraphQLString },
-        password: { type: GraphQLString }
+        userId: { type: GraphQLInt }
       },
       async resolve(parent, args) {
-        let use = await db.models.user.create(args);
-        return use;
+        try {
+          let user = await db.models.user.findByPk(args.userId);
+          console.log("TCL: user", user);
+          const chats = await user.getChats({ include: [db.models.user] });
+          console.log("TCL: chats.users", chats[0].users);
+          return chats;
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
   }
@@ -114,16 +130,14 @@ const rootMutation = new GraphQLObjectType({
   name: "RootMutationType",
   type: "Mutation",
   fields: {
-    createUser: {
+    userSignup: {
       type: UserType,
       args: {
         email: { type: GraphQLString },
         fullName: { type: GraphQLString },
-        googleId: { type: GraphQLString },
         gender: { type: GraphQLString },
         age: { type: GraphQLString },
         homeLocation: { type: new GraphQLList(GraphQLFloat) },
-        incentivePoints: { type: GraphQLInt },
         profilePicture: { type: GraphQLString }
       },
       async resolve(parent, args) {
@@ -131,18 +145,21 @@ const rootMutation = new GraphQLObjectType({
         return data;
       }
     },
+
     findOrCreateChat: {
       type: ChatType,
       args: {
         userId: { type: GraphQLInt }
       },
       async resolve(parent, args) {
-        console.log("turf", turf);
         let chosen;
         const user = await db.models.user.findByPk(args.userId);
-        //console.log(user.__proto__)
+        console.log(user.fullName);
 
         const chats = await db.models.chat.findAll({
+          where: {
+            status: "pending"
+          },
           include: {
             model: db.models.user
           }
@@ -150,28 +167,30 @@ const rootMutation = new GraphQLObjectType({
         let filtered = [];
         if (chats.length) {
           filtered = chats.filter(cur => {
-            console.log("cur", cur.users[0]);
-            const to = point(user.homeLocation);
-            const from = point(cur.users[0].homeLocation);
-            console.log("dsfs", to);
-            const options = { units: "miles" };
-            // const location2 = {
-            //   lat: cur.users[0].homeLocation[0],
-            //   lon: cur.users[0].homeLocation[1],
-            // }
-            // const distance = Distance.between(
-            //   location1,
-            //   location2
-            // ).human_readable()
-            const distance = turf.distance(from, to, options);
-            console.log("distance human readable", distance);
-            if (distance < 10100134 && !cur.users.includes(user)) {
-              return cur;
+            if (cur.users[0]) {
+              const to = point(user.homeLocation);
+              const from = point(cur.users[0].homeLocation);
+
+              const options = { units: "miles" };
+              // const location2 = {
+              //   lat: cur.users[0].homeLocation[0],
+              //   lon: cur.users[0].homeLocation[1],
+              // }
+              // const distance = Distance.between(
+              //   location1,
+              //   location2
+              // ).human_readable()
+              const distance = turf.distance(from, to, options);
+              console.log("distance human readable", distance);
+              if (distance < 10100134 && !cur.users.includes(user)) {
+                return cur;
+              }
             }
           });
         }
         if (filtered.length) {
           chosen = filtered[Math.floor(Math.random() * filtered.length)];
+          chosen = await chosen.update({ status: "active" });
         } else {
           chosen = await db.models.chat.create({
             expirationDate: "12-25-2019",

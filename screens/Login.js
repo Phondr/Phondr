@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import { Text, View, StyleSheet, Button, AsyncStorage } from "react-native";
 import t from "tcomb-form-native";
 import { connect } from "react-redux";
-import { fetchUserLogin } from "../client/redux/user";
+import { fetchUserLogin } from "../redux/user";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import { throwServerError } from "apollo-link-http-common";
@@ -43,16 +43,21 @@ export class Login extends Component {
 
     this.login = this.login.bind(this);
   }
+  static navigationOptions = {
+    drawerLabel: () => null
+  };
 
   async login() {
     const values = this._form.getValue();
     try {
-      let data = await this.props.getUser(values);
-      if (data.fullName) {
-        this.props.navigate();
+      await this.props.getUser(values);
+      const user = this.props.user;
+
+      if (user) {
+        console.log("go home");
+        this.props.navigation.navigate("Home");
       }
     } catch (error) {
-      alert("COULD NOT LOGIN");
       console.log(error);
     }
   }
