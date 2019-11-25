@@ -92,17 +92,24 @@ const rootQuery = new GraphQLObjectType({
           where: {email: args.email}
           // where: { email: args.email, password: args.password },
         })
+
+        console.log('USERMODEL', usermodel)
         if (!usermodel) {
           console.log('No such user found:', args.email)
-          alert('Wrong username and/or password')
+          alert('Wrong username')
         } else if (!usermodel.correctPassword(args.password)) {
           console.log('Incorrect password for user:', args.email)
-          alert('Wrong username and/or password')
+          alert('Wrong password')
         } else {
-          let user = await db.models.user.findOne({
-            where: {email: args.email, password: args.password}
+          // console.log('PASSWORD', usermodel.cryptPassword(args.password))
+          let use = await db.models.user.findOne({
+            where: {
+              email: args.email,
+              password: usermodel.cryptPassword(args.password)
+            }
           })
-          return user
+
+          return use
         }
       }
     },
