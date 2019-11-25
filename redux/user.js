@@ -1,5 +1,5 @@
 import axios from 'axios'
-const { url } = require('../secrets')
+const {url} = require('../secrets')
 import gql from 'graphql-tag'
 console.log('URL', url)
 
@@ -8,8 +8,8 @@ const GETUSER = 'GETUSER'
 const ADDUSER = 'ADDUSER'
 
 //action creator
-export const setUser = user => ({ type: GETUSER, user })
-export const addUser = user => ({ type: ADDUSER, user })
+export const setUser = user => ({type: GETUSER, user})
+export const addUser = user => ({type: ADDUSER, user})
 
 //state
 const initialState = {}
@@ -19,7 +19,7 @@ export const fetchUserLogin = values => async dispatch => {
   try {
     const email = values.email
     const password = values.password
-    let { data } = await axios({
+    let {data} = await axios({
       url: `${url}/graphql`,
       method: 'POST',
       data: {
@@ -34,9 +34,10 @@ export const fetchUserLogin = values => async dispatch => {
               profilePicture
             }
         }
-        `,
-      },
+        `
+      }
     })
+
     dispatch(setUser(data))
   } catch (error) {
     alert('COULD NOT LOGIN')
@@ -51,7 +52,7 @@ export const userSignUp = values => async dispatch => {
     const password = values.password
     const email = values.email
 
-    let { data } = await axios({
+    let {data} = await axios({
       url: `${url}/graphql`,
       method: 'POST',
       data: {
@@ -61,10 +62,9 @@ export const userSignUp = values => async dispatch => {
             id
             }
         }
-        `,
-      },
+        `
+      }
     })
-    console.log('DATA', data)
     dispatch(setUser(data.data.userSignup))
   } catch (error) {
     alert('COULD NOT SIGN-UP')

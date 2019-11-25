@@ -1,66 +1,66 @@
-import client from './apolloClient'
-import gql from 'graphql-tag'
-import myAxios from './axios-config'
+import client from "./apolloClient";
+import gql from "graphql-tag";
+import myAxios from "./axios-config";
 
-const GETMYCHATS = 'GETMYCHATS'
+const GETMYCHATS = "GETMYCHATS";
 const getMyChats = myChats => {
-  return { type: GETMYCHATS, myChats }
-}
+  return { type: GETMYCHATS, myChats };
+};
 
 export const fetchMyChats = uid => {
   return async dispatch => {
     try {
-      //   const { data } = await client.query({
-      //     query: gql`
-      //       query {
-      //         myChats(userId: 1) {
-      //           id
-      //           users {
-      //             id
-      //             fullName
-      //           }
-      //         }
-      //       }
-      //     `,
-      //   })
+      const { data } = await client.query({
+        query: gql`
+          query {
+            myChats(userId: 1) {
+              id
+              users {
+                id
+                fullName
+              }
+            }
+          }
+        `
+      });
 
-      //   console.log('data in thunk', data)
-      //   dispatch(getMyChats(data.myChats))
-      const {
-        data: {
-          data: { myChats },
-        },
-      } = myAxios.post('/', {
-        query: `
-         query{
-             myChats(userId:${uid}){
-                 progress
-                 status
-                 id
-                 users{
-                     id
-                     fullName
-                 }
-             }
-         }
-        `,
-      })
-      console.log('data object in myChats', myChats)
-      dispatch(getMyChats(myChats))
+      console.log("data in thunk", data);
+      dispatch(getMyChats(data.myChats));
+      // const {
+      //   data: {
+      //     data: { myChats },
+      //   },
+      // } = myAxios.post('/', {
+      //   query: `
+      //    query{
+      //        myChats(userId:${uid}){
+      //            progress
+      //            status
+      //            id
+      //            users{
+      //                id
+      //                fullName
+      //            }
+      //        }
+      //    }
+      //   `,
+      // })
+      console.log("data object in myChats", myChats);
+      dispatch(getMyChats(myChats));
     } catch (e) {
-      console.error('messed up in fetchMyChats, error: ', e)
+      console.error("messed up in fetchMyChats, error: ", e);
     }
-  }
-}
+  };
+};
 
 const reducer = (state = [], action) => {
   switch (action.type) {
     case GETMYCHATS:
-      return action.myChats
+      return action.myChats;
 
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default reducer
+export default reducer;
