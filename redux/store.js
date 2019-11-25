@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import axios from 'axios'
 import appReducer from '.'
 import { createLogger } from 'redux-logger'
-import { composeWithDevTools } from 'redux-remote-devtools'
+import { composeWithDevTools } from 'remote-redux-devtools'
 import thunkMiddleware from 'redux-thunk'
 
 let middleware = [

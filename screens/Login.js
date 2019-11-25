@@ -1,29 +1,29 @@
-import React, { Component } from 'react'
-import { Text, View, StyleSheet, Button, AsyncStorage } from 'react-native'
+import React, {Component} from 'react'
+import {Text, View, StyleSheet, Button, AsyncStorage} from 'react-native'
 import t from 'tcomb-form-native'
-import { connect } from 'react-redux'
-import { fetchUserLogin } from '../redux/user'
-import { Query } from 'react-apollo'
+import {connect} from 'react-redux'
+import {fetchUserLogin} from '../redux/user'
+import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
-import { throwServerError } from 'apollo-link-http-common'
-import { navigate } from 'react-navigation'
+import {throwServerError} from 'apollo-link-http-common'
+import {navigate} from 'react-navigation'
 
 const User = t.struct({
   email: t.String,
-  password: t.String,
+  password: t.String
 })
 
 const options = {
   fields: {
     email: {
-      error: 'You need a valid email to login to your account',
+      error: 'You need a valid email to login to your account'
     },
     password: {
       password: true,
       secureTextEntry: true,
-      error: 'You need a valid password to login to your account',
-    },
-  },
+      error: 'You need a valid password to login to your account'
+    }
+  }
 }
 
 // const query = gql`
@@ -44,14 +44,16 @@ export class Login extends Component {
     this.login = this.login.bind(this)
   }
   static navigationOptions = {
-    drawerLabel: () => null,
+    drawerLabel: () => null
   }
 
   async login() {
     const values = this._form.getValue()
     try {
-      let data = await this.props.getUser(values)
-      if (data.fullName) {
+      await this.props.getUser(values)
+      const user = this.props.user
+      if (user.data.userLogin.fullName) {
+        console.log('go home')
         this.props.navigation.navigate('Home')
       }
     } catch (error) {
@@ -71,7 +73,7 @@ export class Login extends Component {
             style={styles.formcontainer}
           />
 
-          <Button title='Submit' onPress={this.login} />
+          <Button title="Submit" onPress={this.login} />
           {/* <Query query={query}>
             {({ loading, error, data }) => {
               // console.log("loading", loading);
@@ -91,13 +93,13 @@ export const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 35,
     padding: 10,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F5FCFF'
   },
   phonderimage: {
     width: 200,
     height: 200,
     position: 'relative',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   textInput: {
     //borderBottomColor: "#CCCCCC",
@@ -113,21 +115,21 @@ export const styles = StyleSheet.create({
   },
   logintext: {
     margin: 2,
-    fontSize: 30,
+    fontSize: 30
   },
   formcontainer: {
     justifyContent: 'center',
     width: '100%',
-    backgroundColor: '#ffffff',
-  },
+    backgroundColor: '#ffffff'
+  }
 })
 
 const mapStateToProps = state => ({
-  user: state.user,
+  user: state.user
 })
 
 const mapDispatchToProps = dispatch => ({
-  getUser: values => dispatch(fetchUserLogin(values)),
+  getUser: values => dispatch(fetchUserLogin(values))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
