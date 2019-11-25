@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import {Button, Text, View} from 'native-base'
+import {Button, Text, View, Container, Footer, FooterTab} from 'native-base'
 import {StyleSheet} from 'react-native'
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'
-import {TextInput} from 'react-native-gesture-handler'
-
+import googlePlaceApiKey from '../secrets'
+import axios from 'axios'
 export default class Sendingmeetings extends Component {
   constructor() {
     super()
@@ -19,11 +19,12 @@ export default class Sendingmeetings extends Component {
         latitude: 0,
         longitude: 0
       },
+      nearby: [],
       flag: false
     }
     this.initialLocation = this.initialLocation.bind(this)
     this.dragMarker = this.dragMarker.bind(this)
-    this.fetchMarkerData = this.fetchMarkerData.bind(this)
+    this.searchNearBy = this.searchNearBy.bind(this)
   }
 
   initialLocation() {
@@ -38,11 +39,26 @@ export default class Sendingmeetings extends Component {
       })
     })
   }
-  componentDidMount() {
+  async componentDidMount() {
     this.initialLocation()
   }
   dragMarker(e) {
+    console.log(e.nativeEvent.coordinate)
     this.setState({marker: e.nativeEvent.coordinate, flag: true})
+    this.searchNearBy()
+  }
+  searchNearBy() {
+    const theUrl =
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.state.region.latitude},${this.state.region.longitude}&radius=1500&type=restaurant&key=` +
+      googlePlaceApiKey
+    axios
+      .get(theUrl)
+      .then(res => {
+        this.setState({nearby: res.data.results})
+        console.log(res.data)
+        // res.data.results.forEach(x=> {console.log(x.geometry.location)})
+      })
+      .catch(err => console.log(err))
   }
   render() {
     const styles = StyleSheet.create({
@@ -50,6 +66,7 @@ export default class Sendingmeetings extends Component {
         ...StyleSheet.absoluteFill
       }
     })
+
     return (
       <View style={styles.map}>
         <MapView
@@ -58,16 +75,22 @@ export default class Sendingmeetings extends Component {
           onPress={this.dragMarker}
           provider={PROVIDER_GOOGLE}
         >
+          {this.state.nearby.length !==0? this.state.nearby.map(x => {
+            console.log(x.geometry.location,x.geometry.location)
+            return <Marker key={x.id} coordinate={{latitude:x.geometry.location.lat, longitude:x.geometry.location.lng}} />
+          }
+            ):null}
           <Marker
             coordinate={this.state.marker}
             draggable
+            pinColor='black'
             onDragEnd={this.dragMarker}
           />
         </MapView>
         {this.state.flag ? (
           <Footer>
             <FooterTab>
-              <Button style={{position: 'absolute'}}>
+              <Button>
                 <Text>Send</Text>
               </Button>
             </FooterTab>
