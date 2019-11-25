@@ -39,9 +39,9 @@ export const fetchUserLogin = values => async dispatch => {
     })
 
     dispatch(setUser(data))
-  } catch (errors) {
+  } catch (error) {
     alert('COULD NOT LOGIN')
-    console.log(errors)
+    console.log(error)
   }
 }
 
