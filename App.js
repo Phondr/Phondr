@@ -2,7 +2,7 @@
 import { AppLoading } from 'expo'
 import { Asset } from 'expo-asset'
 import * as Font from 'expo-font'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Platform,
   StatusBar,
@@ -16,10 +16,18 @@ import { createDrawerNavigator, createAppContainer } from 'react-navigation'
 import Home from './screens/Home'
 import { Container, Content, Header, Body, Drawer } from 'native-base'
 import drawerStyles from './styles/drawerStyle'
-import AppNavigator from './navigation/AppNavigator'
 import CustomDrawer from './components/CustomDrawer'
 import AnatomyExample from './components/hellowworld'
 import New from './components/route'
+import ApolloClient from 'apollo-boost'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { connect, Provider } from 'react-redux'
+import store from './redux/store'
+import AppNavigator from './navigation/AppNavigator'
+import AuthPages from './navigation/MainLoginNavigator'
+import Login from './screens/Login'
+
+const { url } = require('./secrets')
 const drawer = createDrawerNavigator(
   {
     Home: {
@@ -28,9 +36,12 @@ const drawer = createDrawerNavigator(
     New: {
       screen: New,
     },
+    Login: {
+      screen: Login,
+    },
   },
   {
-    initialRouteName: 'New',
+    initialRouteName: 'Home',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange',
@@ -42,10 +53,17 @@ const drawer = createDrawerNavigator(
 )
 const DrawerContainer = createAppContainer(drawer)
 
-export default function App(props) {
+function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
-
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+  const [apClient, setApClient] = useState({})
+  useEffect(() => {
+    setApClient(
+      new ApolloClient({
+        uri: url + '/graphql',
+      })
+    )
+  }, [])
+  if ((!isLoadingComplete && !props.skipLoadingScreen) || !apClient) {
     return (
       <AppLoading
         startAsync={loadResourcesAsync}
@@ -55,17 +73,22 @@ export default function App(props) {
     )
   } else {
     return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle='default' />}
-        {/* <AppNavigator /> */}
-        {/* <AnatomyExample /> */}
-
-        <DrawerContainer />
-        {/* <New /> */}
-      </View>
+      <Provider store={store}>
+        <ApolloProvider client={apClient}>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle='default' />}
+            {/* <AppNavigator /> */}
+            {/* <AnatomyExample /> */}
+            {/* <AuthPages /> */}
+            <DrawerContainer />
+            {/* <New /> */}
+          </View>
+        </ApolloProvider>
+      </Provider>
     )
   }
 }
+export default App
 
 async function loadResourcesAsync() {
   await Promise.all([
