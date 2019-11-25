@@ -9,17 +9,11 @@ import {
   Text,
   Button,
   Icon,
-  Header,
-  Left,
-  Right,
-  Body,
-  Container,
-  Content,
 } from 'native-base'
 import { StyleSheet, StatusBar } from 'react-native'
 import AllChats from './Allchat'
 import Profile from './Profile'
-import MapView from './MapView'
+import Mapv from './MapView'
 import Meetview from './Meetview'
 import Sendmeetings from './Sendmeeting'
 import SingleChats from './SingleChat'
@@ -89,7 +83,7 @@ const Temp = createStackNavigator(
       screen: Profile,
     },
     mapview: {
-      screen: MapView,
+      screen: Mapv,
     },
     meetview: {
       screen: Meetview,
