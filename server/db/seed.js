@@ -9,11 +9,7 @@ const round = require('lodash.round')
 const createUser = async () => {
   try {
     let user = await User.create({
-<<<<<<< HEAD
       fullName: `${faker.name.firstName()} ${faker.name.lastName()}`,
-=======
-      fullName: `${faker.name.firstName()}` + ` ${faker.name.lastName()}`,
->>>>>>> d78df24e3565c18898e666e685d3c4a222fd7e69
       age: faker.random.number(),
       homeLocation: [
         round(faker.address.latitude()),
@@ -23,7 +19,7 @@ const createUser = async () => {
       created_at: faker.date.recent(),
       profilePicture: faker.random.image(),
       email: faker.internet.email(),
-      password: faker.internet.password(),
+      password: '123',
     })
     return user
   } catch (err) {
