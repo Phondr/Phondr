@@ -1,6 +1,10 @@
 # printWidth: 80 # 80
 tabWidth: 2 # 2
+<<<<<<< HEAD
 useTabs: false # false
+=======
+# useTabs: false # false
+>>>>>>> 707a2936fde71b417132197aeb061453781a1050
 semi: false # true
 singleQuote: true # false
 trailingComma: none # none | es5 | all

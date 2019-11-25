@@ -57,6 +57,10 @@ User.prototype.correctPassword = function(candidatePwd) {
   return User.encryptPassword(candidatePwd, this.salt()) === this.password()
 }
 
+User.prototype.cryptPassword = function(candidatePwd) {
+  return User.encryptPassword(candidatePwd, this.salt())
+}
+
 /**
  * classMethods
  */

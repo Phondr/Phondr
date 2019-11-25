@@ -1,5 +1,9 @@
 import React, {Component} from 'react'
+<<<<<<< HEAD
 import {Text, View, StyleSheet, Button, AsyncStorage} from 'react-native'
+=======
+import {Text, View, StyleSheet, Button, TouchableOpacity} from 'react-native'
+>>>>>>> 707a2936fde71b417132197aeb061453781a1050
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
 import {fetchUserLogin} from '../redux/user'
@@ -53,7 +57,10 @@ export class Login extends Component {
       await this.props.getUser(values)
       const user = this.props.user
       if (user.data.userLogin.fullName) {
+<<<<<<< HEAD
         console.log('go home')
+=======
+>>>>>>> 707a2936fde71b417132197aeb061453781a1050
         this.props.navigation.navigate('Home')
       }
     } catch (error) {
@@ -73,7 +80,14 @@ export class Login extends Component {
             style={styles.formcontainer}
           />
 
+<<<<<<< HEAD
           <Button title="Submit" onPress={this.login} />
+=======
+          <TouchableOpacity style={styles.submitButton} onPress={this.login}>
+            <Text style={styles.submitButtonText}>Login</Text>
+          </TouchableOpacity>
+
+>>>>>>> 707a2936fde71b417132197aeb061453781a1050
           {/* <Query query={query}>
             {({ loading, error, data }) => {
               // console.log("loading", loading);
@@ -90,16 +104,37 @@ export class Login extends Component {
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 35,
-    padding: 10,
+    flex: 2,
+    justifyContent: 'center',
+    // alignItems: "center",
     backgroundColor: '#F5FCFF'
+  },
+  input: {
+    margin: 15,
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 1
+  },
+  submitButton: {
+    backgroundColor: 'black',
+    padding: 10,
+<<<<<<< HEAD
+    backgroundColor: '#F5FCFF'
+=======
+    margin: 15,
+    alignItems: 'center',
+    height: 40
+  },
+  submitButtonText: {
+    color: 'white'
+>>>>>>> 707a2936fde71b417132197aeb061453781a1050
   },
   phonderimage: {
     width: 200,
     height: 200,
     position: 'relative',
     justifyContent: 'center'
+<<<<<<< HEAD
   },
   textInput: {
     //borderBottomColor: "#CCCCCC",
@@ -112,6 +147,8 @@ export const styles = StyleSheet.create({
     // paddingRight: 10,
     // textAlign: "center",
     // margin: 5
+=======
+>>>>>>> 707a2936fde71b417132197aeb061453781a1050
   },
   logintext: {
     margin: 2,

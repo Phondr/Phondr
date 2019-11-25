@@ -38,8 +38,12 @@ const ChatType = new GraphQLObjectType({
     progress: {type: GraphQLFloat},
     status: {type: GraphQLString},
     meeting: {type: MeetingType},
+<<<<<<< HEAD
     users: {type: new GraphQLList(UserType)},
     sinceCreation: {type: GraphQLFloat}
+=======
+    users: {type: new GraphQLList(UserType)}
+>>>>>>> 707a2936fde71b417132197aeb061453781a1050
   })
 })
 const MessageType = new GraphQLObjectType({
@@ -89,10 +93,36 @@ const rootQuery = new GraphQLObjectType({
         password: {type: GraphQLString}
       },
       async resolve(parent, args) {
+<<<<<<< HEAD
         let user = await db.models.user.findOne({
           where: {email: args.email, password: args.password}
         })
         return user
+=======
+        let usermodel = await db.models.user.findOne({
+          where: {email: args.email}
+          // where: { email: args.email, password: args.password },
+        })
+
+        console.log('USERMODEL', usermodel)
+        if (!usermodel) {
+          console.log('No such user found:', args.email)
+          alert('Wrong username')
+        } else if (!usermodel.correctPassword(args.password)) {
+          console.log('Incorrect password for user:', args.email)
+          alert('Wrong password')
+        } else {
+          // console.log('PASSWORD', usermodel.cryptPassword(args.password))
+          let use = await db.models.user.findOne({
+            where: {
+              email: args.email,
+              password: usermodel.cryptPassword(args.password)
+            }
+          })
+
+          return use
+        }
+>>>>>>> 707a2936fde71b417132197aeb061453781a1050
       }
     },
     myChats: {
@@ -146,6 +176,7 @@ const rootMutation = new GraphQLObjectType({
         console.log(user.fullName)
 
         const chats = await db.models.chat.findAll({
+<<<<<<< HEAD
           include: {
             model: db.models.user,
             where: {
@@ -154,6 +185,13 @@ const rootMutation = new GraphQLObjectType({
           },
           where: {
             status: 'pending'
+=======
+          where: {
+            status: 'pending'
+          },
+          include: {
+            model: db.models.user
+>>>>>>> 707a2936fde71b417132197aeb061453781a1050
           }
         })
         console.log('TCL: chats', chats)
