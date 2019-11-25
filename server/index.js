@@ -6,12 +6,14 @@ const session = require('express-session')
 const passport = require('passport')
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 const db = require('./db')
-const sessionStore = new SequelizeStore({db})
+const sessionStore = new SequelizeStore({ db })
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
-const graphHTTP = require('express-graphql');
+const graphHTTP = require('express-graphql')
 const schema = require('./graphql/schema')
+const ngrok = require('ngrok')
+
 module.exports = app
 
 // This is a global Mocha hook, used for resource cleanup.
@@ -48,7 +50,7 @@ const createApp = () => {
 
   // body parsing middleware
   app.use(express.json())
-  app.use(express.urlencoded({extended: true}))
+  app.use(express.urlencoded({ extended: true }))
 
   // compression middleware
   app.use(compression())
@@ -59,7 +61,7 @@ const createApp = () => {
       secret: process.env.SESSION_SECRET || 'my best friend is Cody',
       store: sessionStore,
       resave: false,
-      saveUninitialized: false
+      saveUninitialized: false,
     })
   )
   app.use(passport.initialize())
@@ -84,10 +86,13 @@ const createApp = () => {
   // })
 
   //use graphql
-  app.use('/graphql', graphHTTP({
-    schema,
-    graphiql: true
-  }))
+  app.use(
+    '/graphql',
+    graphHTTP({
+      schema,
+      graphiql: true,
+    })
+  )
 
   // sends index.html
   // app.use('*', (req, res) => {
