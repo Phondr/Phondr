@@ -14,7 +14,7 @@ const createUser = async () => {
       created_at: faker.date.recent(),
       profilePicture: faker.random.image(),
       email: faker.internet.email(),
-      password: faker.internet.password()
+      password: "test"
     });
     return user;
   } catch (err) {
@@ -72,7 +72,7 @@ async function seed() {
     created_at: faker.date.recent(),
     profilePicture: faker.random.image(),
     email: "test@test.com",
-    password: 123
+    password: "test"
   });
   for (let i = 0; i < 100; i++) {
     await createUser();
