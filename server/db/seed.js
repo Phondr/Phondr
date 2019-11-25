@@ -2,12 +2,12 @@ const faker = require("faker");
 const db = require("./db");
 const { User, Chat, Message, Meeting } = require("./models");
 
-const SEED = 42070;
-faker.seed(SEED);
+// const SEED = 42070
+// faker.seed(SEED)
 const createUser = async () => {
   try {
     let user = await User.create({
-      fullName: `${faker.name.firstName()} ${faker.name.lastName()}`,
+      fullName: `${faker.name.firstName()}` + ` ${faker.name.lastName()}`,
       age: faker.random.number(),
       homeLocation: faker.address.streetAddress(),
       incentivePoints: faker.random.number(),
@@ -72,7 +72,7 @@ async function seed() {
     created_at: faker.date.recent(),
     profilePicture: faker.random.image(),
     email: "test@test.com",
-    password: "test"
+    password: 123
   });
   for (let i = 0; i < 100; i++) {
     await createUser();
