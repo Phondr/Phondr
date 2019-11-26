@@ -29,7 +29,7 @@ class Home extends Component {
   componentDidMount() {
     //this.props.fetchMyChats(1)
     console.log('home mounted')
-    console.log('HOME PROPS', this.props)
+    //console.log('HOME PROPS', this.props)
   }
 
   render() {

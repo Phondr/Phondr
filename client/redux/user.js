@@ -1,28 +1,28 @@
-import axios from "axios";
+import axios from 'axios'
 import {AsyncStorage} from 'react-native'
 
-const { url } = require("../../secrets");
-console.log("URL", url);
+const {url} = require('../../secrets')
+console.log('URL', url)
 
 //action type
-const GETUSER = "GETUSER";
-const ADDUSER = "ADDUSER";
+const GETUSER = 'GETUSER'
+const ADDUSER = 'ADDUSER'
 
 //action creator
-export const setUser = user => ({ type: GETUSER, user });
-export const addUser = user => ({ type: ADDUSER, user });
+export const setUser = user => ({type: GETUSER, user})
+export const addUser = user => ({type: ADDUSER, user})
 
 //state
-const initialState = {};
+const initialState = {}
 
 //thunk
 export const fetchUserLogin = values => async dispatch => {
   try {
-    const email = values.email;
-    const password = values.password;
-    let { data } = await axios({
+    const email = values.email
+    const password = values.password
+    let {data} = await axios({
       url: `${url}/graphql`,
-      method: "POST",
+      method: 'POST',
       data: {
         query: `
         {
@@ -37,48 +37,57 @@ export const fetchUserLogin = values => async dispatch => {
         }
         `
       }
-    });
-    dispatch(setUser(data));
+    })
+    dispatch(setUser(data))
   } catch (error) {
-    alert("COULD NOT LOGIN");
-    console.log(error);
+    alert('COULD NOT LOGIN')
+    console.log(error)
   }
-};
+}
 
-export const userSignUp = values => async dispatch => {
+export const userSignUp = (values, preferences) => async dispatch => {
   try {
-    const fullname = values.fullname;
-    const age = values.age;
-    const password = values.password;
+    console.log(values, preferences)
 
-    let { data } = await axios({
+    const fullName = values.fullName
+    const age = values.age
+    const password = values.password
+    const email = values.email
+    const address = values.address
+    const radius = values.radius
+
+    let {data} = await axios({
       url: `${url}/graphql`,
-      method: "POST",
+      method: 'POST',
       data: {
         query: `
         {
-          userSignup(email: "${email}", password: "${password}",  fullname: "${fullname}",  age: "${age}") {
+          userSignup(fullName: "${fullName}", age: "${age}", homeLocation: "${address}", radius: "${radius}", email: "${email}", password: "${password}") {
             id
+            email
+            fullName
+            homeLocation
+            incentivePoints
+            profilePicture 
             }
         }
         `
       }
-    });
-    console.log("DATA", data);
-    dispatch(setUser(data));
+    })
+    dispatch(setUser(data.data.userSignup))
   } catch (error) {
-    alert("COULD NOT SIGN-UP");
-    console.log(error);
+    alert('COULD NOT SIGN-UP')
+    console.log(error)
   }
-};
+}
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case GETUSER:
-      return action.user;
+      return action.user
     case ADDUSER:
-      return action.user;
+      return action.user
     default:
-      return state;
+      return state
   }
-};
+}

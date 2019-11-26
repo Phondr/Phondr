@@ -45,6 +45,10 @@ const User = db.define('user', {
   },
   profilePicture: {
     type: Sequelize.STRING
+  },
+  radius: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
   }
 })
 

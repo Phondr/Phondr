@@ -62,7 +62,6 @@ function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
   const [apClient, setApClient] = useState({})
   const [getData, setGetData] = useState({})
-  console.log('GETDATA', getData)
 
   useEffect(() => {
     setApClient(
@@ -71,10 +70,6 @@ function App(props) {
       })
     )
   }, [])
-
-  // useEffect(() => {
-  //   setGetData(getAsyncItem())
-  // }, [])
 
   if ((!isLoadingComplete && !props.skipLoadingScreen) || !apClient) {
     return (

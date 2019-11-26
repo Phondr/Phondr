@@ -76,12 +76,16 @@ export const fetchUserLogin = values => async dispatch => {
   }
 }
 
-export const userSignUp = values => async dispatch => {
+export const userSignUp = (values, preferences) => async dispatch => {
   try {
-    //const fullname = values.fullname
+    console.log(values, preferences)
+
+    const fullName = values.fullName
     const age = values.age
     const password = values.password
     const email = values.email
+    const address = values.address
+    const radius = values.radius
 
     let {data} = await axios({
       url: `${url}/graphql`,
@@ -89,8 +93,10 @@ export const userSignUp = values => async dispatch => {
       data: {
         query: `
         {
-          userSignup(email: "${email}", password: "${password}", age: "${age}") {
+          userSignup(fullName: "${fullName}", age: "${age}", homeLocation: "${address}", radius: "${radius}", email: "${email}", password: "${password}") {
             id
+            email
+            fullName
             }
         }
         `
