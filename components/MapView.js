@@ -19,7 +19,7 @@ export default class Mapv extends Component {
       Location: {},
       nearby: [],
       placeType: 'restaurant',
-      Search: "",
+      // Search: "",
       Found: [],
       pointer: 0
     }
@@ -97,9 +97,10 @@ export default class Mapv extends Component {
       })
       .catch(err => console.log(err))
   }
-  searchByName() {
-    const temp = this.state.Search
-    let newTemp = temp.replace(" ", "20%")
+  searchByName(text) {
+    // const temp = this.state.Search
+    console.log(text)
+    let newTemp = text.replace(" ", "20%")
     while(newTemp.includes(" ")){
       newTemp = newTemp.replace(" ","20%")
     }
@@ -123,6 +124,7 @@ export default class Mapv extends Component {
     this.setState({
       Search: text
     })
+    this.searchByName()
   }
   render() {
     const styles = StyleSheet.create({
@@ -185,7 +187,7 @@ export default class Mapv extends Component {
           <Input
             placeholder="search by name"
             value={this.state.Search}
-            onChangeText={this.onSearch}
+            onSubmitEditing={(event)=>this.searchByName(event.nativeEvent.text)}
           />
         </Item>
         {this.state.Found.length > 1 ? (
