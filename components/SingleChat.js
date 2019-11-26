@@ -68,13 +68,9 @@ class SingleChats extends Component {
       length: message[0].text.length,
       chatId: 1,
     };
-    await this.props.newMessage(newMessage);
-    this.props.fetchMessages(1)
+    this.props.newMessage(newMessage);
   }
   render() {
-    let key = this.props.messages.length;
-    // console.log('here is after fetching', this.props.messages);
-    // console.log('length',this.props.messages.length)
     return (
       // <View>
       //   {this.props.messages.map(message => {
@@ -89,7 +85,6 @@ class SingleChats extends Component {
       //   </Button>
       // </View>
       <GiftedChat
-        key= {key}
         messages={this.props.messages || []}
         onSend={messages => this.onSend2(messages)}
         user={{
