@@ -9,9 +9,10 @@ import {connect} from 'react-redux'
 import {useQuery} from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import {fetchMyChats, findOrCreateChat} from '../redux/myChats'
-import ActiveChats from '../components/ActiveChats'
-import PendingChats from '../components/PendingChats'
+import ActiveComp from '../components/ActiveComp'
+import PendingComp from '../components/PendingComp'
 import {ScrollView} from 'react-native-gesture-handler'
+import {setUser} from '../redux/user'
 
 class Home extends Component {
   constructor() {
@@ -27,9 +28,16 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    //this.props.fetchMyChats(1)
+    //this is just for testing
+    // this.props.setUser(this.state.user)
+
     console.log('home mounted')
     //console.log('HOME PROPS', this.props)
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.user.id !== this.props.user.id) {
+      this.props.fetchMyChats(this.props.user.id)
+    }
   }
 
   render() {
@@ -37,7 +45,7 @@ class Home extends Component {
       <Container>
         <ScrollView>
           <StatusBar barStyle="light-content" />
-          <CustomHeader />
+          <CustomHeader title="Home" />
           <Content
             contentContainerStyle={{
               flex: 1
@@ -45,8 +53,8 @@ class Home extends Component {
           >
             {this.props.myChats.length ? (
               <>
-                <ActiveChats user={this.state.user} />
-                <PendingChats user={this.state.user} />
+                <ActiveComp />
+                <PendingComp />
               </>
             ) : (
               <Text>user has no chats</Text>
@@ -73,5 +81,6 @@ class Home extends Component {
 
 export default connect(({myChats, user}) => ({myChats, user}), {
   fetchMyChats,
-  findOrCreateChat
+  findOrCreateChat,
+  setUser
 })(Home)

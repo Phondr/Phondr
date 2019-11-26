@@ -22,6 +22,8 @@ import Login from './screens/Login'
 import FlashMessage from 'react-native-flash-message'
 import Signup from './screens/Signup'
 import Entry from './screens/Entry'
+import PendingScreen from './screens/PendingScreen'
+import ActiveScreen from './screens/ActiveScreen'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 
@@ -43,10 +45,16 @@ var drawer = createDrawerNavigator(
     },
     Entry: {
       screen: Entry
+    },
+    'Pending Chats': {
+      screen: PendingScreen
+    },
+    'Active Chats': {
+      screen: ActiveScreen
     }
   },
   {
-    initialRouteName: 'Entry',
+    initialRouteName: 'Home',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'

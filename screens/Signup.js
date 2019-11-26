@@ -92,6 +92,9 @@ export class Signup extends Component {
 
     this.signup = this.signup.bind(this)
   }
+  static navigationOptions = {
+    drawerLabel: () => null
+  }
 
   async signup() {
     const values = this._form.getValue()
