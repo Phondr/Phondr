@@ -28,7 +28,7 @@ const PendingChats = ({myChats, user, deleteChat}) => {
             warning
             onPress={() => {
               console.log('TCL: selectedChat.id', selectedChat.id)
-              deleteChat(selectedChat.id, user.id)
+              deleteChat(selectedChat.id)
               setModal(false)
             }}
           >

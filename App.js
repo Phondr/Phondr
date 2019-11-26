@@ -21,114 +21,122 @@ import AuthPages from './navigation/MainLoginNavigator'
 import Login from './screens/Login'
 import Signup from './screens/Signup'
 import Entry from './screens/Entry'
+import PendingScreen from './screens/PendingScreen'
+import ActiveScreen from './screens/ActiveScreen'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 
 const {url} = require('./secrets')
 
 const drawer = createDrawerNavigator(
- {
-  Home: {
-   screen: Home
+  {
+    Home: {
+      screen: Home
+    },
+    New: {
+      screen: New
+    },
+    Login: {
+      screen: Login
+    },
+    Signup: {
+      screen: Signup
+    },
+    Entry: {
+      screen: Entry
+    },
+    'Pending Chats': {
+      screen: PendingScreen
+    },
+    'Active Chats': {
+      screen: ActiveScreen
+    }
   },
-  New: {
-   screen: New
-  },
-  Login: {
-   screen: Login
-  },
-  Signup: {
-   screen: Signup
-  },
-  Entry: {
-   screen: Entry
+  {
+    initialRouteName: 'Home',
+    contentComponent: CustomDrawer,
+    contentOptions: {
+      activeTintColor: 'orange'
+    },
+    drawerOpenRoute: 'DrawerOpen',
+    drawerCloseRoute: 'DrawerClose',
+    drawerToggleRoute: 'DrawerToggle'
   }
- },
- {
-  initialRouteName: 'Home',
-  contentComponent: CustomDrawer,
-  contentOptions: {
-   activeTintColor: 'orange'
-  },
-  drawerOpenRoute: 'DrawerOpen',
-  drawerCloseRoute: 'DrawerClose',
-  drawerToggleRoute: 'DrawerToggle'
- }
 )
 const DrawerContainer = createAppContainer(drawer)
 
 export class persistantData extends Component {
- componentDidMount() {}
+  componentDidMount() {}
 }
 
 function App(props) {
- const [isLoadingComplete, setLoadingComplete] = useState(false)
- const [apClient, setApClient] = useState({})
- useEffect(() => {
-  setApClient(
-   new ApolloClient({
-    uri: url + '/graphql'
-   })
-  )
- }, [])
- if ((!isLoadingComplete && !props.skipLoadingScreen) || !apClient) {
-  return (
-   <AppLoading
-    startAsync={loadResourcesAsync}
-    onError={handleLoadingError}
-    onFinish={() => handleFinishLoading(setLoadingComplete)}
-   />
-  )
- } else {
-  return (
-   <Provider store={store}>
-    <ApolloProvider client={apClient}>
-     <View style={styles.container}>
-      {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-      {/* <AppNavigator /> */}
-      {/* <AnatomyExample /> */}
-      {/* <AuthPages /> */}
-      <DrawerContainer />
-      {/* <New /> */}
-     </View>
-    </ApolloProvider>
-   </Provider>
-  )
- }
+  const [isLoadingComplete, setLoadingComplete] = useState(false)
+  const [apClient, setApClient] = useState({})
+  useEffect(() => {
+    setApClient(
+      new ApolloClient({
+        uri: url + '/graphql'
+      })
+    )
+  }, [])
+  if ((!isLoadingComplete && !props.skipLoadingScreen) || !apClient) {
+    return (
+      <AppLoading
+        startAsync={loadResourcesAsync}
+        onError={handleLoadingError}
+        onFinish={() => handleFinishLoading(setLoadingComplete)}
+      />
+    )
+  } else {
+    return (
+      <Provider store={store}>
+        <ApolloProvider client={apClient}>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            {/* <AppNavigator /> */}
+            {/* <AnatomyExample /> */}
+            {/* <AuthPages /> */}
+            <DrawerContainer />
+            {/* <New /> */}
+          </View>
+        </ApolloProvider>
+      </Provider>
+    )
+  }
 }
 export default App
 
 async function loadResourcesAsync() {
- await Promise.all([
-  Asset.loadAsync([
-   require('./assets/images/robot-dev.png'),
-   require('./assets/images/robot-prod.png')
-  ]),
-  Font.loadAsync({
-   // This is the font that we are using for our tab bar
-   ...Ionicons.font,
-   // We include SpaceMono because we use it in HomeScreen.js. Feel free to
-   // remove this if you are not using it in your app
-   'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
-   Roboto: require('native-base/Fonts/Roboto.ttf'),
-   Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf')
-  })
- ])
+  await Promise.all([
+    Asset.loadAsync([
+      require('./assets/images/robot-dev.png'),
+      require('./assets/images/robot-prod.png')
+    ]),
+    Font.loadAsync({
+      // This is the font that we are using for our tab bar
+      ...Ionicons.font,
+      // We include SpaceMono because we use it in HomeScreen.js. Feel free to
+      // remove this if you are not using it in your app
+      'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf')
+    })
+  ])
 }
 
 function handleLoadingError(error) {
- // In this case, you might want to report the error to your error reporting
- // service, for example Sentry
- console.warn(error)
+  // In this case, you might want to report the error to your error reporting
+  // service, for example Sentry
+  console.warn(error)
 }
 
 function handleFinishLoading(setLoadingComplete) {
- setLoadingComplete(true)
+  setLoadingComplete(true)
 }
 
 const styles = StyleSheet.create({
- container: {
-  flex: 1,
-  backgroundColor: '#fff'
- }
+  container: {
+    flex: 1,
+    backgroundColor: '#fff'
+  }
 })

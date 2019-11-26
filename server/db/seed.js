@@ -107,7 +107,7 @@ async function seed() {
     iPrefer: ['male', 'female'],
     distPref: randomizer(50)
   })
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 50; i++) {
     const user = await createUser()
     console.log('iPrefer in forloop', user.iPrefer)
     //await createChat();
