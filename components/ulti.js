@@ -20,7 +20,7 @@ export const colors = [
   '#9F8170',
   '#5F9EA0'
 ]
-const type = [
+export const PlaceTypes = [
   'amusement_park',
   'aquarium',
   'art_gallery',

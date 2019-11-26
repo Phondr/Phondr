@@ -1,15 +1,10 @@
 import React, {Component} from 'react'
-import {
-  View,
-  Picker,
-  Item,
-  Icon,
-} from 'native-base'
+import {View, Picker, Item, Icon, Form} from 'native-base'
 import {StyleSheet} from 'react-native'
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'
 import googlePlaceApiKey from '../secrets'
 import axios from 'axios'
-import {colors, type} from './ulti'
+import {colors, PlaceTypes} from './ulti'
 
 export default class Mapv extends Component {
   constructor() {
@@ -23,11 +18,12 @@ export default class Mapv extends Component {
       },
       Location: {},
       nearby: [],
-      selected2: undefined
+      placeType: 'restaurant'
     }
     this.initialLocation = this.initialLocation.bind(this)
     this.createMarker = this.createMarker.bind(this)
     this.searchNearBy = this.searchNearBy.bind(this)
+    this.onSelectPlaceType = this.onSelectPlaceType.bind(this)
   }
 
   initialLocation() {
@@ -42,7 +38,7 @@ export default class Mapv extends Component {
       })
     })
   }
-  async componentDidMount() {
+  componentDidMount() {
     this.initialLocation()
   }
   createMarker(e) {
@@ -63,7 +59,7 @@ export default class Mapv extends Component {
   }
   searchNearBy(lat, long) {
     const theUrl =
-      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=1500&type=restaurant&key=` +
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=1500&type=${this.state.placeType}&key=` +
       googlePlaceApiKey
     axios
       .get(theUrl)
@@ -75,9 +71,10 @@ export default class Mapv extends Component {
       })
       .catch(err => console.log(err))
   }
-  onValueChange2(value) {
+  onSelectPlaceType(value) {
+    console.log(this.state.placeType)
     this.setState({
-      selected2: value
+      placeType: value
     })
   }
   render() {
@@ -110,23 +107,23 @@ export default class Mapv extends Component {
               ))
             : null}
         </MapView>
-        <Item picker>
-          <Picker
-            mode="dropdown"
-            iosIcon={<Icon name="arrow-down" />}
-            placeholder="Select your SIM"
-            placeholderStyle={{color: '#bfc6ea'}}
-            placeholderIconColor="#007aff"
-            selectedValue={this.state.selected2}
-            onValueChange={this.onValueChange2.bind(this)}
-          >
-            <Picker.Item label="Wallet" value="key0" />
-            <Picker.Item label="ATM Card" value="key1" />
-            <Picker.Item label="Debit Card" value="key2" />
-            <Picker.Item label="Credit Card" value="key3" />
-            <Picker.Item label="Net Banking" value="key4" />
-          </Picker>
-        </Item>
+        <Form>
+          <Item picker>
+            <Picker
+              mode="dropdown"
+              iosIcon={<Icon name="arrow-down" />}
+              placeholder="Select your place type"
+              placeholderStyle={{color: '#bfc6ea'}}
+              placeholderIconColor="#007aff"
+              selectedValue={this.state.placeType}
+              onValueChange={this.onSelectPlaceType}
+            >
+              {PlaceTypes.map(x => (
+                <Picker.Item key={x} label={x} value={x} />
+              ))}
+            </Picker>
+          </Item>
+        </Form>
       </View>
     )
   }
