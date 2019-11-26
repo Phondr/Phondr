@@ -22,6 +22,9 @@ export class Entry extends Component {
     console.log('navigate to signup')
     this.props.navigation.navigate('Signup')
   }
+  static navigationOptions = {
+    drawerLabel: () => null
+  }
 
   render() {
     return (
@@ -35,7 +38,6 @@ export class Entry extends Component {
             }}
           />
         </View>
-
         <Button
           title="Login"
           onPress={() => {

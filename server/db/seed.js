@@ -3,9 +3,27 @@ const db = require('./db')
 const {User, Chat, Message, Meeting} = require('./models')
 const axios = require('axios')
 const round = require('lodash.round')
+const Op = require('sequelize').Op
 
 // const SEED = 42070
 // faker.seed(SEED)
+const idents = ['male', 'female', 'non-binary']
+const randomizer = num => {
+  return Math.floor(Math.random() * (num + 1))
+}
+const randomSelector = array => {
+  const cache = {}
+  let result = []
+  array.forEach(cur => {
+    const odds = Math.random()
+    if (odds < 0.5 && !cache[cur]) {
+      result.push(cur)
+    } else {
+      cache[cur] = true
+    }
+  })
+  return result
+}
 const createUser = async () => {
   try {
     let user = await User.create({
@@ -19,8 +37,12 @@ const createUser = async () => {
       created_at: faker.date.recent(),
       profilePicture: faker.random.image(),
       email: faker.internet.email(),
-      password: '123'
+      password: '123',
+      iAm: idents[randomizer(2)],
+      iPrefer: [...randomSelector(idents)],
+      distPref: randomizer(50)
     })
+    console.log('iPrefer array', user.iPrefer)
     return user
   } catch (err) {
     console.log(err)
@@ -80,10 +102,14 @@ async function seed() {
     created_at: faker.date.recent(),
     profilePicture: faker.random.image(),
     email: 'test@test.com',
-    password: 'test'
+    password: 'test',
+    iAm: idents[randomizer(2)],
+    iPrefer: ['male', 'female'],
+    distPref: randomizer(50)
   })
-  for (let i = 0; i < 25; i++) {
-    await createUser()
+  for (let i = 0; i < 50; i++) {
+    const user = await createUser()
+    console.log('iPrefer in forloop', user.iPrefer)
     //await createChat();
     await createMeetings()
     await createMessages()
@@ -101,6 +127,7 @@ async function seed() {
             users {
               id
               fullName
+              iPrefer
             } 
           }
         }
