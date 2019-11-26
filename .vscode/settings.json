@@ -1,8 +1,10 @@
 {
-    "workbench.colorCustomizations": {
-        "panel.border": "#3399ff",
-        "sideBar.border": "#3399ff",
-        "editorGroup.border": "#3399ff"
-    },
-    "peacock.color": "#007fff"
+  "workbench.colorCustomizations": {
+    "panel.border": "#3399ff",
+    "sideBar.border": "#3399ff",
+    "editorGroup.border": "#3399ff"
+  },
+  "peacock.color": "#007fff",
+  "merge-conflict.decorators.enabled": true,
+  "prettier.tabWidth": 1
 }

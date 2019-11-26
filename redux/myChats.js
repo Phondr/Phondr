@@ -1,94 +1,141 @@
+/* eslint-disable no-case-declarations */
 import client from './apolloClient'
 import gql from 'graphql-tag'
 import myAxios from './axios-config'
 
 const GETMYCHATS = 'GETMYCHATS'
 const ADDCHAT = 'ADDCHAT'
+const REMOVECHAT = 'REMOVECHAT'
+const removeChat = badChat => {
+	return {type: REMOVECHAT, badChat}
+}
 const addChat = newChat => {
-  return { type: ADDCHAT, newChat }
+	return {type: ADDCHAT, newChat}
 }
 const getMyChats = myChats => {
-  return { type: GETMYCHATS, myChats }
+	return {type: GETMYCHATS, myChats}
+}
+export const deleteChat = chatId => {
+	return async dispatch => {
+		try {
+			const {
+				data: {
+					data: {deleteChat}
+				}
+			} = myAxios.post('', {
+				query: `mutation{
+          deleteChat(chatId:${chatId}){
+            id
+          }
+        }`
+			})
+			dispatch(removeChat(deleteChat.id))
+		} catch (error) {
+			console.error('messed up in deleteChat thunk', error)
+		}
+	}
 }
 export const findOrCreateChat = uid => {
-  return async dispatch => {
-    try {
-      const { data } = await client.mutate({
-        mutation: gql`mutation{
-                    findOrCreateChat(userId:${uid}){
-                      id
-                        status
-                        users{
-                            id
-                            fullName
-                        }
-                    }
-                }`,
-      })
-      console.log('TCL: findOrCreateChat', data)
-      dispatch(addChat(data.findOrCreateChat))
-    } catch (e) {
-      console.error('messed up in focc thunk: ', e)
-    }
-  }
+	return async dispatch => {
+		try {
+			const {
+				data: {
+					data: {findOrCreateChat}
+				}
+			} = await myAxios.post('', {
+				query: `mutation{
+          findOrCreateChat(userId:${uid}){
+            id
+            status
+            users{
+              id
+              fullName
+            }
+          }
+        }`
+			})
+			console.log('findOrCreateChat info in thunk', findOrCreateChat)
+			dispatch(addChat(findOrCreateChat))
+			// const {data} = await client.mutate({
+			//   mutation: gql`mutation{
+			//               findOrCreateChat(userId:${uid}){
+			//                 id
+			//                   status
+			//                   users{
+			//                       id
+			//                       fullName
+			//                   }
+			//               }
+			//           }`
+			// })
+			// console.log('TCL: findOrCreateChat', data)
+			// dispatch(addChat(data.findOrCreateChat))
+		} catch (e) {
+			console.error('messed up in focc thunk: ', e)
+		}
+	}
 }
 export const fetchMyChats = uid => {
-  return async dispatch => {
-    try {
-      const { data } = await client.query({
-        query: gql`
-            query {
-              myChats(userId: ${uid}) {
-                id
-                status
-                sinceCreation
-                users {
-                  id
-                  fullName
-                }
-              }
-            }
-          `,
-      })
+	return async dispatch => {
+		try {
+			// const {data} = await client.query({
+			//   query: gql`
+			//       query {
+			//         myChats(userId: ${uid}) {
+			//           id
+			//           status
+			//           sinceCreation
+			//           users {
+			//             id
+			//             fullName
+			//           }
+			//         }
+			//       }
+			//     `
+			// })
 
-      console.log('data in thunk', data)
-      dispatch(getMyChats(data.myChats))
-      //   const {
-      //     data: {
-      //       data: { myChats },
-      //     },
-      //   } = myAxios.post('/', {
-      //     query: `
-      //      query{
-      //          myChats(userId:${uid}){
-      //              progress
-      //              status
-      //              id
-      //              users{
-      //                  id
-      //                  fullName
-      //              }
-      //          }
-      //      }
-      //     `,
-      //   })
-      //   console.log('data object in myChats', myChats)
-      //   dispatch(getMyChats(myChats))
-    } catch (e) {
-      console.error('messed up in fetchMyChats, error: ', e)
-    }
-  }
+			// console.log('data in thunk', data)
+			// dispatch(getMyChats(data.myChats))
+			const {
+				data: {
+					data: {myChats}
+				}
+			} = myAxios.post('', {
+				query: `
+           query{
+               myChats(userId:${uid}){
+                   progress
+                   status
+                   sinceCreation
+                   id
+                   users{
+                       id
+                       fullName
+                   }
+               }
+           }
+          `
+			})
+			console.log('data object in myChats', myChats)
+			dispatch(getMyChats(myChats))
+		} catch (e) {
+			console.error('messed up in fetchMyChats, error: ', e)
+		}
+	}
 }
 
 const reducer = (chats = [], action) => {
-  switch (action.type) {
-    case GETMYCHATS:
-      return action.myChats
-    case ADDCHAT:
-      return [...chats, action.newChat]
-    default:
-      return chats
-  }
+	switch (action.type) {
+		case GETMYCHATS:
+			return action.myChats
+		case ADDCHAT:
+			return [...chats, action.newChat]
+		case REMOVECHAT:
+			const updated = chats.filter(cur => cur.id !== action.badChat)
+			return updated
+		default:
+			return chats
+	}
 }
 
 export default reducer
