@@ -29,8 +29,6 @@ const ActiveChats = ({myChats, user, navigation, preview}) => {
                 }).fullName
               }
             </Text>
-
-            <Text>cur</Text>
           </CardItem>
         )
       })}

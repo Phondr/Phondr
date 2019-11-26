@@ -54,7 +54,7 @@ var drawer = createDrawerNavigator(
     }
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Login',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'

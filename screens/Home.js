@@ -32,6 +32,9 @@ class Home extends Component {
     // this.props.setUser(this.state.user)
 
     console.log('home mounted')
+    console.log(this.props.user)
+    this.props.fetchMyChats(this.props.user.id)
+
     //console.log('HOME PROPS', this.props)
   }
   componentDidUpdate(prevProps) {

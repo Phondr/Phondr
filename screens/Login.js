@@ -56,7 +56,7 @@ export class Login extends Component {
     try {
       await this.props.getUser(values)
       const user = this.props.user
-      if (user.data.userLogin.fullName) {
+      if (user.fullName) {
         console.log('go home')
         this.props.navigation.navigate('Home')
       }
