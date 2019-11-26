@@ -19,7 +19,7 @@ export default class Mapv extends Component {
       Location: {},
       nearby: [],
       placeType: 'restaurant',
-      Search: "Maggiano's Little Italy",
+      Search: "",
       Found: [],
       pointer: 0
     }
