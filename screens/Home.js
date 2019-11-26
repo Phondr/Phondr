@@ -47,6 +47,7 @@ class Home extends Component {
 
   componentDidMount() {
     //this.props.fetchMyChats(this.state.user.id)
+    //console.log('HOME PROPS', this.props)
   }
 
   render() {

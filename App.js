@@ -22,11 +22,12 @@ import Login from './screens/Login'
 import Signup from './screens/Signup'
 import Entry from './screens/Entry'
 import {AsyncStorage} from 'react-native'
+import {getDataFromTree} from 'react-apollo'
 import {getData} from './redux/user'
 
 const {url} = require('./secrets')
 
-const drawer = createDrawerNavigator(
+var drawer = createDrawerNavigator(
   {
     Home: {
       screen: Home
@@ -55,17 +56,15 @@ const drawer = createDrawerNavigator(
     drawerToggleRoute: 'DrawerToggle'
   }
 )
-const DrawerContainer = createAppContainer(drawer)
 
-export class persistantData extends Component {
-  componentDidMount() {
-    
-  }
-}
+const DrawerContainer = createAppContainer(drawer)
 
 function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
   const [apClient, setApClient] = useState({})
+  const [getData, setGetData] = useState({})
+  console.log('GETDATA', getData)
+
   useEffect(() => {
     setApClient(
       new ApolloClient({
@@ -73,6 +72,11 @@ function App(props) {
       })
     )
   }, [])
+
+  // useEffect(() => {
+  //   setGetData(getAsyncItem())
+  // }, [])
+
   if ((!isLoadingComplete && !props.skipLoadingScreen) || !apClient) {
     return (
       <AppLoading
@@ -82,7 +86,6 @@ function App(props) {
       />
     )
   } else {
-   
     return (
       <Provider store={store}>
         <ApolloProvider client={apClient}>
@@ -92,6 +95,7 @@ function App(props) {
             {/* <AnatomyExample /> */}
             {/* <AuthPages /> */}
             <DrawerContainer />
+
             {/* <New /> */}
           </View>
         </ApolloProvider>
