@@ -19,15 +19,14 @@ export default class Mapv extends Component {
       Location: {},
       nearby: [],
       placeType: 'restaurant',
-      // Search: "",
       Found: [],
-      pointer: 0
+      pointer: 0,
+      flag:true
     }
     this.initialLocation = this.initialLocation.bind(this)
     this.moveTo = this.moveTo.bind(this)
     this.createMarker = this.createMarker.bind(this)
     this.onSelectPlaceType = this.onSelectPlaceType.bind(this)
-    this.onSearch = this.onSearch.bind(this)
     this.searchNearBy = this.searchNearBy.bind(this)
     this.searchByName = this.searchByName.bind(this)
     this.moveToNextMarker = this.moveToNextMarker.bind(this)
@@ -70,7 +69,9 @@ export default class Mapv extends Component {
   }
   createMarker(e) {
     console.log(e.nativeEvent.coordinate)
+
     this.setState({
+      flag:false,
       region: {
         latitude: e.nativeEvent.coordinate.latitude,
         longitude: e.nativeEvent.coordinate.longitude,
@@ -98,8 +99,7 @@ export default class Mapv extends Component {
       .catch(err => console.log(err))
   }
   searchByName(text) {
-    // const temp = this.state.Search
-    console.log(text)
+    this.setState({flag:true})
     let newTemp = text.replace(" ", "20%")
     while(newTemp.includes(" ")){
       newTemp = newTemp.replace(" ","20%")
@@ -111,7 +111,6 @@ export default class Mapv extends Component {
       .get(theUrl)
       .then(res => {
         this.setState({Found: res.data.candidates})
-        console.log(res.data)
       })
       .catch(err => console.log(err))
   }
@@ -119,12 +118,6 @@ export default class Mapv extends Component {
     this.setState({
       placeType: value
     })
-  }
-  onSearch(text) {
-    this.setState({
-      Search: text
-    })
-    this.searchByName()
   }
   render() {
     const styles = StyleSheet.create({
@@ -138,11 +131,10 @@ export default class Mapv extends Component {
         <MapView
           style={styles.map}
           region={this.state.region}
-          // onPress={this.createMarker}
-          onPress={this.searchByName}
+          onPress={this.createMarker}
           provider={PROVIDER_GOOGLE}
         >
-          {/* {this.state.nearby.length !== 0
+          {this.state.nearby.length !== 0 && this.state.flag===false
             ? this.state.nearby.map((x, i) => (
                 <Marker
                   key={x.id}
@@ -155,8 +147,8 @@ export default class Mapv extends Component {
                   pinColor={colors[i]}
                 />
               ))
-            : null} */}
-          {this.state.Found.length !== 0
+            : null}
+          {this.state.Found.length !== 0 && this.state.flag === true
             ? this.state.Found.map(found => (
                 <Marker
                   key={found.place_id}
@@ -168,7 +160,7 @@ export default class Mapv extends Component {
               ))
             : null}
         </MapView>
-        {/* <Item picker>
+        <Item picker>
           <Picker
             mode="dropdown"
             iosIcon={<Icon name="arrow-down" />}
@@ -182,7 +174,7 @@ export default class Mapv extends Component {
               <Picker.Item key={x} label={x} value={x} />
             ))}
           </Picker>
-        </Item> */}
+        </Item>
         <Item rounded>
           <Input
             placeholder="search by name"
