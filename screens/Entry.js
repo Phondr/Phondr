@@ -3,12 +3,17 @@ import {Text, View, StyleSheet, Image, Button} from 'react-native'
 import {navigation} from 'react-navigation'
 import Login from './Login'
 import Signup from './Signup'
-// import mainimage from "../assets/Images/PhondrLogos/EntryLogo/Phondr.png";
-// const image = {
-//   entryimage: require("../assets/Images/PhondrLogos/EntryLogo/Phondr.png")
-// };
+import {AsyncStorage} from 'react-native'
 
 export class Entry extends Component {
+  async componentDidMount() {
+    //const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+    // if (user) {
+    //   this.props.navigation.navigate('Home', {user})
+    // }
+    // console.log('LOGIN VALUE', user)
+  }
+
   gotToLogin() {
     this.props.navigation.navigate('Login')
   }

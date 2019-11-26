@@ -40,9 +40,13 @@ const Form = t.form.Form
 export class Login extends Component {
   constructor() {
     super()
-
     this.login = this.login.bind(this)
   }
+
+  componentDidMount() {
+    console.log('LOGIN PROPS', this.props)
+  }
+
   static navigationOptions = {
     drawerLabel: () => null,
   }
