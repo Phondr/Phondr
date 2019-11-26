@@ -2,12 +2,16 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import axios from 'axios'
 import appReducer from '.'
 import { createLogger } from 'redux-logger'
-import { composeWithDevTools } from 'redux-devtools-extension'
+import { composeWithDevTools } from 'remote-redux-devtools'
 import thunkMiddleware from 'redux-thunk'
 
-let middleware = [thunkMiddleware.withExtraArgument({ axios })]
-
-  middleware = [...middleware, createLogger({ collapsed: true })]
+let middleware = [
+  thunkMiddleware.withExtraArgument({ axios }),
+  createLogger({ collapsed: false }),
+]
+// if (process.browser) {
+//   middleware = [...middleware, createLogger({ collapsed: true })]
+// }
 
 const RESET_STORE = 'RESET_STORE'
 export const resetStore = () => ({ type: RESET_STORE })

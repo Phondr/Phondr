@@ -1,11 +1,11 @@
 const faker = require('faker')
 const db = require('./db')
-const { User, Chat, Message, Meeting } = require('./models')
+const {User, Chat, Message, Meeting} = require('./models')
 const axios = require('axios')
 const round = require('lodash.round')
 
-const SEED = 42070
-faker.seed(SEED)
+// const SEED = 42070
+// faker.seed(SEED)
 const createUser = async () => {
   try {
     let user = await User.create({
@@ -13,13 +13,13 @@ const createUser = async () => {
       age: faker.random.number(),
       homeLocation: [
         round(faker.address.latitude()),
-        round(faker.address.longitude()),
+        round(faker.address.longitude())
       ],
-      incentivePoints: faker.random.number({ max: 100 }),
+      incentivePoints: faker.random.number({max: 100}),
       created_at: faker.date.recent(),
       profilePicture: faker.random.image(),
       email: faker.internet.email(),
-      password: faker.internet.password(),
+      password: '123'
     })
     return user
   } catch (err) {
@@ -31,7 +31,7 @@ const createMessages = async () => {
   try {
     let message = await Message.create({
       content: faker.random.words(),
-      length: faker.random.number(),
+      length: faker.random.number()
     })
     return message
   } catch (err) {
@@ -57,7 +57,7 @@ const createMeetings = async () => {
   try {
     let meeting = await Meeting.create({
       location: faker.address.streetAddress(),
-      date: faker.random.words(),
+      date: faker.random.words()
     })
     return meeting
   } catch (err) {
@@ -66,7 +66,7 @@ const createMeetings = async () => {
 }
 
 async function seed() {
-  await db.sync({ force: true })
+  await db.sync({force: true})
   console.log('db synced!')
 
   await User.create({
@@ -74,13 +74,13 @@ async function seed() {
     age: 24,
     homeLocation: [
       round(faker.address.latitude()),
-      round(faker.address.longitude()),
+      round(faker.address.longitude())
     ],
     incentivePoints: faker.random.number(),
     created_at: faker.date.recent(),
     profilePicture: faker.random.image(),
     email: 'test@test.com',
-    password: 'test',
+    password: 'test'
   })
   for (let i = 0; i < 25; i++) {
     await createUser()
@@ -90,22 +90,24 @@ async function seed() {
   }
   for (let i = 1; i < 10; i++) {
     const {
-      data: { data: actual },
+      data: {
+        data: {findOrCreateChat}
+      }
     } = await axios.post('http://localhost:8080/graphql', {
       query: `
         mutation{
           findOrCreateChat(userId:${i}){
+            id
             users {
               id
               fullName
-            }
-            id
+            } 
           }
         }
-          `,
+          `
     })
 
-    console.log(`chat ${i}: ${JSON.stringify(actual)}`)
+    console.log(`chat ${i}: ${JSON.stringify(findOrCreateChat)}`)
   }
   console.log(`seeded successfully`)
 }

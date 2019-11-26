@@ -6,7 +6,7 @@ const User = db.define('user', {
   email: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false,
+    allowNull: false
   },
   password: {
     type: Sequelize.STRING,
@@ -14,7 +14,7 @@ const User = db.define('user', {
     // This is a hack to get around Sequelize's lack of a "private" option.
     get() {
       return () => this.getDataValue('password')
-    },
+    }
   },
   salt: {
     type: Sequelize.STRING,
@@ -22,30 +22,34 @@ const User = db.define('user', {
     // This is a hack to get around Sequelize's lack of a "private" option.
     get() {
       return () => this.getDataValue('salt')
-    },
+    }
   },
   googleId: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
   },
   fullName: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
     // allowNull: false,
   },
   age: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER
     // allowNull: false,
   },
   homeLocation: {
-    type: Sequelize.ARRAY(Sequelize.FLOAT),
+    type: Sequelize.ARRAY(Sequelize.FLOAT)
     // allowNull: false,
   },
   incentivePoints: {
     type: Sequelize.INTEGER,
-    defaultValue: 0,
+    defaultValue: 0
   },
   profilePicture: {
-    type: Sequelize.STRING,
-  },
+    type: Sequelize.STRING
+  }
+  // radius: {
+  //   type: Sequelize.INTEGER,
+  //   defaultValue: 0
+  // }
 })
 
 module.exports = User
@@ -54,7 +58,13 @@ module.exports = User
  * instanceMethods
  */
 User.prototype.correctPassword = function(candidatePwd) {
+  // console.log('P', this.password())
+  // console.log('CRYPT', User.encryptPassword(candidatePwd, this.salt()))
   return User.encryptPassword(candidatePwd, this.salt()) === this.password()
+}
+
+User.prototype.cryptPassword = function(candidatePwd) {
+  return User.encryptPassword(candidatePwd, this.salt())
 }
 
 /**

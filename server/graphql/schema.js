@@ -5,13 +5,13 @@ const {
   GraphQLBoolean,
   GraphQLSchema,
   GraphQLFloat,
-  GraphQLList,
-} = require('graphql');
-const db = require('../db/db');
-const Op = require('sequelize').Op;
-const Distance = require('geo-distance');
-const turf = require('@turf/turf');
-const point = require('turf-point');
+  GraphQLList
+} = require('graphql')
+const db = require('../db/db')
+const Op = require('sequelize').Op
+const Distance = require('geo-distance')
+const turf = require('@turf/turf')
+const point = require('turf-point')
 
 //Type Definitions for GraphQL(what info should graphql expect from each model)
 const UserType = new GraphQLObjectType({
@@ -77,7 +77,7 @@ const rootQuery = new GraphQLObjectType({
     user: {
       type: UserType,
       args: {
-        id: { type: GraphQLInt },
+        id: {type: GraphQLInt}
       },
       async resolve(parent, args) {
         return await db.models.user.findByPk(args.id, {
@@ -88,28 +88,49 @@ const rootQuery = new GraphQLObjectType({
     userLogin: {
       type: UserType,
       args: {
-        email: { type: GraphQLString },
-        password: { type: GraphQLString },
+        email: {type: GraphQLString},
+        password: {type: GraphQLString}
       },
       async resolve(parent, args) {
-        let user = await db.models.user.findOne({
-          where: { email: args.email, password: args.password },
-        });
-        return user;
-      },
+        let usermodel = await db.models.user.findOne({
+          where: {email: args.email}
+          // where: { email: args.email, password: args.password },
+        })
+        console.log('PASSWORD', args.password)
+        console.log(usermodel.correctPassword(args.password))
+
+        console.log('USERMODEL', usermodel)
+        if (!usermodel) {
+          console.log('No such user found:', args.email)
+          alert('Wrong username')
+        } else if (!usermodel.correctPassword(args.password)) {
+          console.log('Incorrect password for user:', args.email)
+          alert('Wrong password')
+        } else {
+          // console.log('PASSWORD', usermodel.cryptPassword(args.password))
+          let use = await db.models.user.findOne({
+            where: {
+              email: args.email,
+              password: usermodel.cryptPassword(args.password)
+            }
+          })
+          console.log('USER', use)
+          return use
+        }
+      }
     },
     myChats: {
       type: new GraphQLList(ChatType),
       args: {
-        userId: { type: GraphQLInt },
+        userId: {type: GraphQLInt}
       },
       async resolve(parent, args) {
         try {
-          let user = await db.models.user.findByPk(args.userId);
-          console.log('TCL: user', user);
-          const chats = await user.getChats({ include: [db.models.user] });
-          console.log('TCL: chats.users', chats[0].users);
-          return chats;
+          let user = await db.models.user.findByPk(args.userId)
+          console.log('TCL: user', user)
+          const chats = await user.getChats({include: [db.models.user]})
+          console.log('TCL: chats.users', chats[0].users)
+          return chats
         } catch (e) {
           console.error(e);
         }
@@ -145,23 +166,26 @@ const rootMutation = new GraphQLObjectType({
     userSignup: {
       type: UserType,
       args: {
-        email: { type: GraphQLString },
-        fullName: { type: GraphQLString },
-        gender: { type: GraphQLString },
-        age: { type: GraphQLString },
-        homeLocation: { type: new GraphQLList(GraphQLFloat) },
-        profilePicture: { type: GraphQLString },
+        email: {type: GraphQLString},
+        fullName: {type: GraphQLString},
+        gender: {type: GraphQLString},
+        age: {type: GraphQLString},
+        homeLocation: {type: new GraphQLList(GraphQLFloat)}
+        //radius: {type: new GraphQLList(GraphQLFloat)}
       },
       async resolve(parent, args) {
-        const data = await db.models.user.create(args);
-        return data;
-      },
+        console.log('ARGS', args)
+        const data = await db.models.user.create(args)
+        if (data) {
+          return data
+        }
+      }
     },
 
     findOrCreateChat: {
       type: ChatType,
       args: {
-        userId: { type: GraphQLInt },
+        userId: {type: GraphQLInt}
       },
       async resolve(parent, args) {
         let chosen;
@@ -169,21 +193,26 @@ const rootMutation = new GraphQLObjectType({
         console.log(user.fullName);
 
         const chats = await db.models.chat.findAll({
-          where: {
-            status: 'pending',
-          },
           include: {
             model: db.models.user,
+            where: {
+              id: {[Op.ne]: args.userId}
+            }
           },
-        });
-        let filtered = [];
+          where: {
+            status: 'pending'
+          }
+        })
+        console.log('TCL: chats', chats)
+
+        let filtered = []
         if (chats.length) {
           filtered = chats.filter(cur => {
             if (cur.users[0]) {
               const to = point(user.homeLocation);
               const from = point(cur.users[0].homeLocation);
 
-              const options = { units: 'miles' };
+              const options = {units: 'miles'}
               // const location2 = {
               //   lat: cur.users[0].homeLocation[0],
               //   lon: cur.users[0].homeLocation[1],
@@ -201,15 +230,15 @@ const rootMutation = new GraphQLObjectType({
           });
         }
         if (filtered.length) {
-          chosen = filtered[Math.floor(Math.random() * filtered.length)];
-          chosen = await chosen.update({ status: 'active' });
+          chosen = filtered[Math.floor(Math.random() * filtered.length)]
+          chosen = await chosen.update({status: 'active'})
         } else {
           chosen = await db.models.chat.create({
             expirationDate: '12-25-2019',
             progress: 0,
             status: 'pending',
-            meeting: null,
-          });
+            meeting: null
+          })
         }
 
         await user.addChat(chosen);
