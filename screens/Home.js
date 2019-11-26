@@ -70,7 +70,7 @@ class Home extends Component {
             // justifyContent: 'center',
           }}
         >
-          {this.props.myChats.length ? (
+          {this.props.myChats ? (
             <Card>
               {this.props.myChats.map(cur => {
                 return (
