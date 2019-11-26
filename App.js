@@ -22,7 +22,6 @@ import Login from './screens/Login'
 import Signup from './screens/Signup'
 import Entry from './screens/Entry'
 import {AsyncStorage} from 'react-native'
-import {getDataFromTree} from 'react-apollo'
 import {getData} from './redux/user'
 
 const {url} = require('./secrets')
