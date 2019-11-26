@@ -7,9 +7,9 @@ import {AsyncStorage} from 'react-native'
 
 export class Entry extends Component {
   async componentDidMount() {
-    const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+    //const user = JSON.parse(await AsyncStorage.getItem('userKey'))
     if (user) {
-      this.props.navigation.navigate('Home', {user})
+      //this.props.navigation.navigate('Home', {user})
     }
     // console.log('LOGIN VALUE', user)
   }

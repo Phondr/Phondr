@@ -66,7 +66,7 @@ export const fetchUserLogin = values => async dispatch => {
 
     if (data.data.userLogin) {
       //console.log('USERLOGIN', data.data.userLogin.email)
-      storeData('userKey', JSON.stringify(data.data.userLogin))
+      //storeData('userKey', JSON.stringify(data.data.userLogin))
     }
 
     dispatch(setUser(data))
