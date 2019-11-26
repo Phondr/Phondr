@@ -45,6 +45,7 @@ export const fetchUserLogin = values => async dispatch => {
   try {
     const email = values.email
     const password = values.password
+
     let {data} = await axios({
       url: `${url}/graphql`,
       method: 'POST',
@@ -64,6 +65,7 @@ export const fetchUserLogin = values => async dispatch => {
       }
     })
 
+    console.log('USERDATA', data)
     if (data.data.userLogin) {
       //console.log('USERLOGIN', data.data.userLogin.email)
       //storeData('userKey', JSON.stringify(data.data.userLogin))
@@ -93,7 +95,7 @@ export const userSignUp = (values, preferences) => async dispatch => {
       data: {
         query: `
         {
-          userSignup(fullName: "${fullName}", age: "${age}", homeLocation: "${address}", radius: "${radius}", email: "${email}", password: "${password}") {
+          userSignup(fullName: "${fullName}", age: "${age}", homeLocation: "${address}", email: "${email}", password: "${password}") {
             id
             email
             fullName

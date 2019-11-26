@@ -93,6 +93,8 @@ const rootQuery = new GraphQLObjectType({
           where: {email: args.email}
           // where: { email: args.email, password: args.password },
         })
+        console.log('PASSWORD', args.password)
+        console.log(usermodel.correctPassword(args.password))
 
         console.log('USERMODEL', usermodel)
         if (!usermodel) {
@@ -109,7 +111,7 @@ const rootQuery = new GraphQLObjectType({
               password: usermodel.cryptPassword(args.password)
             }
           })
-
+          console.log('USER', use)
           return use
         }
       }
@@ -145,8 +147,8 @@ const rootMutation = new GraphQLObjectType({
         fullName: {type: GraphQLString},
         gender: {type: GraphQLString},
         age: {type: GraphQLString},
-        homeLocation: {type: new GraphQLList(GraphQLFloat)},
-        radius: {type: new GraphQLList(GraphQLFloat)}
+        homeLocation: {type: new GraphQLList(GraphQLFloat)}
+        //radius: {type: new GraphQLList(GraphQLFloat)}
       },
       async resolve(parent, args) {
         console.log('ARGS', args)

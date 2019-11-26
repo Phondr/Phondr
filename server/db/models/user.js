@@ -45,11 +45,11 @@ const User = db.define('user', {
   },
   profilePicture: {
     type: Sequelize.STRING
-  },
-  radius: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
   }
+  // radius: {
+  //   type: Sequelize.INTEGER,
+  //   defaultValue: 0
+  // }
 })
 
 module.exports = User
@@ -58,6 +58,8 @@ module.exports = User
  * instanceMethods
  */
 User.prototype.correctPassword = function(candidatePwd) {
+  // console.log('P', this.password())
+  // console.log('CRYPT', User.encryptPassword(candidatePwd, this.salt()))
   return User.encryptPassword(candidatePwd, this.salt()) === this.password()
 }
 
@@ -86,7 +88,7 @@ User.encryptPassword = function(plainText, salt) {
 const setSaltAndPassword = user => {
   if (user.changed('password')) {
     user.salt = User.generateSalt()
-    //user.password = User.encryptPassword(user.password(), user.salt())
+    user.password = User.encryptPassword(user.password(), user.salt())
   }
 }
 
