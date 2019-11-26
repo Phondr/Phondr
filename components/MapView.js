@@ -1,9 +1,20 @@
 import React, {Component} from 'react'
-import {Button, Text, View, Container, Footer, FooterTab, Title} from 'native-base'
+import {
+  Text,
+  View,
+  Form,
+  Picker,
+  Item,
+  Icon,
+  Content,
+  Container,
+  Button
+} from 'native-base'
 import {StyleSheet} from 'react-native'
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'
 import googlePlaceApiKey from '../secrets'
 import axios from 'axios'
+import {colors} from './ulti'
 export default class Mapv extends Component {
   constructor() {
     super()
@@ -15,17 +26,12 @@ export default class Mapv extends Component {
         longitudeDelta: 0.0421
       },
       Location: {},
-      marker: {
-        latitude: 0,
-        longitude: 0
-      },
       nearby: [],
-      flag: false
+      selected2: undefined
     }
     this.initialLocation = this.initialLocation.bind(this)
-    this.dragMarker = this.dragMarker.bind(this)
+    this.createMarker = this.createMarker.bind(this)
     this.searchNearBy = this.searchNearBy.bind(this)
-    // this.selectMarker = this.selectMarker.bind(this)
   }
 
   initialLocation() {
@@ -42,12 +48,10 @@ export default class Mapv extends Component {
   }
   async componentDidMount() {
     this.initialLocation()
-    // this.searchNearBy()
   }
-  dragMarker(e) {
+  createMarker(e) {
     console.log(e.nativeEvent.coordinate)
     this.setState({
-      marker: e.nativeEvent.coordinate,
       flag: true,
       region: {
         latitude: e.nativeEvent.coordinate.latitude,
@@ -56,23 +60,29 @@ export default class Mapv extends Component {
         longitudeDelta: 0.0421
       }
     })
-    console.log(this.state.region.latitude, this.state.region.longitude)
-    this.searchNearBy()
+    this.searchNearBy(
+      e.nativeEvent.coordinate.latitude,
+      e.nativeEvent.coordinate.longitude
+    )
   }
-  searchNearBy() {
+  searchNearBy(lat, long) {
     const theUrl =
-      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.state.region.latitude},${this.state.region.longitude}&radius=1500&type=restaurant&key=` +
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=1500&type=restaurant&key=` +
       googlePlaceApiKey
     axios
       .get(theUrl)
       .then(res => {
         this.setState({nearby: res.data.results})
-        console.log(res.data)
         res.data.results.forEach(x => {
           console.log(x.name)
         })
       })
       .catch(err => console.log(err))
+  }
+  onValueChange2(value) {
+    this.setState({
+      selected2: value
+    })
   }
   render() {
     const styles = StyleSheet.create({
@@ -86,38 +96,49 @@ export default class Mapv extends Component {
         <MapView
           style={styles.map}
           region={this.state.region}
-          onPress={this.dragMarker}
+          onPress={this.createMarker}
           provider={PROVIDER_GOOGLE}
         >
           {this.state.nearby.length !== 0
-            ? this.state.nearby.map(x => (
+            ? this.state.nearby.map((x, i) => (
                 <Marker
                   key={x.id}
                   coordinate={{
                     latitude: x.geometry.location.lat,
                     longitude: x.geometry.location.lng
                   }}
-                  Title={`${x.name}(${x.rating} rating)`}
-                  description={x.vicinity}
+                  title={`${x.name}(${x.rating} rating)`}
+                  description={`In the vicinity of : ${x.vicinity} `}
+                  pinColor={colors[i]}
                 />
               ))
             : null}
-          <Marker
-            coordinate={this.state.marker}
-            draggable
-            pinColor={'#000000'}
-            onDragEnd={this.dragMarker}
-          />
+          {/* <Container style={{position: 'absolute'}}>
+            <Content style={{position: 'absolute'}}>
+              <Form style={{position: 'absolute'}}>
+                <Item picker style={{position: 'absolute'}}>
+                  <Picker
+                    mode="dropdown"
+                    iosIcon={<Icon name="arrow-down" />}
+                    style={{position: 'absolute'}}
+                    placeholder="Select your SIM"
+                    placeholderStyle={{color: '#bfc6ea'}}
+                    placeholderIconColor="#007aff"
+                    selectedValue={this.state.selected2}
+                    onValueChange={this.onValueChange2.bind(this)}
+                  >
+                    <Picker.Item label="Wallet" value="key0" />
+                    <Picker.Item label="ATM Card" value="key1" />
+                    <Picker.Item label="Debit Card" value="key2" />
+                    <Picker.Item label="Credit Card" value="key3" />
+                    <Picker.Item label="Net Banking" value="key4" />
+                  </Picker>
+                </Item>
+              </Form>
+            </Content>
+          </Container> */}
         </MapView>
-        {this.state.flag ? (
-          <Footer>
-            <FooterTab>
-              <Button>
-                <Text>Send</Text>
-              </Button>
-            </FooterTab>
-          </Footer>
-        ) : null}
+          <Button><Text> CLICK  ME</Text></Button>
       </View>
     )
   }
