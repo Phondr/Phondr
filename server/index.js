@@ -110,7 +110,28 @@ const createApp = () => {
 }
 
 io.on('connection', (socket)=>{
-  console.log('We have a new connection!')
+  console.log('New user has connected')
+
+  socket.on('subscribe-to-chat', ({chatId}) =>{
+    console.log(`You have joined chat room ${chatId}!` )
+    socket.join(chatId)
+    io.to(chatId).emit('loginLogoutMessage', {message: 'Another user has joined the room'})
+  })
+
+  socket.on('unsubscribe-to-chat', ({chatId}) => {
+    console.log(`You have left chat room ${chatId}.`)
+    socket.leave(chatId)
+    io.to(chatId).emit('loginLogoutMessage', {message: 'A user has left the room'})
+  })
+
+  socket.on('sendMessage', ({message, chatId}) => {
+    console.log(message)
+    io.to(chatId).emit('receiveMessage', {message})
+  })
+
+  socket.on('disconnect', () => {
+    console.log('User has left')
+  })
 })
 
 const startListening = () => {

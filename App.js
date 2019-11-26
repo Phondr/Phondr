@@ -26,6 +26,7 @@ import store from './redux/store'
 import AppNavigator from './navigation/AppNavigator'
 import AuthPages from './navigation/MainLoginNavigator'
 import Login from './screens/Login'
+import FlashMessage from 'react-native-flash-message'
 
 const { url } = require('./secrets')
 const drawer = createDrawerNavigator(
@@ -81,6 +82,7 @@ function App(props) {
             {/* <AnatomyExample /> */}
             {/* <AuthPages /> */}
             <DrawerContainer />
+            <FlashMessage position='top'/>
             {/* <New /> */}
           </View>
         </ApolloProvider>

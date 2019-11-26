@@ -15,7 +15,7 @@ const setNewMessage = message => {
 
 export const fetchMessages = chatId => {
   return async dispatch => {
-    try {
+    try { //Add in user{avatar: profilePicture} when they unlock this to show profile picture in chat instead of initials
       const { data } = await axios({
         url: url + '/graphql',
         method: 'POST',
@@ -33,7 +33,6 @@ export const fetchMessages = chatId => {
                 _id: id,
                 name: fullName,
                 email,
-                avatar: profilePicture
               }
             }
           }
@@ -69,7 +68,6 @@ export const newMessage = message => {
                 _id: id,
                 email,
                 name: fullName,
-                avatar: profilePicture
               }
             }
           }
