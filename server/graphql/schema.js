@@ -167,8 +167,9 @@ const rootMutation = new GraphQLObjectType({
         chatId: {type: GraphQLInt}
       },
       async resolve(parent, args) {
-        const chat = await db.models.chat.findByPk(args.chatId)
-        await db.models.chat.delete(chat)
+        console.log('in delete chat')
+        let chat = await db.models.chat.findByPk(args.chatId)
+        await chat.destroy()
         return chat
       }
     },
@@ -182,7 +183,7 @@ const rootMutation = new GraphQLObjectType({
         const user = await User.findByPk(args.userId)
         console.log(
           'TCL: iPrefer in schema',
-          user,
+          user.iPrefer,
           'typeof',
           typeof user.iPrefer
         )
