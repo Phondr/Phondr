@@ -19,10 +19,10 @@ import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { Query } from 'react-apollo';
 import ApolloClient from 'apollo-boost';
-const email = 'mike@email.com'
+const email = 'mike@email.com';
 const query = gql`
   {
-    userTest(email: "mike@email.com") {
+    allUsers {
       id
       email
       fullName
@@ -32,6 +32,7 @@ const query = gql`
 
 export default class AllChats extends Component {
   render() {
+    console.log(this.state.chats || '')
     return (
       <Container>
         <Header>
@@ -41,14 +42,14 @@ export default class AllChats extends Component {
             </Button>
           </Left>
           <Body>
-            <Query query={query}>
+            {/* <Query query={query}>
               {({ loading, error, data }) => {
                 console.log('loading', loading);
                 console.log('error', error);
                 console.log(data);
                 return <Text>hiiii</Text>;
               }}
-            </Query>
+            </Query> */}
             <Title>These are all my preys</Title>
           </Body>
           <Right />

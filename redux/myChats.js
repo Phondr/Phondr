@@ -1,10 +1,10 @@
-import client from './apolloClient'
-import gql from 'graphql-tag'
+import client from './apolloClient';
+import gql from 'graphql-tag';
 
-const GETMYCHATS = 'GETMYCHATS'
+const GETMYCHATS = 'GETMYCHATS';
 const getMyChats = myChats => {
-  return { type: GETMYCHATS, myChats }
-}
+  return { type: GETMYCHATS, myChats };
+};
 
 export const fetchMyChats = uid => {
   return async dispatch => {
@@ -21,23 +21,22 @@ export const fetchMyChats = uid => {
             }
           }
         `,
-      })
-      console.log('data in thunk', data)
-      dispatch(getMyChats(data.myChats))
+      });
+      // console.log('data in thunk', data);
+      dispatch(getMyChats(data.myChats));
     } catch (e) {
-      console.error('messed up in fetchMyChats, error: ', e)
+      console.error('messed up in fetchMyChats, error: ', e);
     }
-  }
-}
+  };
+};
 
 const reducer = (state = [], action) => {
   switch (action.type) {
     case GETMYCHATS:
-      return action.myChats
-
+      return action.myChats;
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default reducer
+export default reducer;

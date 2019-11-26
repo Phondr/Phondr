@@ -27,6 +27,7 @@ import { connect } from 'react-redux'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { fetchMyChats } from '../redux/myChats'
+import {fetchMessages} from '../redux/message'
 
 // const Query = gql`
 //   query RootQueryType {
@@ -97,4 +98,4 @@ class Home extends Component {
   }
 }
 
-export default connect(({ myChats }) => ({ myChats }), { fetchMyChats })(Home)
+export default connect(({ myChats }) => ({ myChats }), { fetchMyChats, fetchMessages })(Home)

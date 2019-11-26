@@ -12,6 +12,8 @@ const app = express()
 const socketio = require('socket.io')
 const graphHTTP = require('express-graphql')
 const schema = require('./graphql/schema')
+const server = require('http').createServer(app)
+const io = require('socket.io').listen(server)
 
 module.exports = app
 
@@ -107,15 +109,19 @@ const createApp = () => {
   })
 }
 
+io.on('connection', (socket)=>{
+  console.log('We have a new connection!')
+})
+
 const startListening = () => {
   // start listening (and create a 'server' object representing our server)
-  const server = app.listen(PORT, () =>
+  server.listen(PORT, () =>
     console.log(`Mixing it up on port ${PORT}`)
   )
 
-  // set up our socket control center
-  const io = socketio(server)
-  require('./socket')(io)
+//   // set up our socket control center
+//   const io = socketio(server)
+//   require('./socket')(io)
 }
 
 const syncDb = () => db.sync()

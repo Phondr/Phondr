@@ -6,9 +6,8 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk'
 
 let middleware = [thunkMiddleware.withExtraArgument({ axios })]
-if (process.browser) {
+
   middleware = [...middleware, createLogger({ collapsed: true })]
-}
 
 const RESET_STORE = 'RESET_STORE'
 export const resetStore = () => ({ type: RESET_STORE })
