@@ -1,9 +1,10 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "startall": "npm run start-dev && npm start",
+    "startall": "npm run start-dev & npm start",
     "start": "expo start",
     "start-server": "nodemon server -e html,js,scss --ignore public --ignore client",
+    "start-static": "node server -e html,js,scss --ignore public --ignore client",
     "start-dev": "NODE_ENV='development' & npm run start-server ",
     "android": "expo start --android",
     "ios": "expo start --ios",
