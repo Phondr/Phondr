@@ -15,7 +15,7 @@ export const calcProgress = chat => {
     'in calcProgress',
     sum,
     hoursSince,
-    ((sum / hoursSince) * sum) / 4 / 100
+    ((sum / (hoursSince * 0.1)) * sum) / 4 / 100
   )
   return ((sum / hoursSince) * sum) / 4 / 100
 }
