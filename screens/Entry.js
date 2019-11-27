@@ -8,6 +8,10 @@ import {fetchUserLogin, setUser} from '../redux/user'
 import {connect} from 'react-redux'
 
 export class Entry extends Component {
+  constructor() {
+    super()
+    this.state = {user: ''}
+  }
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
     console.log('TCL: userlogin', user)

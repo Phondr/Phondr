@@ -3,8 +3,9 @@ import {Header, Left, Right, Body, Button, Icon, Text, Title} from 'native-base'
 import {StyleSheet, StatusBar} from 'react-native'
 import {Platform} from '@unimodules/core'
 import {withNavigation} from 'react-navigation'
+import ProgressBar from './ProgressBar'
 
-const CustomHeader = ({title = '', navigation}) => {
+const CustomHeader = ({title = '', navigation, currentChat}) => {
   return (
     <Header style={styles.header}>
       <Left>
@@ -15,7 +16,9 @@ const CustomHeader = ({title = '', navigation}) => {
       <Body>
         <Title>{title}</Title>
       </Body>
-      <Right />
+      <Right>
+        {currentChat === true && <ProgressBar currentChat={currentChat} />}
+      </Right>
     </Header>
   )
 }

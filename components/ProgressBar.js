@@ -1,6 +1,16 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Icon, Left, Card, CardItem, Text, Container, Content} from 'native-base'
+import {
+  Icon,
+  Left,
+  Card,
+  CardItem,
+  Text,
+  Container,
+  Content,
+  Right,
+  Body
+} from 'native-base'
 import {ScrollView} from 'react-native'
 import CustomHeader from '../components/CustomHeader'
 import {withNavigation} from 'react-navigation'
@@ -13,12 +23,20 @@ const ProgressBar = ({currentChat, navigation}) => {
   console.log('TCL: progress', progress)
   return (
     <>
-      <Bar
-        progress={progress}
-        width={200}
-        animated={true}
-        animationType="decay"
-      />
+      <Content>
+        <Left>
+          <Bar
+            progress={progress}
+            width={200}
+            animated={true}
+            animationType="decay"
+          />
+        </Left>
+        <Body>
+          <Text style={{color: 'blue'}}>{progress}%</Text>
+        </Body>
+        <Right />
+      </Content>
     </>
   )
 }

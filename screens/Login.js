@@ -72,8 +72,7 @@ export class Login extends Component {
 
   render() {
     return (
-      <View styles={styles.container}>
-        <View>
+      <View styles={{padding: 30, margin: 50}}>
           <Form
             ref={c => (this._form = c)}
             type={User}
@@ -93,7 +92,6 @@ export class Login extends Component {
               return <Text>hiiii</Text>;
             }}
           </Query> */}
-        </View>
       </View>
     )
   }

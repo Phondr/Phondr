@@ -81,7 +81,7 @@ export const newMessage = message => {
       data.data.newMessage.createdAt = new Date(
         Number(data.data.newMessage.createdAt)
       )
-      await dispatch(setNewMessage(data.data.newMessage))
+      return data.data.newMessage
     } catch (e) {
       console.error('messed up in fetchMyChats, error: ', e)
     }

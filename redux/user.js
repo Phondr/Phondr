@@ -67,7 +67,7 @@ export const fetchUserLogin = values => async dispatch => {
 
     console.log('USERDATA', data)
     if (data.data.userLogin) {
-      console.log('USERLOGIN', data.data.userLogin.email)
+      //console.log('USERLOGIN', data.data.userLogin.email)
       storeData('userKey', JSON.stringify(data.data.userLogin))
     }
 
