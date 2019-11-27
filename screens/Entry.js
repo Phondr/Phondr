@@ -6,12 +6,20 @@ import Signup from './Signup'
 import {AsyncStorage} from 'react-native'
 
 export class Entry extends Component {
+  constructor() {
+    super()
+    this.state = {user: ''}
+  }
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
-    if (user) {
-      //this.props.navigation.navigate('Home', {user})
+    if (user !== null) {
+      if (this.state.user === '') {
+        this.setState({user}) //Sets user if user was previously logged in through asyncStorage
+      }
+      if (this.state.user !== '') {
+        this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
+      }
     }
-    // console.log('LOGIN VALUE', user)
   }
 
   gotToLogin() {
@@ -19,7 +27,6 @@ export class Entry extends Component {
   }
 
   goToSignUp() {
-    console.log('navigate to signup')
     this.props.navigation.navigate('Signup')
   }
   static navigationOptions = {
@@ -68,18 +75,6 @@ export const styles = StyleSheet.create({
     height: 350,
     position: 'relative',
     justifyContent: 'center'
-  },
-  textInput: {
-    //borderBottomColor: "#CCCCCC",
-    // borderTopWidth: 1,
-    //borderBottomWidth: 1,
-    // height: 50,
-    // width: 400,
-    // fontSize: 25,
-    // paddingLeft: 10,
-    // paddingRight: 10,
-    // textAlign: "center",
-    // margin: 5
   },
   logintext: {
     margin: 2,

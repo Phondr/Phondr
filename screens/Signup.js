@@ -12,7 +12,8 @@ import {
   ListItem,
   Body,
   Left,
-  Right
+  Right,
+  Dimensions
 } from 'native-base'
 import {connect} from 'react-redux'
 import {userSignUp} from '../redux/user'
@@ -99,7 +100,6 @@ export class Signup extends Component {
   componentDidUpdate() {
     const user = this.props.user
     if (this.props.user.id) {
-      console.log('go home')
       this.props.navigation.navigate('Home', {user})
     }
   }
@@ -146,8 +146,6 @@ export class Signup extends Component {
   }
 
   render() {
-    console.log('In Sign Up')
-
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -204,7 +202,6 @@ export class Signup extends Component {
             options={options}
             style={styles.formcontainer}
           />
-
           <TouchableOpacity style={styles.submitButton} onPress={this.signup}>
             <Text style={styles.submitButtonText}>Sign Up</Text>
           </TouchableOpacity>
@@ -218,6 +215,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 35,
+
     padding: 20,
     backgroundColor: '#F5FCFF'
   },

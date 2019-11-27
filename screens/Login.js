@@ -1,5 +1,13 @@
 import React, {Component} from 'react'
-import {Text, View, StyleSheet, Button, TouchableOpacity} from 'react-native'
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  Dimensions,
+  ScrollView
+} from 'react-native'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
 import {fetchUserLogin} from '../redux/user'
@@ -34,8 +42,11 @@ export class Login extends Component {
     this.login = this.login.bind(this)
   }
 
-  componentDidMount() {
-    console.log('LOGIN PROPS', this.props)
+  componentDidUpdate() {
+    const user = this.props.user
+    if (this.props.user.id) {
+      this.props.navigation.navigate('Home', {user})
+    }
   }
 
   static navigationOptions = {
@@ -46,11 +57,6 @@ export class Login extends Component {
     const values = this._form.getValue()
     try {
       await this.props.getUser(values)
-      const user = this.props.user
-      if (this.props.user.id) {
-        console.log('go home')
-        this.props.navigation.navigate('Home', {user})
-      }
     } catch (error) {
       alert('COULD NOT LOGIN')
       console.log(error)
@@ -59,8 +65,8 @@ export class Login extends Component {
 
   render() {
     return (
-      <View styles={styles.container}>
-        <View>
+      <ScrollView>
+        <View styles={styles.container}>
           <Form
             ref={c => (this._form = c)}
             type={User}
@@ -71,23 +77,18 @@ export class Login extends Component {
             <Text style={styles.submitButtonText}>Login</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     )
   }
 }
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 2,
-    justifyContent: 'center',
-    // alignItems: "center",
+    margin: 20,
+    padding: 30,
+    // width: Dimensions.get('window').width,
+    // height: Dimensions.get('window').height,
     backgroundColor: '#F5FCFF'
-  },
-  input: {
-    margin: 15,
-    height: 40,
-    borderColor: 'black',
-    borderWidth: 1
   },
   submitButton: {
     backgroundColor: 'black',
@@ -98,16 +99,6 @@ export const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: 'white'
-  },
-  phonderimage: {
-    width: 200,
-    height: 200,
-    position: 'relative',
-    justifyContent: 'center'
-  },
-  logintext: {
-    margin: 2,
-    fontSize: 30
   },
   formcontainer: {
     justifyContent: 'center',

@@ -21,7 +21,6 @@ export const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value)
     const data = await getData(key)
-    console.log('DATA', data)
   } catch (e) {
     // saving error
     console.log(e)
@@ -33,6 +32,7 @@ export const getData = async key => {
     const value = await AsyncStorage.getItem(key)
     if (value) {
       // value previously stored
+      console.log('MADE KEY')
       return value
     }
   } catch (e) {
@@ -44,6 +44,7 @@ export const getData = async key => {
 export const removeData = async key => {
   try {
     await AsyncStorage.removeItem(key)
+    console.log('REMOVED KEY')
   } catch (e) {
     // error reading value
     console.log(e)
@@ -55,6 +56,10 @@ export const fetchUserLogin = values => async dispatch => {
   try {
     const email = values.email
     const password = values.password
+
+    if (getData('userKey')) {
+      removeData('userKey')
+    }
 
     let {data} = await axios({
       url: `${url}/graphql`,
@@ -75,7 +80,6 @@ export const fetchUserLogin = values => async dispatch => {
       }
     })
 
-    console.log('USERDATA', data)
     if (data.data.userLogin) {
       //console.log('USERLOGIN', data.data.userLogin.email)
       storeData('userKey', JSON.stringify(data.data.userLogin))
@@ -114,10 +118,7 @@ export const userSignUp = (values, preferences) => async dispatch => {
               }`
     })
 
-    console.log('DATA', data.userSignup)
-
     if (data.userSignup) {
-      console.log('USERLOGIN', data.userSignup.email)
       storeData('userKey', JSON.stringify(data.userSignup))
     }
 

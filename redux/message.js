@@ -9,7 +9,7 @@ const NEW_MESSAGE = 'NEW_MESSAGE';
 const getMessages = messages => {
   return { type: GET_MESSAGES, messages };
 };
-const setNewMessage = message => {
+export const setNewMessage = message => {
   return { type: NEW_MESSAGE, message };
 };
 
@@ -75,7 +75,7 @@ export const newMessage = message => {
       });
       //Format into readable date by gifted chat
       data.data.newMessage.createdAt = new Date(Number(data.data.newMessage.createdAt))
-      await dispatch(setNewMessage(data.data.newMessage));
+      return data.data.newMessage
     } catch (e) {
       console.error('messed up in fetchMyChats, error: ', e);
     }

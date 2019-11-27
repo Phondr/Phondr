@@ -27,15 +27,13 @@ class Home extends Component {
     }
   }
 
-  componentDidMount() {
-    //this is just for testing
-    // this.props.setUser(this.state.user)
-
-    console.log('home mounted')
-    console.log(this.props.user)
-    this.props.fetchMyChats(this.props.user.id)
-
-    //console.log('HOME PROPS', this.props)
+  async componentDidMount() {
+    if (this.props.user.id) {
+      //If brought from login screen, there is already user data on redux. Just grab chats.
+      this.props.fetchMyChats(this.props.user.id)
+    } else {
+      await this.props.setUser(this.props.navigation.getParam('user')) //If brought through async storage, need to set user data from navigation prop to redux store of user.
+    }
   }
   componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id) {
