@@ -81,7 +81,7 @@ export const fetchUserLogin = values => async dispatch => {
       storeData('userKey', JSON.stringify(data.data.userLogin))
     }
 
-    dispatch(setUser(data))
+    dispatch(setUser(data.data.userLogin))
   } catch (error) {
     alert('COULD NOT LOGIN')
     console.log(error)

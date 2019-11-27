@@ -47,9 +47,9 @@ export class Login extends Component {
     try {
       await this.props.getUser(values)
       const user = this.props.user
-      if (user.data.userLogin.id) {
+      if (this.props.user.id) {
         console.log('go home')
-        this.props.navigation.navigate('Home')
+        this.props.navigation.navigate('Home', {user})
       }
     } catch (error) {
       alert('COULD NOT LOGIN')

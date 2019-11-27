@@ -1,18 +1,20 @@
 import React from 'react'
-import { Header, Left, Right, Body, Button, Icon } from 'native-base'
-import { StyleSheet, StatusBar } from 'react-native'
-import { Platform } from '@unimodules/core'
-import { withNavigation } from 'react-navigation'
+import {Header, Left, Right, Body, Button, Icon, Text, Title} from 'native-base'
+import {StyleSheet, StatusBar} from 'react-native'
+import {Platform} from '@unimodules/core'
+import {withNavigation} from 'react-navigation'
 
-const CustomHeader = props => {
+const CustomHeader = ({title = '', navigation}) => {
   return (
     <Header style={styles.header}>
       <Left>
-        <Button transparent onPress={() => props.navigation.openDrawer()}>
-          <Icon name='menu' />
+        <Button transparent onPress={() => navigation.openDrawer()}>
+          <Icon name="menu" />
         </Button>
       </Left>
-      <Body />
+      <Body>
+        <Title>{title}</Title>
+      </Body>
       <Right />
     </Header>
   )
@@ -20,8 +22,8 @@ const CustomHeader = props => {
 const styles = StyleSheet.create({
   header: {
     marginTop: Platform.OS !== 'ios' ? StatusBar.currentHeight : 0,
-    justifyContent: 'flex-end',
-  },
+    justifyContent: 'flex-end'
+  }
 })
 
 export default withNavigation(CustomHeader)
