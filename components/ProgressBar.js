@@ -26,7 +26,7 @@ const ProgressBar = ({currentChat, navigation}) => {
         <Left>
           <Bar
             progress={progress / 100}
-            width={200}
+            width={100}
             animated={true}
             animationType="decay"
           />
