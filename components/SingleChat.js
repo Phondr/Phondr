@@ -27,9 +27,6 @@ import CustomHeader from '../components/CustomHeader'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      chatId: 0
-    }
     this.onSend = this.onSend.bind(this)
   }
   // componentWillMount() {
@@ -49,8 +46,9 @@ class SingleChats extends Component {
   //   });
   // }
 
-  static navigationOptions = { //This is here so it doesn't show up on the drawer pull out 
-    drawerLabel: () => null,
+  static navigationOptions = {
+    //This is here so it doesn't show up on the drawer pull out
+    drawerLabel: () => null
   }
 
   componentDidMount() {
@@ -71,22 +69,32 @@ class SingleChats extends Component {
     socket.off('receiveMessage')
   }
 
+  componentDidUpdate(prevProps) {
+    console.log('prevProps', prevProps)
+    console.log('newProps', this.props)
+    if (prevProps.currentChat !== this.props.currentChat) {
+      console.log('got here')
+    }
+  }
+
   async onSend(message) {
     //Format message for input into thunk
     const formattedMessage = {
       content: message[0].text,
       userId: message[0].user._id,
       length: message[0].text.length,
-      chatId: this.props.currentChat.id,
+      chatId: this.props.currentChat.id
     }
     //Create the message ONCE after click send but don't set to redux yet
     const newMessage = await this.props.newMessage(formattedMessage)
     //Send created message to sockets with event sendMessage
-    socket.emit('sendMessage', {message: newMessage, chatId: this.props.currentChat.id})
+    socket.emit('sendMessage', {
+      message: newMessage,
+      chatId: this.props.currentChat.id
+    })
   }
   render() {
     console.log('yohere', this.props.currentChat)
-    if(this.props.currentChat.id !== this.state.chatId) {this.setState({chatId: this.props.currentChat.id})}
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
@@ -108,7 +116,7 @@ const MapStateToProps = state => {
   return {
     user: state.user,
     messages: state.messages,
-    currentChat: state.currentChat,
+    currentChat: state.currentChat
   }
 }
 const MapDispatchToProps = dispatch => {

@@ -25,7 +25,6 @@ import Entry from './screens/Entry'
 import PendingScreen from './screens/PendingScreen'
 import ActiveScreen from './screens/ActiveScreen'
 import SingleChat from './components/SingleChat'
-import {Test} from './screens/test'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 
@@ -50,9 +49,6 @@ var drawer = createDrawerNavigator(
     },
     SingleChat: {
       screen: SingleChat
-    },
-    Test: {
-      screen: Test
     },
     'Pending Chats': {
       screen: PendingScreen

@@ -74,7 +74,6 @@ class Home extends Component {
                 </Icon>
               </Button>
             </Right>
-            <Button onPress={() => this.props.navigation.navigate('Test')}><Text>login</Text></Button>
           </Content>
         </ScrollView>
       </Container>
