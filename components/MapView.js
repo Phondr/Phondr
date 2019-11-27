@@ -1,11 +1,20 @@
 import React, {Component} from 'react'
-import {View, Picker, Item, Icon, Input, Button, Text} from 'native-base'
+import {
+  View,
+  Picker,
+  Item,
+  Icon,
+  Input,
+  Button,
+  Text,
+  Container
+} from 'native-base'
 import {StyleSheet} from 'react-native'
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'
 import googlePlaceApiKey from '../secrets'
 import axios from 'axios'
 import {colors, PlaceTypes} from './ulti'
-
+import CustomHeader from './CustomHeader'
 export default class Mapv extends Component {
   constructor() {
     super()
@@ -21,7 +30,8 @@ export default class Mapv extends Component {
       placeType: 'restaurant',
       Found: [],
       pointer: 0,
-      flag:true
+      flag: true,
+      show: true
     }
     this.initialLocation = this.initialLocation.bind(this)
     this.moveTo = this.moveTo.bind(this)
@@ -71,7 +81,8 @@ export default class Mapv extends Component {
     console.log(e.nativeEvent.coordinate)
 
     this.setState({
-      flag:false,
+      flag: false,
+      show:!this.state.show,
       region: {
         latitude: e.nativeEvent.coordinate.latitude,
         longitude: e.nativeEvent.coordinate.longitude,
@@ -99,10 +110,10 @@ export default class Mapv extends Component {
       .catch(err => console.log(err))
   }
   searchByName(text) {
-    this.setState({flag:true})
-    let newTemp = text.replace(" ", "20%")
-    while(newTemp.includes(" ")){
-      newTemp = newTemp.replace(" ","20%")
+    this.setState({flag: true})
+    let newTemp = text.replace(' ', '20%')
+    while (newTemp.includes(' ')) {
+      newTemp = newTemp.replace(' ', '20%')
     }
     const theUrl =
       `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${newTemp}&inputtype=textquery&fields=geometry,place_id&key=` +
@@ -127,14 +138,44 @@ export default class Mapv extends Component {
     })
 
     return (
-      <View style={styles.map}>
+      <View>
+        <CustomHeader title="Mapv" />
+        {this.state.show ? (
+          <Item regular>
+            <Input
+              placeholder="search by name"
+              value={this.state.Search}
+              onSubmitEditing={event =>
+                this.searchByName(event.nativeEvent.text)
+              }
+            />
+          </Item>
+        ) : null}
+        {this.state.show ? (
+          <Item picker>
+            <Picker
+              mode="dropdown"
+              iosIcon={<Icon name="arrow-down" />}
+              placeholder="Select your place type"
+              placeholderStyle={{color: '#bfc6ea'}}
+              placeholderIconColor="#007aff"
+              selectedValue={this.state.placeType}
+              onValueChange={this.onSelectPlaceType}
+            >
+              {PlaceTypes.map(x => (
+                <Picker.Item key={x} label={x} value={x} />
+              ))}
+            </Picker>
+          </Item>
+        ) : null}
+
         <MapView
-          style={styles.map}
+          style={{position: 'relative', width: '100%', height: '100%'}}
           region={this.state.region}
           onPress={this.createMarker}
           provider={PROVIDER_GOOGLE}
         >
-          {this.state.nearby.length !== 0 && this.state.flag===false
+          {this.state.nearby.length !== 0 && this.state.flag === false
             ? this.state.nearby.map((x, i) => (
                 <Marker
                   key={x.id}
@@ -160,28 +201,6 @@ export default class Mapv extends Component {
               ))
             : null}
         </MapView>
-        <Item picker>
-          <Picker
-            mode="dropdown"
-            iosIcon={<Icon name="arrow-down" />}
-            placeholder="Select your place type"
-            placeholderStyle={{color: '#bfc6ea'}}
-            placeholderIconColor="#007aff"
-            selectedValue={this.state.placeType}
-            onValueChange={this.onSelectPlaceType}
-          >
-            {PlaceTypes.map(x => (
-              <Picker.Item key={x} label={x} value={x} />
-            ))}
-          </Picker>
-        </Item>
-        <Item rounded>
-          <Input
-            placeholder="search by name"
-            value={this.state.Search}
-            onSubmitEditing={(event)=>this.searchByName(event.nativeEvent.text)}
-          />
-        </Item>
         {this.state.Found.length > 1 ? (
           <Button onPress={this.moveToNextMarker}>
             <Text>next marker</Text>
