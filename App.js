@@ -54,7 +54,7 @@ var drawer = createDrawerNavigator(
     }
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Entry',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'
@@ -91,7 +91,6 @@ function App(props) {
   } else {
     return (
       <Provider store={store}>
-        <ApolloProvider client={apClient}>
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
             {/* <AppNavigator /> */}
@@ -101,7 +100,6 @@ function App(props) {
             <FlashMessage position='top'/>
             {/* <New /> */}
           </View>
-        </ApolloProvider>
       </Provider>
     )
   }

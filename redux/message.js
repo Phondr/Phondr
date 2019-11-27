@@ -75,7 +75,6 @@ export const newMessage = message => {
       });
       //Format into readable date by gifted chat
       data.data.newMessage.createdAt = new Date(Number(data.data.newMessage.createdAt))
-      // await dispatch(setNewMessage(data.data.newMessage));
       return data.data.newMessage
     } catch (e) {
       console.error('messed up in fetchMyChats, error: ', e);

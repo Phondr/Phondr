@@ -28,10 +28,6 @@ class SingleChats extends Component {
     super(props);
     this.onSend = this.onSend.bind(this);
   }
-  // state = {
-  //   messages: [],
-  // };
-
   // componentWillMount() {
   //   this.setState({
   //     messages: [
@@ -88,8 +84,6 @@ class SingleChats extends Component {
         user={{
           _id: this.props.user.id,
           name: this.props.user.fullName,
-          avatar:
-            'https://img.buzzfeed.com/thumbnailer-prod-us-east-1/dc23cd051d2249a5903d25faf8eeee4c/BFV36537_CC2017_2IngredintDough4Ways-FB.jpg',
         }}
       />
     );

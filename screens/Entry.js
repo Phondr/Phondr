@@ -6,12 +6,18 @@ import Signup from './Signup'
 import {AsyncStorage} from 'react-native'
 
 export class Entry extends Component {
+  constructor() {
+    super()
+    this.state = {user: ''}
+  }
   async componentDidMount() {
-    //const user = JSON.parse(await AsyncStorage.getItem('userKey'))
-    // if (user) {
-    //   this.props.navigation.navigate('Home', {user})
-    // }
-    // console.log('LOGIN VALUE', user)
+    const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+    if (this.state.user === '') {
+      this.setState({user}) //Sets user if user was previously logged in through asyncStorage
+    }
+    if (this.state.user !== '') {
+      this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
+    }
   }
 
   gotToLogin() {
