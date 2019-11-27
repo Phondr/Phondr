@@ -107,6 +107,22 @@ async function seed() {
     iPrefer: ['male', 'female'],
     distPref: randomizer(50)
   })
+  await User.create({
+    fullName: `Mike Lim`,
+    age: 24,
+    homeLocation: [
+      round(faker.address.latitude()),
+      round(faker.address.longitude())
+    ],
+    incentivePoints: faker.random.number(),
+    created_at: faker.date.recent(),
+    profilePicture: faker.random.image(),
+    email: 'mike@email.com',
+    password: '123',
+    iAm: idents[randomizer(2)],
+    iPrefer: ['male', 'female'],
+    distPref: randomizer(50)
+  })
   for (let i = 0; i < 50; i++) {
     const user = await createUser()
     console.log('iPrefer in forloop', user.iPrefer)

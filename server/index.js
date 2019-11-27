@@ -115,13 +115,13 @@ io.on('connection', (socket)=>{
   socket.on('subscribe-to-chat', ({chatId}) =>{
     console.log(`You have joined chat room ${chatId}!` )
     socket.join(chatId)
-    io.to(chatId).emit('loginLogoutMessage', {message: 'Another user has joined the room'})
+    socket.to(chatId).emit('loginLogoutMessage', {message: 'Another user has joined the room'})
   })
 
   socket.on('unsubscribe-to-chat', ({chatId}) => {
     console.log(`You have left chat room ${chatId}.`)
     socket.leave(chatId)
-    io.to(chatId).emit('loginLogoutMessage', {message: 'A user has left the room'})
+    socket.to(chatId).emit('loginLogoutMessage', {message: 'A user has left the room'})
   })
 
   socket.on('sendMessage', ({message, chatId}) => {
