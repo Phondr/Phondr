@@ -79,6 +79,7 @@ export const findOrCreateChat = uid => {
 export const fetchMyChats = uid => {
   return async dispatch => {
     try {
+      console.log('uid in chat', uid)
       const {data} = await myAxios.post('', {
         query: `query{
                myChats(userId:${uid}){

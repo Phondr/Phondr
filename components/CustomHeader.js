@@ -5,7 +5,7 @@ import {Platform} from '@unimodules/core'
 import {withNavigation} from 'react-navigation'
 import ProgressBar from './ProgressBar'
 
-const CustomHeader = ({title = '', navigation, currentChat}) => {
+const CustomHeader = ({title = '', navigation, currentChat = {}}) => {
   return (
     <Header style={styles.header}>
       <Left>
@@ -17,7 +17,7 @@ const CustomHeader = ({title = '', navigation, currentChat}) => {
         <Title>{title}</Title>
       </Body>
       <Right>
-        {currentChat === true && <ProgressBar currentChat={currentChat} />}
+        {currentChat.id && <ProgressBar currentChat={currentChat} />}
       </Right>
     </Header>
   )

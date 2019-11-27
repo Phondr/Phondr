@@ -89,10 +89,6 @@ class SingleChats extends Component {
     })
   }
   render() {
-    console.log('yohere', this.props.currentChat)
-    if (this.props.currentChat.id !== this.state.chatId) {
-      this.setState({chatId: this.props.currentChat.id})
-    }
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />

@@ -16,17 +16,16 @@ import CustomHeader from '../components/CustomHeader'
 import {withNavigation} from 'react-navigation'
 import {calcProgress} from '../util'
 import {Bar} from 'react-native-progress'
-
+import round from 'lodash.round'
 const ProgressBar = ({currentChat, navigation}) => {
-  console.log('currentChat', currentChat)
-  const progress = calcProgress(currentChat)
-  console.log('TCL: progress', progress)
+  const progress = round(calcProgress(currentChat), 2)
+
   return (
     <>
       <Content>
         <Left>
           <Bar
-            progress={progress}
+            progress={progress / 100}
             width={200}
             animated={true}
             animationType="decay"

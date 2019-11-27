@@ -36,6 +36,7 @@ class Home extends Component {
       this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
     }
     if (this.props.user.id) {
+      console.log('in comp did mouth fmc')
       this.props.fetchMyChats(this.props.user.id)
     }
 
@@ -43,6 +44,7 @@ class Home extends Component {
   }
   componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id) {
+      console.log('in comp did update fmc')
       this.props.fetchMyChats(this.props.user.id)
     }
   }
