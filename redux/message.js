@@ -9,7 +9,7 @@ const NEW_MESSAGE = 'NEW_MESSAGE'
 const getMessages = messages => {
   return {type: GET_MESSAGES, messages}
 }
-const setNewMessage = message => {
+export const setNewMessage = message => {
   return {type: NEW_MESSAGE, message}
 }
 
@@ -17,6 +17,7 @@ export const fetchMessages = chatId => {
   return async dispatch => {
     try {
       //Add in user{avatar: profilePicture} when they unlock this to show profile picture in chat instead of initials
+      console.log('chat id in fetchMessages', chatId)
       const {data} = await axios({
         url: url + '/graphql',
         method: 'POST',
@@ -35,22 +36,21 @@ export const fetchMessages = chatId => {
                 name: fullName,
                 email,
               }
-              chat{
-                sinceCreation
-              }
+              
             }
           }
           `
         }
       })
+
       const formatedMessage = data.data.messages.map(message => {
         message.createdAt = new Date(Number(message.createdAt))
         return message
       })
-      // console.log('data in thunk', formatedMessage);
+      console.log('data in thunk', formatedMessage)
       dispatch(getMessages(formatedMessage))
     } catch (e) {
-      console.error('messed up in fetchMyChats, error: ', e)
+      console.error('messed up in fetchMes, error: ', e)
     }
   }
 }
@@ -83,7 +83,7 @@ export const newMessage = message => {
       )
       return data.data.newMessage
     } catch (e) {
-      console.error('messed up in fetchMyChats, error: ', e)
+      console.error('messed up in newMessages, error: ', e)
     }
   }
 }

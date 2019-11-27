@@ -55,7 +55,7 @@ export const findOrCreateChat = uid => {
           }
         }`
       })
-      console.log('findOrCreateChat info in thunk', findOrCreateChat)
+
       dispatch(addChat(findOrCreateChat))
       // const {data} = await client.mutate({
       //   mutation: gql`mutation{
@@ -99,7 +99,7 @@ export const fetchMyChats = uid => {
               }
              `
       })
-      console.log('data object in myChats', data)
+
       dispatch(getMyChats(data.data.myChats))
 
       //    axios({

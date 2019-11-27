@@ -1,14 +1,27 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {Icon, Left, Card, CardItem, Text} from 'native-base'
-import {withNavigation} from 'react-navigation'
+import {withNavigation, NavigationEvents} from 'react-navigation'
 import {setChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
-const ActiveChats = ({myChats, user, setChat, navigation, preview}) => {
+import {fetchMyChats} from '../redux/myChats'
+const ActiveChats = ({myChats, user, setChat, fetchMyChats, navigation}) => {
   const active = myChats.filter(chat => chat.status === 'active')
-  console.log('active', active, 'user', user)
+
+  // useEffect(() => {
+  //   navigation.addListener('didFocus', () => {
+  //     if (user && user.id) {
+  //       fetchMyChats(user.id)
+  //     }
+  //   })
+  // }, [])
   return (
     <Card>
+      <NavigationEvents
+        onWillFocus={payload => {
+          fetchMyChats(user.id)
+        }}
+      />
       <CardItem header>
         <Text>Active Chats</Text>
       </CardItem>
@@ -30,7 +43,6 @@ const ActiveChats = ({myChats, user, setChat, navigation, preview}) => {
             <Text>
               {
                 cur.users.find(u => {
-                  console.log('u', u, 'chat id', cur.id)
                   return u.fullName !== user.fullName
                 }).fullName
               }
@@ -43,5 +55,7 @@ const ActiveChats = ({myChats, user, setChat, navigation, preview}) => {
 }
 
 export default withNavigation(
-  connect(({myChats, user}) => ({myChats, user}), {setChat})(ActiveChats)
+  connect(({myChats, user}) => ({myChats, user}), {setChat, fetchMyChats})(
+    ActiveChats
+  )
 )

@@ -14,12 +14,11 @@ export class Entry extends Component {
   }
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
-    console.log('TCL: userlogin', user)
+
     if (user) {
       await this.props.setUser(user)
       this.props.navigation.navigate('Home', {user})
     }
-    console.log('LOGIN VALUE', user)
   }
 
   gotToLogin() {

@@ -16,7 +16,13 @@ import {
   Item,
   Input
 } from 'native-base'
-import {ScrollView, View, StatusBar} from 'react-native'
+import {
+  ScrollView,
+  View,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native'
 import {GiftedChat} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {connect} from 'react-redux'
@@ -27,9 +33,6 @@ import CustomHeader from '../components/CustomHeader'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      chatId: 0
-    }
     this.onSend = this.onSend.bind(this)
   }
   // componentWillMount() {
@@ -63,6 +66,7 @@ class SingleChats extends Component {
     socket.on('receiveMessage', ({message}) => {
       this.props.setNewMessage(message)
     })
+
     this.props.fetchMessages(this.props.currentChat.id)
   }
 
@@ -70,6 +74,12 @@ class SingleChats extends Component {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
     socket.off('loginLogoutMessage')
     socket.off('receiveMessage')
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentChat !== this.props.currentChat) {
+      console.log('got here')
+    }
   }
 
   async onSend(message) {
@@ -104,6 +114,9 @@ class SingleChats extends Component {
             name: this.props.user.fullName
           }}
         />
+        {Platform.OS === 'android' && (
+          <KeyboardAvoidingView behavior="padding" />
+        )}
       </React.Fragment>
     )
   }

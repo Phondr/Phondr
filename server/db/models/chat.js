@@ -27,7 +27,7 @@ const Chat = db.define('chat', {
 
       const diffMs = now - start
       console.log('TCL: diffMs', diffMs)
-      const diffMins = ((diffMs % 86400000) % 3600000) / 60000
+      const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000)
       console.log('TCL: diffMins', diffMins)
 
       return diffMins

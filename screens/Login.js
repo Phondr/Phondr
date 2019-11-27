@@ -1,5 +1,13 @@
 import React, {Component} from 'react'
-import {Text, View, StyleSheet, Button, TouchableOpacity} from 'react-native'
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard
+} from 'react-native'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
 import {fetchUserLogin} from '../redux/user'
@@ -44,7 +52,7 @@ export class Login extends Component {
   }
 
   componentDidMount() {
-    console.log('LOGIN PROPS', this.props)
+   
   }
 
   //this is what eric changed
@@ -72,36 +80,24 @@ export class Login extends Component {
 
   render() {
     return (
-      <View styles={{padding: 30, margin: 50}}>
-          <Form
-            ref={c => (this._form = c)}
-            type={User}
-            options={options}
-            style={styles.formcontainer}
-          />
-
-          <TouchableOpacity style={styles.submitButton} onPress={this.login}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
+          <Form ref={c => (this._form = c)} type={User} options={options} />
+          <TouchableOpacity onPress={this.login} style={styles.submitButton}>
             <Text style={styles.submitButtonText}>Login</Text>
           </TouchableOpacity>
-
-          {/* <Query query={query}>
-            {({ loading, error, data }) => {
-              // console.log("loading", loading);
-              // console.log("error", error);
-              console.log(data);
-              return <Text>hiiii</Text>;
-            }}
-          </Query> */}
-      </View>
+        </View>
+      </TouchableWithoutFeedback>
     )
   }
 }
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 1,
     justifyContent: 'center',
-    // alignItems: "center",
+    paddingLeft: 10,
+    paddingRight: 10,
     backgroundColor: '#F5FCFF'
   },
   input: {
@@ -120,20 +116,9 @@ export const styles = StyleSheet.create({
   submitButtonText: {
     color: 'white'
   },
-  phonderimage: {
-    width: 200,
-    height: 200,
-    position: 'relative',
-    justifyContent: 'center'
-  },
   logintext: {
     margin: 2,
     fontSize: 30
-  },
-  formcontainer: {
-    justifyContent: 'center',
-    width: '100%',
-    backgroundColor: '#ffffff'
   }
 })
 

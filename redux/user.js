@@ -20,7 +20,7 @@ export const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value)
     const data = await getData(key)
-    console.log('DATA', data)
+    
   } catch (e) {
     // saving error
     console.log(e)
@@ -65,7 +65,7 @@ export const fetchUserLogin = values => async dispatch => {
       }
     })
 
-    console.log('USERDATA', data)
+    
     if (data.data.userLogin) {
       //console.log('USERLOGIN', data.data.userLogin.email)
       storeData('userKey', JSON.stringify(data.data.userLogin))
@@ -80,7 +80,7 @@ export const fetchUserLogin = values => async dispatch => {
 
 export const userSignUp = (values, preferences) => async dispatch => {
   try {
-    console.log(values, preferences)
+    
 
     const fullName = values.fullName
     const age = values.age
