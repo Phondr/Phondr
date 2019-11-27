@@ -37,7 +37,7 @@ const options = {
 
 const Form = t.form.Form
 
-export class Login extends Component {
+export class Test extends React.Component {
   constructor() {
     super()
     this.login = this.login.bind(this)
@@ -68,17 +68,18 @@ export class Login extends Component {
 
   render() {
     return (
-      <View styles={{padding: 30, margin: 50}}>
-          <Form
+      <View >
+        <Text>hiiii</Text>
+          {/* <Form
             ref={c => (this._form = c)}
             type={User}
             options={options}
-            style={styles.formcontainer}
+            // style={styles.formcontainer}
           />
 
-          <TouchableOpacity style={styles.submitButton} onPress={this.login}>
-            <Text style={styles.submitButtonText}>Login</Text>
-          </TouchableOpacity>
+          <TouchableOpacity  onPress={this.login}>
+            <Text >Login</Text>
+          </TouchableOpacity> */}
 
           {/* <Query query={query}>
             {({ loading, error, data }) => {
@@ -92,53 +93,3 @@ export class Login extends Component {
     )
   }
 }
-
-export const styles = StyleSheet.create({
-  container: {
-    flex: 2,
-    justifyContent: 'center',
-    // alignItems: "center",
-    backgroundColor: '#F5FCFF',
-  },
-  input: {
-    margin: 15,
-    height: 40,
-    borderColor: 'black',
-    borderWidth: 1,
-  },
-  submitButton: {
-    backgroundColor: 'black',
-    padding: 10,
-    margin: 15,
-    alignItems: 'center',
-    height: 40,
-  },
-  submitButtonText: {
-    color: 'white',
-  },
-  phonderimage: {
-    width: 200,
-    height: 200,
-    position: 'relative',
-    justifyContent: 'center',
-  },
-  logintext: {
-    margin: 2,
-    fontSize: 30,
-  },
-  formcontainer: {
-    justifyContent: 'center',
-    width: '100%',
-    backgroundColor: '#ffffff',
-  },
-})
-
-const mapStateToProps = state => ({
-  user: state.user,
-})
-
-const mapDispatchToProps = dispatch => ({
-  getUser: values => dispatch(fetchUserLogin(values)),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login)

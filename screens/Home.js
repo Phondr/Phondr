@@ -67,13 +67,14 @@ class Home extends Component {
                 bordered
                 rounded
                 info
-                onPress={() => this.props.findOrCreateChat(1)}
+                onPress={() => this.props.findOrCreateChat(this.props.user.id)}
               >
                 <Icon name="pluscircle" type="AntDesign">
                   <Text>New Chat</Text>
                 </Icon>
               </Button>
             </Right>
+            <Button onPress={() => this.props.navigation.navigate('Test')}><Text>login</Text></Button>
           </Content>
         </ScrollView>
       </Container>
