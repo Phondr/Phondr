@@ -1,26 +1,61 @@
 const faker = require('faker')
 const db = require('./db')
+<<<<<<< HEAD
 const {User, Chat, Message, Meeting, userChats} = require('./models')
 
 const SEED = 42070
 faker.seed(SEED)
+=======
+const {User, Chat, Message, Meeting} = require('./models')
+const axios = require('axios')
+const round = require('lodash.round')
+const Op = require('sequelize').Op
+
+// const SEED = 42070
+// faker.seed(SEED)
+const idents = ['male', 'female', 'non-binary']
+const randomizer = num => {
+  return Math.floor(Math.random() * (num + 1))
+}
+const randomSelector = array => {
+  const cache = {}
+  let result = []
+  array.forEach(cur => {
+    const odds = Math.random()
+    if (odds < 0.5 && !cache[cur]) {
+      result.push(cur)
+    } else {
+      cache[cur] = true
+    }
+  })
+  return result
+}
+>>>>>>> 2ee4b63ae7cb3966c39f9c71c2601f800453d6c1
 const createUser = async () => {
   try {
     let user = await User.create({
-      fullName: `${faker.name.firstName()}` + ` ${faker.name.lastName()}`,
+      fullName: `${faker.name.firstName()} ${faker.name.lastName()}`,
       age: faker.random.number(),
-      homeLocation: faker.address.streetAddress(),
-      incentivePoints: faker.random.number(),
+      homeLocation: [
+        round(faker.address.latitude()),
+        round(faker.address.longitude())
+      ],
+      incentivePoints: faker.random.number({max: 100}),
       created_at: faker.date.recent(),
       profilePicture: faker.random.image(),
       email: faker.internet.email(),
-      password: faker.internet.password()
+      password: '123',
+      iAm: idents[randomizer(2)],
+      iPrefer: [...randomSelector(idents)],
+      distPref: randomizer(50)
     })
+    console.log('iPrefer array', user.iPrefer)
     return user
   } catch (err) {
     console.log(err)
   }
 }
+
 const createMessages = async () => {
   try {
     let message = await Message.create({
@@ -32,6 +67,7 @@ const createMessages = async () => {
     console.log(err)
   }
 }
+<<<<<<< HEAD
 const createChat = async () => {
   try {
     // const status = ['pending', 'active', 'closed']
@@ -69,6 +105,22 @@ const createuserChats = async num => {
     console.log(err)
   }
 }
+=======
+// const createChat = async () => {
+//   try {
+//     const status = ["pending", "active", "closed"];
+//     let chat = await Chat.create({
+//       expirationDate: faker.random.words(),
+//       progress: parseFloat((Math.random() * 100).toFixed(2)),
+//       created_at: faker.random.words(),
+//       status: status[Math.floor(Math.random() * 2)]
+//     });
+//     return chat;
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+>>>>>>> 2ee4b63ae7cb3966c39f9c71c2601f800453d6c1
 
 const createMeetings = async () => {
   try {
@@ -85,6 +137,7 @@ const createMeetings = async () => {
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
+<<<<<<< HEAD
   console.log(`seeded successfully`)
   for (let i = 1; i < 50; i++) {
     await createUser()
@@ -104,6 +157,55 @@ async function seed() {
     await U.addMessages(M)
     await C.addMessages(M)
   }
+=======
+
+  await User.create({
+    fullName: `Avaree Warrick`,
+    age: 24,
+    homeLocation: [
+      round(faker.address.latitude()),
+      round(faker.address.longitude())
+    ],
+    incentivePoints: faker.random.number(),
+    created_at: faker.date.recent(),
+    profilePicture: faker.random.image(),
+    email: 'test@test.com',
+    password: 'test',
+    iAm: idents[randomizer(2)],
+    iPrefer: ['male', 'female'],
+    distPref: randomizer(50)
+  })
+  for (let i = 0; i < 50; i++) {
+    const user = await createUser()
+    console.log('iPrefer in forloop', user.iPrefer)
+    //await createChat();
+    await createMeetings()
+    await createMessages()
+  }
+  for (let i = 1; i < 10; i++) {
+    const {
+      data: {
+        data: {findOrCreateChat}
+      }
+    } = await axios.post('http://localhost:8080/graphql', {
+      query: `
+        mutation{
+          findOrCreateChat(userId:${i}){
+            id
+            users {
+              id
+              fullName
+              iPrefer
+            } 
+          }
+        }
+          `
+    })
+
+    console.log(`chat ${i}: ${JSON.stringify(findOrCreateChat)}`)
+  }
+  console.log(`seeded successfully`)
+>>>>>>> 2ee4b63ae7cb3966c39f9c71c2601f800453d6c1
 }
 async function runSeed() {
   console.log('seeding...')

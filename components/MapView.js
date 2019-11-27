@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Picker, Item, Icon, Form, Input, Button, Text} from 'native-base'
+import {View, Picker, Item, Icon, Input, Button, Text} from 'native-base'
 import {StyleSheet} from 'react-native'
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'
 import googlePlaceApiKey from '../secrets'
