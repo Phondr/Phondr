@@ -1,29 +1,29 @@
-import React, { Component } from 'react'
-import { Text, View, StyleSheet, Button, TouchableOpacity } from 'react-native'
+import React, {Component} from 'react'
+import {Text, View, StyleSheet, Button, TouchableOpacity} from 'react-native'
 import t from 'tcomb-form-native'
-import { connect } from 'react-redux'
-import { fetchUserLogin } from '../redux/user'
-import { Query } from 'react-apollo'
+import {connect} from 'react-redux'
+import {fetchUserLogin} from '../redux/user'
+import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
-import { throwServerError } from 'apollo-link-http-common'
-import { navigate } from 'react-navigation'
+import {throwServerError} from 'apollo-link-http-common'
+import {navigate} from 'react-navigation'
 
 const User = t.struct({
   email: t.String,
-  password: t.String,
+  password: t.String
 })
 
 const options = {
   fields: {
     email: {
-      error: 'You need a valid email to login to your account',
+      error: 'You need a valid email to login to your account'
     },
     password: {
       password: true,
       secureTextEntry: true,
-      error: 'You need a valid password to login to your account',
-    },
-  },
+      error: 'You need a valid password to login to your account'
+    }
+  }
 }
 
 // const query = gql`
@@ -47,19 +47,23 @@ export class Login extends Component {
     console.log('LOGIN PROPS', this.props)
   }
 
+  //this is what eric changed
+  componentDidUpdate(prevProps) {
+    if (this.props.user.id) {
+      console.log('go home')
+      this.props.navigation.navigate('Home')
+    }
+  }
   static navigationOptions = {
-    drawerLabel: () => null,
+    drawerLabel: () => null
   }
 
   async login() {
     const values = this._form.getValue()
+    console.log('TCL: values', values)
+
     try {
-      await this.props.getUser(values)
-      const user = this.props.user
-      if (user.fullName) {
-        console.log('go home')
-        this.props.navigation.navigate('Home')
-      }
+      this.props.getUser(values)
     } catch (error) {
       alert('COULD NOT LOGIN')
       console.log(error)
@@ -100,47 +104,47 @@ export const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     // alignItems: "center",
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F5FCFF'
   },
   input: {
     margin: 15,
     height: 40,
     borderColor: 'black',
-    borderWidth: 1,
+    borderWidth: 1
   },
   submitButton: {
     backgroundColor: 'black',
     padding: 10,
     margin: 15,
     alignItems: 'center',
-    height: 40,
+    height: 40
   },
   submitButtonText: {
-    color: 'white',
+    color: 'white'
   },
   phonderimage: {
     width: 200,
     height: 200,
     position: 'relative',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   logintext: {
     margin: 2,
-    fontSize: 30,
+    fontSize: 30
   },
   formcontainer: {
     justifyContent: 'center',
     width: '100%',
-    backgroundColor: '#ffffff',
-  },
+    backgroundColor: '#ffffff'
+  }
 })
 
 const mapStateToProps = state => ({
-  user: state.user,
+  user: state.user
 })
 
 const mapDispatchToProps = dispatch => ({
-  getUser: values => dispatch(fetchUserLogin(values)),
+  getUser: values => dispatch(fetchUserLogin(values))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

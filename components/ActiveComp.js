@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Icon, Left, Card, CardItem, Text} from 'native-base'
 import {withNavigation} from 'react-navigation'
+import ProgressBar from './ProgressBar'
 const ActiveChats = ({myChats, user, navigation, preview}) => {
   const active = myChats.filter(chat => chat.status === 'active')
   console.log('active', active, 'user', user)
@@ -18,6 +19,7 @@ const ActiveChats = ({myChats, user, navigation, preview}) => {
             onPress={() => navigation.navigate('SingleChat')}
             key={cur.id}
           >
+            <ProgressBar currentChat={cur} />
             <Left>
               <Icon name="person" />
             </Left>

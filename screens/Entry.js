@@ -4,14 +4,18 @@ import {navigation} from 'react-navigation'
 import Login from './Login'
 import Signup from './Signup'
 import {AsyncStorage} from 'react-native'
+import {fetchUserLogin, setUser} from '../redux/user'
+import {connect} from 'react-redux'
 
 export class Entry extends Component {
   async componentDidMount() {
-    //const user = JSON.parse(await AsyncStorage.getItem('userKey'))
-    // if (user) {
-    //   this.props.navigation.navigate('Home', {user})
-    // }
-    // console.log('LOGIN VALUE', user)
+    const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+    console.log('TCL: userlogin', user)
+    if (user) {
+      await this.props.setUser(user)
+      this.props.navigation.navigate('Home', {user})
+    }
+    console.log('LOGIN VALUE', user)
   }
 
   gotToLogin() {
@@ -94,4 +98,4 @@ export const styles = StyleSheet.create({
   }
 })
 
-export default Entry
+export default connect(({user}) => ({user}), {fetchUserLogin, setUser})(Entry)

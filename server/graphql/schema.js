@@ -22,53 +22,55 @@ const {User, Chat, Message, Meeting} = require('../db/models')
 const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    id: { type: GraphQLInt },
-    email: { type: GraphQLString },
-    fullName: { type: GraphQLString },
-    googleId: { type: GraphQLString },
-    gender: { type: GraphQLString },
-    age: { type: GraphQLString },
-    homeLocation: { type: new GraphQLList(GraphQLFloat) },
-    incentivePoints: { type: GraphQLInt },
-    profilePicture: { type: GraphQLString },
-    chats: { type: new GraphQLList(ChatType) },
-    messages: { type: new GraphQLList(MessageType) },
+    id: {type: GraphQLInt},
+    email: {type: GraphQLString},
+    fullName: {type: GraphQLString},
+    googleId: {type: GraphQLString},
+    gender: {type: GraphQLString},
+    age: {type: GraphQLString},
+    homeLocation: {type: new GraphQLList(GraphQLFloat)},
+    incentivePoints: {type: GraphQLInt},
+    profilePicture: {type: GraphQLString},
+    chats: {type: new GraphQLList(ChatType)},
+    messages: {type: new GraphQLList(MessageType)},
     iAm: {type: GraphQLString},
     iPrefer: {type: new GraphQLList(GraphQLString)},
-    distPref: {type: GraphQLInt},
-  }),
-});
-const ChatType = new GraphQLObjectType({
-  name: 'Chat',
-  fields: () => ({
-    id: { type: GraphQLInt },
-    expirationDate: { type: GraphQLString },
-    progress: { type: GraphQLFloat },
-    status: { type: GraphQLString },
-    meeting: { type: MeetingType },
-    users: { type: new GraphQLList(UserType) },
-    sinceCreation: {type: GraphQLFloat},
-  }),
-});
+    distPref: {type: GraphQLInt}
+  })
+})
+
 const MessageType = new GraphQLObjectType({
   name: 'Message',
   fields: () => ({
-    id: { type: GraphQLInt },
-    content: { type: GraphQLString },
-    length: { type: GraphQLInt },
-    userId: { type: GraphQLInt },
-    chatId: { type: GraphQLInt },
+    id: {type: GraphQLInt},
+    content: {type: GraphQLString},
+    length: {type: GraphQLInt},
+    userId: {type: GraphQLInt},
+    chatId: {type: GraphQLInt},
     createdAt: {type: GraphQLString},
-    user: {type: UserType},
-  }),
-});
+    user: {type: UserType}
+  })
+})
+const ChatType = new GraphQLObjectType({
+  name: 'Chat',
+  fields: () => ({
+    id: {type: GraphQLInt},
+    expirationDate: {type: GraphQLString},
+    progress: {type: GraphQLFloat},
+    status: {type: GraphQLString},
+    meeting: {type: MeetingType},
+    users: {type: new GraphQLList(UserType)},
+    sinceCreation: {type: GraphQLFloat},
+    messages: {type: new GraphQLList(MessageType)}
+  })
+})
 const MeetingType = new GraphQLObjectType({
   name: 'Meeting',
   fields: () => ({
-    location: { type: GraphQLString },
-    date: { type: GraphQLString },
-  }),
-});
+    location: {type: GraphQLString},
+    date: {type: GraphQLString}
+  })
+})
 //Query Requests(grab information from the database)
 const rootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -78,10 +80,10 @@ const rootQuery = new GraphQLObjectType({
       type: new GraphQLList(UserType),
       async resolve(parent, args) {
         const data = await db.models.user.findAll({
-          include: [{ model: db.models.chat }, { model: db.models.message }],
-        });
-        return data;
-      },
+          include: [{model: db.models.chat}, {model: db.models.message}]
+        })
+        return data
+      }
     },
     user: {
       type: UserType,
@@ -90,9 +92,9 @@ const rootQuery = new GraphQLObjectType({
       },
       async resolve(parent, args) {
         return await db.models.user.findByPk(args.id, {
-          include: [{ model: db.models.chat }],
-        });
-      },
+          include: [{model: db.models.chat}]
+        })
+      }
     },
     userLogin: {
       type: UserType,
@@ -137,36 +139,36 @@ const rootQuery = new GraphQLObjectType({
         try {
           let user = await db.models.user.findByPk(args.userId)
           console.log('TCL: user', user)
-          const chats = await user.getChats({include: [db.models.user]})
+          const chats = await user.getChats({
+            include: [{model: db.models.user}, {model: db.models.message}]
+          })
           console.log('TCL: chats.users', chats[0].users)
           return chats
         } catch (e) {
-          console.error(e);
+          console.error(e)
         }
-      },
+      }
     },
     messages: {
       type: new GraphQLList(MessageType),
       args: {
-        chatId: { type: GraphQLInt },
+        chatId: {type: GraphQLInt}
       },
       async resolve(parent, args) {
         try {
           const messages = await db.models.message.findAll({
-            where: { chatId: args.chatId },
+            where: {chatId: args.chatId},
             include: [db.models.user],
-            order: [
-              ['createdAt', 'DESC']
-            ]
-          });
-          return messages;
+            order: [['createdAt', 'DESC']]
+          })
+          return messages
         } catch (err) {
-          console.error(err);
+          console.error(err)
         }
-      },
-    },
-  },
-});
+      }
+    }
+  }
+})
 
 const rootMutation = new GraphQLObjectType({
   name: 'RootMutationType',
@@ -239,8 +241,8 @@ const rootMutation = new GraphQLObjectType({
         if (chats.length) {
           filtered = chats.filter(cur => {
             if (cur.users[0]) {
-              const to = point(user.homeLocation);
-              const from = point(cur.users[0].homeLocation);
+              const to = point(user.homeLocation)
+              const from = point(cur.users[0].homeLocation)
 
               const options = {units: 'miles'}
               // const location2 = {
@@ -251,13 +253,13 @@ const rootMutation = new GraphQLObjectType({
               //   location1,
               //   location2
               // ).human_readable()
-              const distance = turf.distance(from, to, options);
-              console.log('distance human readable', distance);
+              const distance = turf.distance(from, to, options)
+              console.log('distance human readable', distance)
               if (distance < 10100134 && !cur.users.includes(user)) {
-                return cur;
+                return cur
               }
             }
-          });
+          })
         }
         if (filtered.length) {
           chosen = filtered[Math.floor(Math.random() * filtered.length)]
@@ -272,33 +274,35 @@ const rootMutation = new GraphQLObjectType({
         }
         console.log('TCL: chosen', chosen)
 
-        await user.addChat(chosen);
+        await user.addChat(chosen)
         const updated = await db.models.chat.findByPk(chosen.id, {
-          include: [db.models.user],
-        });
-        return updated;
-      },
+          include: [db.models.user]
+        })
+        return updated
+      }
     },
     newMessage: {
       type: MessageType,
       args: {
-        content: { type: GraphQLString },
-        length: { type: GraphQLInt },
-        userId: { type: GraphQLInt },
-        chatId: { type: GraphQLInt },
+        content: {type: GraphQLString},
+        length: {type: GraphQLInt},
+        userId: {type: GraphQLInt},
+        chatId: {type: GraphQLInt}
       },
       async resolve(parent, args) {
-        const message = await db.models.message.create({ ...args});
-        const createdMessage = await db.models.message.findByPk(message.id, {include: [db.models.user]})
-        return createdMessage;
-      },
-    },
-  },
-});
+        const message = await db.models.message.create({...args})
+        const createdMessage = await db.models.message.findByPk(message.id, {
+          include: [db.models.user]
+        })
+        return createdMessage
+      }
+    }
+  }
+})
 
 //Mutation Requests(change information in the database)
 
 module.exports = new GraphQLSchema({
   query: rootQuery,
-  mutation: rootMutation,
-});
+  mutation: rootMutation
+})

@@ -54,7 +54,7 @@ var drawer = createDrawerNavigator(
     }
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Entry',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'
@@ -98,7 +98,7 @@ function App(props) {
             {/* <AnatomyExample /> */}
             {/* <AuthPages /> */}
             <DrawerContainer />
-            <FlashMessage position='top'/>
+            <FlashMessage position="top" />
             {/* <New /> */}
           </View>
         </ApolloProvider>

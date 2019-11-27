@@ -13,6 +13,7 @@ import ActiveComp from '../components/ActiveComp'
 import PendingComp from '../components/PendingComp'
 import {ScrollView} from 'react-native-gesture-handler'
 import {setUser} from '../redux/user'
+import {fetchUserLogin} from '../redux/user'
 
 class Home extends Component {
   constructor() {
@@ -31,9 +32,12 @@ class Home extends Component {
     //this is just for testing
     // this.props.setUser(this.state.user)
 
-    console.log('home mounted')
-    console.log(this.props.user)
-    this.props.fetchMyChats(this.props.user.id)
+    if (!this.props.user.id) {
+      this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
+    }
+    if (this.props.user.id) {
+      this.props.fetchMyChats(this.props.user.id)
+    }
 
     //console.log('HOME PROPS', this.props)
   }
@@ -85,5 +89,6 @@ class Home extends Component {
 export default connect(({myChats, user}) => ({myChats, user}), {
   fetchMyChats,
   findOrCreateChat,
-  setUser
+  setUser,
+  fetchUserLogin
 })(Home)

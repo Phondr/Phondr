@@ -85,7 +85,11 @@ export const fetchMyChats = uid => {
                  progress
                  status
                   sinceCreation
-   			   id
+				  id
+				  messages{
+					  id
+					  userId
+				  }
    			   users{
                    id
                    fullName
@@ -119,10 +123,10 @@ export const fetchMyChats = uid => {
       //     console.log(result.data)
       //    })
     } catch (e) {
-      console.error('messed up in fetchMyChats, error: ', e);
+      console.error('messed up in fetchMyChats, error: ', e)
     }
-  };
-};
+  }
+}
 
 const reducer = (chats = [], action) => {
   switch (action.type) {
@@ -136,6 +140,6 @@ const reducer = (chats = [], action) => {
     default:
       return chats
   }
-};
+}
 
-export default reducer;
+export default reducer
