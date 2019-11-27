@@ -31,7 +31,7 @@ import t, {MultiSelectExample} from 'tcomb-form-native'
 const User = t.struct({
   fullName: t.String,
   age: t.Integer,
-  address: t.String,
+  //address: t.String,
   radius: t.Integer,
   gender: t.String,
   email: t.String,
@@ -47,9 +47,9 @@ const options = {
     age: {
       error: 'You need a valid age to sign up'
     },
-    address: {
-      error: 'You need a valid address to sign up'
-    },
+    // address: {
+    //   error: 'You need a valid address to sign up'
+    // },
     radius: {
       placeholder: 'miles',
       error: 'You need to specify a search radius(in miles)'
@@ -93,18 +93,20 @@ export class Signup extends Component {
     this.signup = this.signup.bind(this)
   }
 
+  componentDidUpdate() {
+    const user = this.props.user
+    if (this.props.user.id) {
+      console.log('go home')
+      this.props.navigation.navigate('Home', {user})
+    }
+  }
+
   async signup() {
     const values = this._form.getValue()
     const preferences = this.state.preferences
     //console.log(values)
     try {
       await this.props.addUser(values, preferences)
-      const user = this.props.user
-      console.log('USER', user)
-      if (user.data.userLogin.fullName) {
-        console.log('go home')
-        this.props.navigation.navigate('Home')
-      }
     } catch (error) {
       alert('COULD NOT SIGNUP')
       console.log(error)

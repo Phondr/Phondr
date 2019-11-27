@@ -3,7 +3,8 @@ const {url} = require('../secrets')
 import gql from 'graphql-tag'
 import {AsyncStorage} from 'react-native'
 import AsyncUtils from '../server/AsyncUtils'
-console.log('URL', url)
+import client from './apolloClient'
+import myAxios from './axios-config'
 
 //action type
 const GETUSER = 'GETUSER'
@@ -40,6 +41,15 @@ export const getData = async key => {
   }
 }
 
+export const removeData = async key => {
+  try {
+    await AsyncStorage.removeItem(key)
+  } catch (e) {
+    // error reading value
+    console.log(e)
+  }
+}
+
 //thunk
 export const fetchUserLogin = values => async dispatch => {
   try {
@@ -68,7 +78,7 @@ export const fetchUserLogin = values => async dispatch => {
     console.log('USERDATA', data)
     if (data.data.userLogin) {
       //console.log('USERLOGIN', data.data.userLogin.email)
-      //storeData('userKey', JSON.stringify(data.data.userLogin))
+      storeData('userKey', JSON.stringify(data.data.userLogin))
     }
 
     dispatch(setUser(data))
@@ -82,6 +92,10 @@ export const userSignUp = (values, preferences) => async dispatch => {
   try {
     console.log(values, preferences)
 
+    if (getData('userKey')) {
+      removeData('userKey')
+    }
+
     const fullName = values.fullName
     const age = values.age
     const password = values.password
@@ -89,22 +103,25 @@ export const userSignUp = (values, preferences) => async dispatch => {
     const address = values.address
     const radius = values.radius
 
-    let {data} = await axios({
-      url: `${url}/graphql`,
-      method: 'POST',
-      data: {
-        query: `
-        {
-          userSignup(fullName: "${fullName}", age: "${age}", homeLocation: "${address}", email: "${email}", password: "${password}") {
-            id
-            email
-            fullName
-            }
-        }
-        `
-      }
+    let {data} = await client.mutate({
+      mutation: gql`mutation{
+        userSignup(fullName: "${fullName}", email: "${email}", password: "${password}") {
+          id
+          email
+          fullName
+          password
+          }
+              }`
     })
-    dispatch(setUser(data.data.userSignup))
+
+    console.log('DATA', data.userSignup)
+
+    if (data.userSignup) {
+      console.log('USERLOGIN', data.userSignup.email)
+      storeData('userKey', JSON.stringify(data.userSignup))
+    }
+
+    dispatch(setUser(data.userSignup))
   } catch (error) {
     alert('COULD NOT SIGN-UP')
     console.log(error)
