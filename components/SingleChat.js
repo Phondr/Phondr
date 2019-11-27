@@ -49,8 +49,9 @@ class SingleChats extends Component {
   //   });
   // }
 
-  static navigationOptions = { //This is here so it doesn't show up on the drawer pull out 
-    drawerLabel: () => null,
+  static navigationOptions = {
+    //This is here so it doesn't show up on the drawer pull out
+    drawerLabel: () => null
   }
 
   componentDidMount() {
@@ -77,20 +78,28 @@ class SingleChats extends Component {
       content: message[0].text,
       userId: message[0].user._id,
       length: message[0].text.length,
-      chatId: this.props.currentChat.id,
+      chatId: this.props.currentChat.id
     }
     //Create the message ONCE after click send but don't set to redux yet
     const newMessage = await this.props.newMessage(formattedMessage)
     //Send created message to sockets with event sendMessage
-    socket.emit('sendMessage', {message: newMessage, chatId: this.props.currentChat.id})
+    socket.emit('sendMessage', {
+      message: newMessage,
+      chatId: this.props.currentChat.id
+    })
   }
   render() {
     console.log('yohere', this.props.currentChat)
-    if(this.props.currentChat.id !== this.state.chatId) {this.setState({chatId: this.props.currentChat.id})}
+    if (this.props.currentChat.id !== this.state.chatId) {
+      this.setState({chatId: this.props.currentChat.id})
+    }
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
-        <CustomHeader title={`Chat Room ${this.props.currentChat.id}`} currentChat={this.props.currentChat}/>
+        <CustomHeader
+          title={`Chat Room ${this.props.currentChat.id}`}
+          currentChat={this.props.currentChat}
+        />
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
@@ -106,24 +115,16 @@ class SingleChats extends Component {
 
 const MapStateToProps = state => {
   return {
-<<<<<<< HEAD
-    messages: state.messages
-=======
     user: state.user,
     messages: state.messages,
-    currentChat: state.currentChat,
->>>>>>> 436b369d6ef19e2cc3a0c651ef33e69367f455c1
+    currentChat: state.currentChat
   }
 }
 const MapDispatchToProps = dispatch => {
   return {
     fetchMessages: chatId => dispatch(fetchMessages(chatId)),
-<<<<<<< HEAD
-    newMessage: message => dispatch(newMessage(message))
-=======
     newMessage: message => dispatch(newMessage(message)),
     setNewMessage: message => dispatch(setNewMessage(message))
->>>>>>> 436b369d6ef19e2cc3a0c651ef33e69367f455c1
   }
 }
 
