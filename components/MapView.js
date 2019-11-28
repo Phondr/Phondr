@@ -7,14 +7,16 @@ import {
   Input,
   Button,
   Text,
-  Container
+  Container,
+  Content
 } from 'native-base'
-import {StyleSheet} from 'react-native'
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps'
-import googlePlaceApiKey from '../secrets'
+import {googlePlaceApiKey} from '../secrets'
 import axios from 'axios'
 import {colors, PlaceTypes} from './ulti'
 import CustomHeader from './CustomHeader'
+import {connect} from 'react-redux'
+
 export default class Mapv extends Component {
   constructor() {
     super()
@@ -24,6 +26,10 @@ export default class Mapv extends Component {
         longitude: 0,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
+      },
+      currentCoord: {
+        latitude: 0,
+        longitude: 0
       },
       Location: {},
       nearby: [],
@@ -53,6 +59,10 @@ export default class Mapv extends Component {
           longitude: position.coords.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421
+        },
+        currentCoord: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
         }
       })
     })
@@ -82,7 +92,6 @@ export default class Mapv extends Component {
 
     this.setState({
       flag: false,
-      show:!this.state.show,
       region: {
         latitude: e.nativeEvent.coordinate.latitude,
         longitude: e.nativeEvent.coordinate.longitude,
@@ -116,11 +125,12 @@ export default class Mapv extends Component {
       newTemp = newTemp.replace(' ', '20%')
     }
     const theUrl =
-      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${newTemp}&inputtype=textquery&fields=geometry,place_id&key=` +
+      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${newTemp}&inputtype=textquery&fields=geometry,place_id,name,rating,formatted_address&key=` +
       googlePlaceApiKey
     axios
       .get(theUrl)
       .then(res => {
+        console.log(res.data)
         this.setState({Found: res.data.candidates})
       })
       .catch(err => console.log(err))
@@ -131,15 +141,9 @@ export default class Mapv extends Component {
     })
   }
   render() {
-    const styles = StyleSheet.create({
-      map: {
-        ...StyleSheet.absoluteFill
-      }
-    })
-
     return (
       <View>
-        <CustomHeader title="Mapv" />
+        <CustomHeader title="Map" />
         {this.state.show ? (
           <Item regular>
             <Input
@@ -168,13 +172,59 @@ export default class Mapv extends Component {
             </Picker>
           </Item>
         ) : null}
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}
+        >
+          <View>
+            <Button
+              block
+              style={{width: 100}}
+              onPress={() => this.setState({show: !this.state.show})}
+            >
+              <Text style={{color: 'red'}}>SHOW/HIDE</Text>
+            </Button>
+          </View>
+          <View>
+            {this.state.Found.length > 1 ? (
+              <Button onPress={this.moveToNextMarker}>
+                <Text>next marker</Text>
+              </Button>
+            ) : null}
+          </View>
+          <View>
+            <Button
+              block
+              style={{width: 100}}
+              onPress={() => {
+                this.moveTo(
+                  this.state.currentCoord.latitude,
+                  this.state.currentCoord.longitude
+                )
+              }}
+            >
+              <Text>Move to Your location</Text>
+            </Button>
+          </View>
+        </View>
 
         <MapView
-          style={{position: 'relative', width: '100%', height: '100%'}}
+          style={{width: '100%', height: '80%'}}
           region={this.state.region}
           onPress={this.createMarker}
           provider={PROVIDER_GOOGLE}
         >
+          <Marker
+            coordinate={{
+              latitude: this.state.currentCoord.latitude,
+              longitude: this.state.currentCoord.longitude
+            }}
+            title="YOU"
+            pinColor={{color: '#1A2421'}}
+          />
           {this.state.nearby.length !== 0 && this.state.flag === false
             ? this.state.nearby.map((x, i) => (
                 <Marker
@@ -186,6 +236,7 @@ export default class Mapv extends Component {
                   title={`${x.name}(${x.rating} rating)`}
                   description={`In the vicinity of : ${x.vicinity} `}
                   pinColor={colors[i]}
+                  style={{position: 'absolute'}}
                 />
               ))
             : null}
@@ -197,15 +248,12 @@ export default class Mapv extends Component {
                     latitude: found.geometry.location.lat,
                     longitude: found.geometry.location.lng
                   }}
+                  title={`${found.name}(${found.rating} rating)`}
+                  description={`${found.formatted_address}`}
                 />
               ))
             : null}
         </MapView>
-        {this.state.Found.length > 1 ? (
-          <Button onPress={this.moveToNextMarker}>
-            <Text>next marker</Text>
-          </Button>
-        ) : null}
       </View>
     )
   }

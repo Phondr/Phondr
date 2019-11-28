@@ -13,7 +13,6 @@ import {
 import AllChats from './Allchat'
 import Profile from './Profile'
 import Mapv from './MapView'
-import Meetview from './Meetview'
 import SingleChats from './SingleChat'
 import CustomHeader from '../components/CustomHeader'
 
@@ -74,9 +73,6 @@ const Temp = createStackNavigator(
     },
     mapview: {
       screen: Mapv,
-    },
-    meetview: {
-      screen: Meetview,
     },
     singlechat: {
       screen: SingleChats,
