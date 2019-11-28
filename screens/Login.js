@@ -15,6 +15,7 @@ import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
 import {throwServerError} from 'apollo-link-http-common'
 import {navigate} from 'react-navigation'
+import Spinner from '../components/Spinner'
 
 const User = t.struct({
   email: t.String,
@@ -48,12 +49,11 @@ const Form = t.form.Form
 export class Login extends Component {
   constructor() {
     super()
+    this.state = {loading: false}
     this.login = this.login.bind(this)
   }
 
-  componentDidMount() {
-   
-  }
+  componentDidMount() {}
 
   //this is what eric changed
   componentDidUpdate(prevProps) {
@@ -67,18 +67,23 @@ export class Login extends Component {
   }
 
   async login() {
+    this.setState({loading: true})
     const values = this._form.getValue()
     console.log('TCL: values', values)
 
     try {
       this.props.getUser(values)
     } catch (error) {
+      this.setState({loading: false})
       alert('COULD NOT LOGIN')
       console.log(error)
     }
   }
 
   render() {
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>

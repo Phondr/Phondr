@@ -27,7 +27,7 @@ import ActiveScreen from './screens/ActiveScreen'
 import SingleChat from './components/SingleChat'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
-
+import Spinner from './components/Spinner'
 const {url} = require('./secrets')
 
 var drawer = createDrawerNavigator(
@@ -95,15 +95,15 @@ function App(props) {
   } else {
     return (
       <Provider store={store}>
-          <View style={styles.container}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            {/* <AppNavigator /> */}
-            {/* <AnatomyExample /> */}
-            {/* <AuthPages /> */}
-            <DrawerContainer />
-            <FlashMessage position="top" />
-            {/* <New /> */}
-          </View>
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          {/* <AppNavigator /> */}
+          {/* <AnatomyExample /> */}
+          {/* <AuthPages /> */}
+          <DrawerContainer />
+          <FlashMessage position="top" />
+          {/* <New /> */}
+        </View>
       </Provider>
     )
   }

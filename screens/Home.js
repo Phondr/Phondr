@@ -1,6 +1,14 @@
 import React, {Component} from 'react'
 import {ImageBackground, View, StatusBar, StyleSheet, Text} from 'react-native'
-import {Container, Button, Icon, Content, Left, Right} from 'native-base'
+import {
+  Container,
+  Button,
+  Icon,
+  Content,
+  Left,
+  Right,
+  Spinner
+} from 'native-base'
 import {Platform} from '@unimodules/core'
 
 import {withNavigation} from 'react-navigation'
@@ -14,12 +22,14 @@ import PendingComp from '../components/PendingComp'
 import {ScrollView} from 'react-native-gesture-handler'
 import {setUser} from '../redux/user'
 import {fetchUserLogin} from '../redux/user'
+import {setLoading} from '../redux/loading'
 
 class Home extends Component {
   constructor() {
     super()
     this.state = {
-      user: {fullName: 'Avaree Warrick', id: 1}
+      user: {fullName: 'Avaree Warrick', id: 1},
+      loading: true
     }
   }
   static navigationOptions = {
@@ -39,7 +49,6 @@ class Home extends Component {
       console.log('in comp did mouth fmc')
       this.props.fetchMyChats(this.props.user.id)
     }
-
     //console.log('HOME PROPS', this.props)
   }
   componentDidUpdate(prevProps) {

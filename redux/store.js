@@ -6,8 +6,8 @@ import {composeWithDevTools} from 'remote-redux-devtools'
 import thunkMiddleware from 'redux-thunk'
 
 let middleware = [
-  thunkMiddleware.withExtraArgument({axios})
-  //createLogger({collapsed: true})
+  thunkMiddleware.withExtraArgument({axios}),
+  createLogger({collapsed: true})
 ]
 // if (process.browser) {
 //   middleware = [...middleware, createLogger({ collapsed: true })]

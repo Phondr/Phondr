@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Text, View, StyleSheet, Image, Button} from 'react-native'
+import Spinner from '../components/Spinner'
 import {navigation} from 'react-navigation'
 import Login from './Login'
 import Signup from './Signup'
@@ -10,14 +11,17 @@ import {connect} from 'react-redux'
 export class Entry extends Component {
   constructor() {
     super()
-    this.state = {user: ''}
+    this.state = {user: '', loading: true}
   }
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
 
-    if (user) {
+    if (user.email) {
       await this.props.setUser(user)
       this.props.navigation.navigate('Home', {user})
+    }
+    if (this.state.loading) {
+      this.setState({loading: false})
     }
   }
 
@@ -34,6 +38,9 @@ export class Entry extends Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
       <View style={styles.container}>
         <View style={styles.title}>
