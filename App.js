@@ -29,6 +29,7 @@ import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 import Spinner from './components/Spinner'
 const {url} = require('./secrets')
+import PlaceSearch from './components/PlaceSearch'
 
 var drawer = createDrawerNavigator(
   {
@@ -55,10 +56,11 @@ var drawer = createDrawerNavigator(
     },
     'Active Chats': {
       screen: ActiveScreen
-    }
+    },
+    PlaceSearch
   },
   {
-    initialRouteName: 'Entry',
+    initialRouteName: 'PlaceSearch',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'

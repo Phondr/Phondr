@@ -1,33 +1,38 @@
 import React from 'react'
 import {placesAPI} from '../secrets'
-import {View, Text, TextInput, ScrollView} from 'react-native'
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  Alert,
+  StyleSheet
+} from 'react-native'
 import {Feather} from '@expo/vector-icons'
-import SearchBar from '../components/SearchBar'
 import {GoogleAutoComplete} from 'react-native-google-autocomplete'
 
 import PlaceItem from './PlaceItem'
 class PlaceSearch extends React.Component {
   constructor() {
     super()
-
-    this.setState = this.setState.bind(this)
   }
   render() {
     return (
-      <View style={styles.backgroundStyle}>
+      <View>
         <GoogleAutoComplete apiKey={placesAPI} debounce={500}>
           {({handleTextChange, locationResults, fetchDetails}) => (
-            <View>
-              {console.log('location results', locationResults)}
-              <Feather style={styles.iconStyle} name="search" />
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Search"
-                autoCapitalize="none"
-                autoCorrect={false}
-                value={this.state.term}
-                onChangeText={val => handleTextChange}
-              />
+            <React.Fragment>
+              <View style={styles.backgroundStyle}>
+                {console.log('location results', locationResults)}
+                <Feather style={styles.iconStyle} name="search" />
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Search Place"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  onChangeText={val => handleTextChange}
+                />
+              </View>
               <ScrollView>
                 {locationResults.map(cur => {
                   return (
@@ -39,7 +44,7 @@ class PlaceSearch extends React.Component {
                   )
                 })}
               </ScrollView>
-            </View>
+            </React.Fragment>
           )}
         </GoogleAutoComplete>
       </View>
@@ -48,7 +53,7 @@ class PlaceSearch extends React.Component {
 }
 const styles = StyleSheet.create({
   backgroundStyle: {
-    marginTop: 10,
+    marginTop: 50,
     marginBottom: 1,
     backgroundColor: '#F0EEEE',
     height: 50,
@@ -68,3 +73,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 15
   }
 })
+
+export default PlaceSearch

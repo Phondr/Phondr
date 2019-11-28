@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Text, TouchableOpacity} from 'react-native'
+import {View, Text, TouchableOpacity, Alert} from 'react-native'
 import {Container, Content, Card, CardItem} from 'native-base'
 import {connect} from 'react-redux'
 import {updatePendingDate, updatePendingLocation} from '../redux/invitation'
@@ -12,10 +12,9 @@ const PlaceItem = ({
 }) => {
   const handlePress = async () => {
     const {geometry} = fetchDetails(place_id)
-    updatePendingLocation([
-      geometry.location.latitude,
-      geometry.location.longitude
-    ])
+    const location = [geometry.location.latitude, geometry.location.longitude]
+    Alert.alert(location)
+    updatePendingLocation(location)
   }
   return (
     <React.Fragment>
