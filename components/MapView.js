@@ -223,7 +223,7 @@ export default class Mapv extends Component {
               longitude: this.state.currentCoord.longitude
             }}
             title="YOU"
-            pinColor={{color: '#1A2421'}}
+            pinColor="#15F4EE"
           />
           {this.state.nearby.length !== 0 && this.state.flag === false
             ? this.state.nearby.map((x, i) => (
