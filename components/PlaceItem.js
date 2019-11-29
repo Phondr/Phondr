@@ -5,16 +5,18 @@ import {connect} from 'react-redux'
 import {updatePendingDate, updatePendingLocation} from '../redux/invitation'
 
 const PlaceItem = ({
-  description,
-  fetchDetails,
   place_id,
-  updatePendingLocation
+  description,
+  updatePendingLocation,
+  fetchDetails
 }) => {
   const handlePress = async () => {
-    const {geometry} = fetchDetails(place_id)
-    const location = [geometry.location.latitude, geometry.location.longitude]
-    Alert.alert(location)
-    updatePendingLocation(location)
+    const res = await fetchDetails(place_id)
+    const {geometry, name} = res
+    console.log('TCL: res', res)
+
+    const coords = [geometry.location.lat, geometry.location.lng]
+    updatePendingLocation(coords, name)
   }
   return (
     <React.Fragment>
@@ -27,6 +29,6 @@ const PlaceItem = ({
   )
 }
 
-export default connect(({invitation}) => ({invitation}), {
+export default connect(null, {
   updatePendingLocation
 })(PlaceItem)

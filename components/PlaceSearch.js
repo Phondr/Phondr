@@ -19,22 +19,26 @@ class PlaceSearch extends React.Component {
   render() {
     return (
       <View>
-        <GoogleAutoComplete apiKey={placesAPI} debounce={500}>
+        <GoogleAutoComplete
+          apiKey={placesAPI}
+          debounce={200}
+          queryTypes={'establishment'}
+        >
           {({handleTextChange, locationResults, fetchDetails}) => (
             <React.Fragment>
               <View style={styles.backgroundStyle}>
-                {console.log('location results', locationResults)}
                 <Feather style={styles.iconStyle} name="search" />
                 <TextInput
                   style={styles.inputStyle}
                   placeholder="Search Place"
                   autoCapitalize="none"
                   autoCorrect={false}
-                  onChangeText={val => handleTextChange}
+                  onChangeText={handleTextChange}
                 />
               </View>
               <ScrollView>
                 {locationResults.map(cur => {
+                  console.log('TCL: cur ', cur)
                   return (
                     <PlaceItem
                       key={cur.id}
