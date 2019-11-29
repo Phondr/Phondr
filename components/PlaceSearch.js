@@ -34,11 +34,11 @@ class PlaceSearch extends React.Component {
                   autoCapitalize="none"
                   autoCorrect={false}
                   onChangeText={handleTextChange}
+                  // onEndEditing={handleTextChange}
                 />
               </View>
               <ScrollView>
                 {locationResults.map(cur => {
-                  console.log('TCL: cur ', cur)
                   return (
                     <PlaceItem
                       key={cur.id}

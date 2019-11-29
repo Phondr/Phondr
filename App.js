@@ -30,6 +30,7 @@ import {getData} from './redux/user'
 import Spinner from './components/Spinner'
 const {url} = require('./secrets')
 import PlaceSearch from './components/PlaceSearch'
+import MeetingModal from './screens/MeetingModal'
 
 var drawer = createDrawerNavigator(
   {
@@ -57,10 +58,10 @@ var drawer = createDrawerNavigator(
     'Active Chats': {
       screen: ActiveScreen
     },
-    PlaceSearch
+    MeetingModal
   },
   {
-    initialRouteName: 'PlaceSearch',
+    initialRouteName: 'New',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'

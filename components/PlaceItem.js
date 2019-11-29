@@ -13,7 +13,6 @@ const PlaceItem = ({
   const handlePress = async () => {
     const res = await fetchDetails(place_id)
     const {geometry, name} = res
-    console.log('TCL: res', res)
 
     const coords = [geometry.location.lat, geometry.location.lng]
     updatePendingLocation(coords, name)
