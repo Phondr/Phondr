@@ -1,4 +1,4 @@
-let url = 'https://f3cb5825.ngrok.io'
-const googlePlaceApiKey = `AIzaSyDuPTaAlgtbEnHCQeSMZed8WgBahOaUuQ0`
+let url = 'https://9015f914.ngrok.io'
+const googlePlaceApiKey = `AIzaSyBCmg-KBnHeXTwvTgujd4DJsni6rW7x38A`
 
 module.exports = { url, googlePlaceApiKey }

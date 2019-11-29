@@ -112,6 +112,7 @@ export default class Mapv extends Component {
       .get(theUrl)
       .then(res => {
         this.setState({nearby: res.data.results})
+        console.log(res.data)
         res.data.results.forEach(x => {
           console.log(x.name)
         })
@@ -120,7 +121,7 @@ export default class Mapv extends Component {
   }
   searchByName(text) {
     this.setState({flag: true})
-    let newTemp = text.replace(' ', '20%')
+    let newTemp = text
     while (newTemp.includes(' ')) {
       newTemp = newTemp.replace(' ', '20%')
     }
@@ -189,7 +190,7 @@ export default class Mapv extends Component {
             </Button>
           </View>
           <View>
-            {this.state.Found.length > 1 ? (
+            {this.state.Found.length > 0 ? (
               <Button onPress={this.moveToNextMarker}>
                 <Text>next marker</Text>
               </Button>
