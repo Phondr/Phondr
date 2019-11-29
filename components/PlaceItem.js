@@ -8,14 +8,18 @@ const PlaceItem = ({
   place_id,
   description,
   updatePendingLocation,
-  fetchDetails
+  fetchDetails,
+  term,
+  setTerm
 }) => {
   const handlePress = async () => {
     const res = await fetchDetails(place_id)
+    console.log('res', res)
     const {geometry, name} = res
 
     const coords = [geometry.location.lat, geometry.location.lng]
-    updatePendingLocation(coords, name)
+    updatePendingLocation(coords, name, description)
+    setTerm({term: ''})
   }
   return (
     <React.Fragment>

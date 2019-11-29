@@ -7,12 +7,14 @@ import {
   Icon,
   Card,
   CardItem,
-  Body
+  Body,
+  Form
 } from 'native-base'
 import PlaceSearch from '../components/PlaceSearch'
 import Modal from 'react-native-modal'
 import MapView, {Marker} from 'react-native-maps'
 import {connect} from 'react-redux'
+import CustomDatePicker from '../components/CustomDatePicker'
 
 const MeetingModal = ({invitation}) => {
   const formatRegion = inv => {
@@ -39,6 +41,12 @@ const MeetingModal = ({invitation}) => {
 
         {invitation.name && (
           <View>
+            <Card>
+              <CardItem>
+                <Text>Selected: {invitation.address}</Text>
+              </CardItem>
+            </Card>
+
             <MapView
               style={{
                 height: 150,
@@ -54,9 +62,21 @@ const MeetingModal = ({invitation}) => {
                   longitude: formatRegion(invitation).longitude
                 }}
                 title={invitation.name}
+                description={invitation.address}
               />
             </MapView>
           </View>
+        )}
+        <CustomDatePicker />
+
+        {!!invitation.date && (
+          <Card>
+            <CardItem>
+              <Text>
+                Chosen Date: {invitation.date.toString().substr(4, 12)}
+              </Text>
+            </CardItem>
+          </Card>
         )}
       </Content>
     </Container>

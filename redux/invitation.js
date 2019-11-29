@@ -1,8 +1,8 @@
 const UPDATEPENDINGLOCATION = 'UPDATEPENDINGLOCATION'
 const UPDATEPENDINGDATE = 'UPDATEPENDINGDATE'
 // const UPDATEPENDINGNAME='UPDATEPENDINGNAME'
-export const updatePendingLocation = (coords, name) => {
-  return {type: UPDATEPENDINGLOCATION, coords, name}
+export const updatePendingLocation = (coords, name, address) => {
+  return {type: UPDATEPENDINGLOCATION, coords, name, address}
 }
 export const updatePendingDate = date => {
   return {type: UPDATEPENDINGDATE, date}
@@ -14,7 +14,12 @@ export const updatePendingDate = date => {
 const reducer = (invitation = {}, action) => {
   switch (action.type) {
     case UPDATEPENDINGLOCATION:
-      return {...invitation, coords: action.coords, name: action.name}
+      return {
+        ...invitation,
+        coords: action.coords,
+        name: action.name,
+        address: action.address
+      }
     case UPDATEPENDINGDATE:
       return {...invitation, date: action.date}
     default:

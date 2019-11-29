@@ -8,17 +8,20 @@ import {
   Alert,
   StyleSheet
 } from 'react-native'
+import {Item, Icon, Input} from 'native-base'
 import {Feather} from '@expo/vector-icons'
 import {GoogleAutoComplete} from 'react-native-google-autocomplete'
+import {connect} from 'react-redux'
 
 import PlaceItem from './PlaceItem'
 class PlaceSearch extends React.Component {
   constructor() {
     super()
+    this.state = {term: ''}
   }
   render() {
     return (
-      <View>
+      <React.Fragment>
         <GoogleAutoComplete
           apiKey={placesAPI}
           debounce={200}
@@ -26,32 +29,41 @@ class PlaceSearch extends React.Component {
         >
           {({handleTextChange, locationResults, fetchDetails}) => (
             <React.Fragment>
-              <View style={styles.backgroundStyle}>
-                <Feather style={styles.iconStyle} name="search" />
-                <TextInput
-                  style={styles.inputStyle}
+              <Item>
+                <Icon name="search" />
+                <Input
+                  //style={styles.inputStyle}
                   placeholder="Search Place"
                   autoCapitalize="none"
                   autoCorrect={false}
-                  onChangeText={handleTextChange}
+                  onChangeText={val => {
+                    this.setState({term: val})
+                    handleTextChange(val)
+                  }}
+                  value={this.state.term}
+                  placeholderTextColor={'#d3d3d3'}
                   // onEndEditing={handleTextChange}
                 />
-              </View>
-              <ScrollView>
-                {locationResults.map(cur => {
-                  return (
-                    <PlaceItem
-                      key={cur.id}
-                      fetchDetails={fetchDetails}
-                      {...cur}
-                    />
-                  )
-                })}
-              </ScrollView>
+              </Item>
+              {!!this.state.term.length && (
+                <ScrollView>
+                  {locationResults.map(cur => {
+                    return (
+                      <PlaceItem
+                        key={cur.id}
+                        fetchDetails={fetchDetails}
+                        {...cur}
+                        term={this.state.term}
+                        setTerm={this.setState.bind(this)}
+                      />
+                    )
+                  })}
+                </ScrollView>
+              )}
             </React.Fragment>
           )}
         </GoogleAutoComplete>
-      </View>
+      </React.Fragment>
     )
   }
 }
