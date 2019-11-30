@@ -26,6 +26,7 @@ import PendingScreen from './screens/PendingScreen'
 import ActiveScreen from './screens/ActiveScreen'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
+import MapV from './components/MapView'
 
 const {url} = require('./secrets')
 
@@ -34,9 +35,9 @@ var drawer = createDrawerNavigator(
     Home: {
       screen: Home
     },
-    New: {
-      screen: New
-    },
+    // New: {
+    //   screen: New
+    // },
     Login: {
       screen: Login
     },
@@ -46,12 +47,15 @@ var drawer = createDrawerNavigator(
     Entry: {
       screen: Entry
     },
+    MapV:{
+      screen: MapV
+    },
     'Pending Chats': {
       screen: PendingScreen
     },
     'Active Chats': {
       screen: ActiveScreen
-    }
+    },
   },
   {
     initialRouteName: 'Login',

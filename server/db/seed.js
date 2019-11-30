@@ -40,7 +40,8 @@ const createUser = async () => {
       password: '123',
       iAm: idents[randomizer(2)],
       iPrefer: [...randomSelector(idents)],
-      distPref: randomizer(50)
+      distPref: randomizer(50),
+      isNoob: faker.random.boolean()
     })
     console.log('iPrefer array', user.iPrefer)
     return user
@@ -128,7 +129,7 @@ async function seed() {
               id
               fullName
               iPrefer
-            } 
+            }
           }
         }
           `

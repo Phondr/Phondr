@@ -6,7 +6,7 @@ import messages from './message'
 const appReducer = combineReducers({
   user,
   myChats,
-  messages,
+  messages
 })
 
 export default appReducer
