@@ -175,7 +175,7 @@ const MeetingModal = ({invitation, updatePendingLocation}) => {
                       //pinColor={colors[i]}
                       //style={{position: 'absolute'}}
                       onPress={() => updateInvitation(x)}
-                      // onCalloutPress={() => updateInvitation(x)}
+                      onCalloutPress={() => updateInvitation(x)}
                     >
                       {/* <Callout tooltip>
                         <View>
