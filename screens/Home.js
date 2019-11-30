@@ -23,13 +23,20 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {setUser} from '../redux/user'
 import {fetchUserLogin} from '../redux/user'
 import {setLoading} from '../redux/loading'
+import Dialog, {
+  DialogTitle,
+  DialogContent,
+  DialogFooter,
+  DialogButton
+} from 'react-native-popup-dialog'
 
 class Home extends Component {
   constructor() {
     super()
     this.state = {
-      user: {fullName: 'Avaree Warrick', id: 1},
-      loading: true
+      user: {fullName: 'Avaree Warrick', id: 1, isNoob: true},
+      defaultAnimationDialog: true,
+      loading:true
     }
   }
   static navigationOptions = {
@@ -62,6 +69,56 @@ class Home extends Component {
     return (
       <Container>
         <ScrollView>
+          {this.state.user.isNoob === true? (
+            <Dialog
+              onDismiss={() => {
+                this.setState({defaultAnimationDialog: false})
+              }}
+              width={0.9}
+              visible={this.state.defaultAnimationDialog}
+              rounded
+              actionsBordered
+              dialogTitle={
+                <DialogTitle
+                  title="Intro to the App"
+                  style={{
+                    backgroundColor: '#F7F7F8'
+                  }}
+                  hasTitleBar={false}
+                  align="left"
+                />
+              }
+              footer={
+                <DialogFooter>
+                  <DialogButton
+                    text="Turn off intro"
+                    bordered
+                    onPress={() => {
+                      this.setState({defaultAnimationDialog: false, isNoob: false})
+                    }}
+                    key="button-1"
+                  />
+                  <DialogButton
+                    text="OK"
+                    bordered
+                    onPress={() => {
+                      this.setState({defaultAnimationDialog: false})
+                    }}
+                    key="button-2"
+                  />
+                </DialogFooter>
+              }
+            >
+              <DialogContent
+                style={{
+                  backgroundColor: '#F7F7F8'
+                }}
+              >
+                <Text>INPUT THE INTRO HERE</Text>
+              </DialogContent>
+            </Dialog>
+          ) : null}
+
           <StatusBar barStyle="light-content" />
           <CustomHeader title="Home" />
           <Content
@@ -86,7 +143,7 @@ class Home extends Component {
                 onPress={() => this.props.findOrCreateChat(this.props.user.id)}
               >
                 <Icon name="pluscircle" type="AntDesign">
-                  <Text>New Chat</Text>
+                  <Text> New Chat</Text>
                 </Icon>
               </Button>
             </Right>

@@ -28,6 +28,8 @@ import SingleChat from './components/SingleChat'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 import Spinner from './components/Spinner'
+import MapV from './components/MapView'
+
 const {url} = require('./secrets')
 import PlaceSearch from './components/PlaceSearch'
 import MeetingModal from './screens/MeetingModal'
@@ -37,9 +39,9 @@ var drawer = createDrawerNavigator(
     Home: {
       screen: Home
     },
-    New: {
-      screen: New
-    },
+    // New: {
+    //   screen: New
+    // },
     Login: {
       screen: Login
     },
@@ -51,6 +53,9 @@ var drawer = createDrawerNavigator(
     },
     SingleChat: {
       screen: SingleChat
+    },
+    MapV:{
+      screen: MapV
     },
     'Pending Chats': {
       screen: PendingScreen
