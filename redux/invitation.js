@@ -1,8 +1,8 @@
 const UPDATEPENDINGLOCATION = 'UPDATEPENDINGLOCATION'
 const UPDATEPENDINGDATE = 'UPDATEPENDINGDATE'
 // const UPDATEPENDINGNAME='UPDATEPENDINGNAME'
-export const updatePendingLocation = (coords, name, address) => {
-  return {type: UPDATEPENDINGLOCATION, coords, name, address}
+export const updatePendingLocation = (coords, name, address, rating) => {
+  return {type: UPDATEPENDINGLOCATION, coords, name, address, rating}
 }
 export const updatePendingDate = date => {
   return {type: UPDATEPENDINGDATE, date}
@@ -18,7 +18,8 @@ const reducer = (invitation = {}, action) => {
         ...invitation,
         coords: action.coords,
         name: action.name,
-        address: action.address
+        address: action.address,
+        rating: action.rating
       }
     case UPDATEPENDINGDATE:
       return {...invitation, date: action.date}

@@ -15,10 +15,10 @@ const PlaceItem = ({
   const handlePress = async () => {
     const res = await fetchDetails(place_id)
     console.log('res', res)
-    const {geometry, name} = res
+    const {geometry, name, rating} = res
 
     const coords = [geometry.location.lat, geometry.location.lng]
-    updatePendingLocation(coords, name, description)
+    updatePendingLocation(coords, name, description, rating)
     setTerm({term: ''})
   }
   return (

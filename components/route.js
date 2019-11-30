@@ -88,11 +88,12 @@ const Temp = createStackNavigator(
       screen: Profile
     },
     mapview: {
-      screen: Mapv,
+      screen: Mapv
     },
     singlechat: {
-      screen: SingleChats,
-    },MeetingModal
+      screen: SingleChats
+    },
+    MeetingModal
   },
   {initialRouteName: 'stack'}
 )

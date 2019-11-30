@@ -39,9 +39,9 @@ var drawer = createDrawerNavigator(
     Home: {
       screen: Home
     },
-    // New: {
-    //   screen: New
-    // },
+    New: {
+      screen: New
+    },
     Login: {
       screen: Login
     },
@@ -54,7 +54,7 @@ var drawer = createDrawerNavigator(
     SingleChat: {
       screen: SingleChat
     },
-    MapV:{
+    MapV: {
       screen: MapV
     },
     'Pending Chats': {
@@ -62,8 +62,7 @@ var drawer = createDrawerNavigator(
     },
     'Active Chats': {
       screen: ActiveScreen
-    },
-    MeetingModal
+    }
   },
   {
     initialRouteName: 'New',
