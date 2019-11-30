@@ -116,7 +116,7 @@ const MeetingModal = ({invitation, updatePendingLocation}) => {
   console.log('nearby', nearby)
   if (loading) {
     return (
-      <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Spinner />
       </View>
     )
@@ -185,8 +185,8 @@ const MeetingModal = ({invitation, updatePendingLocation}) => {
                             {`In the vicinity of : ${x.vicinity} `}
                           </Text>
                         </View>
-                      </Callout>
-                    </Marker> */}
+                      </Callout> */}
+                    </Marker>
                   )
                 })}
             </MapView>
