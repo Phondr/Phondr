@@ -28,6 +28,7 @@ class SingleChats extends Component {
   constructor(props) {
     super(props)
     this.onSend = this.onSend.bind(this)
+    this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
   }
   // componentWillMount() {
   //   this.setState({
@@ -48,7 +49,7 @@ class SingleChats extends Component {
 
   static navigationOptions = {
     //This is here so it doesn't show up on the drawer pull out
-    drawerLabel: () => null
+    drawerLabel: () => null,
   }
 
   componentDidMount() {
@@ -93,12 +94,16 @@ class SingleChats extends Component {
       chatId: this.props.currentChat.id
     })
   }
+
+  getOtherUserInChat(chat){
+    return chat.users.find(user=> user.fullName!==this.props.user.fullName)
+  }
+
   render() {
-    console.log('yohere', this.props.currentChat)
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
-        <CustomHeader title={`Chat Room ${this.props.currentChat.id}`} />
+        <CustomHeader title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`} />
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}

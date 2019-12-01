@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {Icon, Left, Card, CardItem, Text} from 'native-base'
 import {withNavigation} from 'react-navigation'
 import { setChat } from '../redux/currentChat'
+
 const ActiveChats = ({myChats, user, setChat, navigation, preview}) => {
   const active = myChats.filter(chat => chat.status === 'active')
   console.log('active', active, 'user', user)
