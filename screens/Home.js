@@ -35,6 +35,7 @@ class Home extends Component {
       await this.props.setUser(this.props.navigation.getParam('user')) //If brought through async storage, need to set user data from navigation prop to redux store of user.
     }
   }
+  
   componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id) {
       this.props.fetchMyChats(this.props.user.id)

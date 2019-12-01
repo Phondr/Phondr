@@ -129,6 +129,34 @@ export const userSignUp = (values, preferences) => async dispatch => {
   }
 }
 
+export const fetchUserFromAsync = () => async dispatch => {
+  try {
+    const user = JSON.parse(await getData('userKey'))
+
+    let {data} = await client.query({
+      query: gql`query{
+        user(id: ${user.id}) {
+          id
+          email
+          fullName
+          homeLocation
+          incentivePoints
+          profilePicture
+          age
+          gender
+        }
+              }`
+    })
+
+    if (data.user) {
+      dispatch(setUser(data.user))
+    }
+  } catch (error) {
+    alert('COULD NOT GET PROFILE DATA')
+    console.log(error)
+  }
+}
+
 export default (state = initialState, action) => {
   switch (action.type) {
     case GETUSER:
