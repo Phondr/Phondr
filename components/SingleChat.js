@@ -95,7 +95,7 @@ class SingleChats extends Component {
         imageRef
       } = nextProps.currentMeeting
       const formattedMessage = {
-        content: `${link} New Invitation To Meet!  Address: ${address} Date: ${new Date(
+        content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
           +date
         ).toString()}`,
         imageRef: imageRef,

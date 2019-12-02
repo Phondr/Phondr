@@ -38,14 +38,14 @@ const MeetingModal = ({
   const getDetails = async id => {
     const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${placesAPI}`
     const {data} = await axios.post(url)
-    console.log('data in getDetails', data)
+
     return data.result
   }
 
   const updateInvitation = async ({place_id}) => {
     console.log('placeid', place_id)
     const res = await getDetails(place_id.toString())
-    console.log('res', res)
+
     const {geometry, name, rating, url, photos, formatted_address} = res
     const coords = [geometry.location.lat, geometry.location.lng]
     const imageRef = photos[0].photo_reference

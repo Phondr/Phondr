@@ -47,6 +47,9 @@ export const fetchMessages = chatId => {
 
       const formatedMessage = data.data.messages.map(message => {
         message.createdAt = new Date(Number(message.createdAt))
+        if (message.text.includes('++New Invitation To Meet!')) {
+          message.text = message.text.split('++').join('\n')
+        }
         return message
       })
       //console.log('data in thunk', formatedMessage)
@@ -92,6 +95,11 @@ export const newMessage = message => {
       //   data.data.newMessage.image = googleImage
       // }
       //Format into readable date by gifted chat
+      if (data.data.newMessage.text.includes('++New Invitation To Meet!')) {
+        data.data.newMessage.text = data.data.newMessage.text
+          .split('++')
+          .join('\n')
+      }
       data.data.newMessage.createdAt = new Date(
         Number(data.data.newMessage.createdAt)
       )
