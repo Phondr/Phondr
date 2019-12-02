@@ -14,6 +14,7 @@ class SingleChats extends Component {
     this.state = {active: false}
     this.onSend = this.onSend.bind(this)
     this.setActive = this.setActive.bind(this)
+    this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
   }
   // componentWillMount() {
   //   this.setState({
@@ -34,7 +35,7 @@ class SingleChats extends Component {
 
   static navigationOptions = {
     //This is here so it doesn't show up on the drawer pull out
-    drawerLabel: () => null
+    drawerLabel: () => null,
   }
 
   componentDidMount() {
@@ -81,6 +82,11 @@ class SingleChats extends Component {
   setActive() {
     this.setState({active: true})
   }
+
+  getOtherUserInChat(chat){
+    return chat.users.find(user=> user.fullName!==this.props.user.fullName)
+  }
+
   render() {
     return (
       <React.Fragment>

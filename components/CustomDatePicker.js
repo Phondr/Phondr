@@ -10,7 +10,7 @@ const CustomDatePicker = ({invitation, updatePendingDate}) => {
   }
   return (
     <Item last>
-      <Icon name="date-range" type={'MaterialIcons'} />
+      <Icon name="date-range" style={{color:'red'}} type={'MaterialIcons'} />
       <DatePicker
         //defaultDate={new Date(2018, 4, 4)}
         minimumDate={new Date(2018, 1, 1)}
@@ -21,7 +21,6 @@ const CustomDatePicker = ({invitation, updatePendingDate}) => {
         animationType={'fade'}
         androidMode={'default'}
         placeHolderText="Select date"
-        textStyle={{color: 'black'}}
         placeHolderTextStyle={{color: '#d3d3d3'}}
         onDateChange={date => {
           console.log('date', date)

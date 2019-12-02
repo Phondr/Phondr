@@ -21,7 +21,7 @@ class PlaceSearch extends React.Component {
   }
   render() {
     return (
-      <React.Fragment>
+      <React.Fragment >
         <GoogleAutoComplete
           apiKey={placesAPI}
           debounce={200}
@@ -30,7 +30,7 @@ class PlaceSearch extends React.Component {
           {({handleTextChange, locationResults, fetchDetails}) => (
             <React.Fragment>
               <Item>
-                <Icon name="search" />
+                <Icon style={{color:'red'}} name="search" />
                 <Input
                   //style={styles.inputStyle}
                   placeholder="Search Place"

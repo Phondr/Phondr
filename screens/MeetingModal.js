@@ -140,7 +140,7 @@ const MeetingModal = ({
     //   isVisible={true} // this will be tied to state from parent
     //   onBackdropPress={() => {}}
     // >
-    <Container>
+    <Container style={{backgroundColor: "#2a3439"}}>
       <Content contentContainerStyle={{marginTop: 20}}>
         <PlaceSearch />
 
@@ -221,11 +221,11 @@ const MeetingModal = ({
           <Button
             onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
           >
-            <Text>Send</Text>
+            <Text style={{color:'red'}} >Send</Text>
           </Button>
         ) : (
           <Button disabled bordered>
-            <Text>Send</Text>
+            <Text style={{color:'red'}}>Send</Text>
           </Button>
         )}
       </Content>

@@ -5,7 +5,7 @@ import * as Font from 'expo-font'
 import React, {Component, useState, useEffect} from 'react'
 import {Platform, StatusBar, StyleSheet, View, Text, Image} from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
-import {createDrawerNavigator, createAppContainer} from 'react-navigation'
+import {createDrawerNavigator, createAppContainer, createStackNavigator} from 'react-navigation'
 import Home from './screens/Home'
 import {Container, Content, Header, Body, Drawer} from 'native-base'
 import drawerStyles from './styles/drawerStyle'
@@ -22,11 +22,14 @@ import Login from './screens/Login'
 import FlashMessage from 'react-native-flash-message'
 import Signup from './screens/Signup'
 import Entry from './screens/Entry'
+import SignOut from './screens/SignOut'
 import PendingScreen from './screens/PendingScreen'
 import ActiveScreen from './screens/ActiveScreen'
 import SingleChat from './components/SingleChat'
+import ActiveComponent from './components/ActiveComp'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
+import Profile from './screens/Profile'
 import Spinner from './components/Spinner'
 import MapV from './components/MapView'
 
@@ -34,8 +37,26 @@ const {url} = require('./secrets')
 import PlaceSearch from './components/PlaceSearch'
 import MeetingModal from './screens/MeetingModal'
 
+const ActiveScreenStack = createStackNavigator({
+  ActiveScreen: {
+    screen: ActiveScreen,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  SingleChat: {
+    screen: SingleChat,
+    navigationOptions: {
+      header: null,
+    },
+  }
+})
+
 var drawer = createDrawerNavigator(
   {
+    Profile: {
+      screen: Profile
+    },
     Home: {
       screen: Home
     },
@@ -51,9 +72,6 @@ var drawer = createDrawerNavigator(
     Entry: {
       screen: Entry
     },
-    SingleChat: {
-      screen: SingleChat
-    },
     MapV: {
       screen: MapV
     },
@@ -61,7 +79,10 @@ var drawer = createDrawerNavigator(
       screen: PendingScreen
     },
     'Active Chats': {
-      screen: ActiveScreen
+      screen: ActiveScreenStack
+    },
+    'Sign Out': {
+      screen: SignOut
     },
     MeetingModal
   },
