@@ -6,7 +6,9 @@ import {
   Button,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  Dimensions,
+  ScrollView
 } from 'react-native'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
@@ -34,15 +36,6 @@ const options = {
   }
 }
 
-// const query = gql`
-//   {
-//     userLogin(email: "test@test.com") {
-//       id
-//       email
-//     }
-//   }
-// `;
-
 const Form = t.form.Form
 
 export class Login extends Component {
@@ -53,6 +46,11 @@ export class Login extends Component {
 
   componentDidMount() {
    
+  // componentDidUpdate() {
+  //   const user = this.props.user
+  //   if (this.props.user.id) {
+  //     this.props.navigation.navigate('Home', {user})
+  //   }
   }
 
   //this is what eric changed

@@ -22,12 +22,14 @@ import Login from './screens/Login'
 import FlashMessage from 'react-native-flash-message'
 import Signup from './screens/Signup'
 import Entry from './screens/Entry'
+import SignOut from './screens/SignOut'
 import PendingScreen from './screens/PendingScreen'
 import ActiveScreen from './screens/ActiveScreen'
 import SingleChat from './components/SingleChat'
 import ActiveComponent from './components/ActiveComp'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
+import Profile from './screens/Profile'
 
 const {url} = require('./secrets')
 
@@ -48,6 +50,9 @@ const ActiveScreenStack = createStackNavigator({
 
 var drawer = createDrawerNavigator(
   {
+    Profile: {
+      screen: Profile
+    },
     Home: {
       screen: Home
     },
@@ -69,6 +74,9 @@ var drawer = createDrawerNavigator(
     'Active Chats': {
       screen: ActiveScreenStack
     },
+    'Sign Out': {
+      screen: SignOut
+    }
   },
   {
     initialRouteName: 'Entry',

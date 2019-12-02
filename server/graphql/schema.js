@@ -28,6 +28,7 @@ const UserType = new GraphQLObjectType({
     googleId: {type: GraphQLString},
     gender: {type: GraphQLString},
     age: {type: GraphQLString},
+    password: {type: GraphQLString},
     homeLocation: {type: new GraphQLList(GraphQLFloat)},
     incentivePoints: {type: GraphQLInt},
     profilePicture: {type: GraphQLString},
@@ -36,19 +37,6 @@ const UserType = new GraphQLObjectType({
     iAm: {type: GraphQLString},
     iPrefer: {type: new GraphQLList(GraphQLString)},
     distPref: {type: GraphQLInt}
-  })
-})
-
-const MessageType = new GraphQLObjectType({
-  name: 'Message',
-  fields: () => ({
-    id: {type: GraphQLInt},
-    content: {type: GraphQLString},
-    length: {type: GraphQLInt},
-    userId: {type: GraphQLInt},
-    chatId: {type: GraphQLInt},
-    createdAt: {type: GraphQLString},
-    user: {type: UserType}
   })
 })
 const ChatType = new GraphQLObjectType({
@@ -62,6 +50,18 @@ const ChatType = new GraphQLObjectType({
     users: {type: new GraphQLList(UserType)},
     sinceCreation: {type: GraphQLFloat},
     messages: {type: new GraphQLList(MessageType)}
+  })
+})
+const MessageType = new GraphQLObjectType({
+  name: 'Message',
+  fields: () => ({
+    id: {type: GraphQLInt},
+    content: {type: GraphQLString},
+    length: {type: GraphQLInt},
+    userId: {type: GraphQLInt},
+    chatId: {type: GraphQLInt},
+    createdAt: {type: GraphQLString},
+    user: {type: UserType}
   })
 })
 const MeetingType = new GraphQLObjectType({
@@ -177,16 +177,20 @@ const rootMutation = new GraphQLObjectType({
     userSignup: {
       type: UserType,
       args: {
-        email: {type: GraphQLString},
         fullName: {type: GraphQLString},
-        gender: {type: GraphQLString},
-        age: {type: GraphQLString},
-        homeLocation: {type: new GraphQLList(GraphQLFloat)},
-        profilePicture: {type: GraphQLString}
+        email: {type: GraphQLString},
+        password: {type: GraphQLString}
       },
       async resolve(parent, args) {
         console.log('ARGS', args)
-        const data = await db.models.user.create(args)
+
+        const data = await db.models.user.create({
+          fullName: args.fullName,
+          email: args.email,
+          password: args.password
+        })
+
+        console.log('CREATED USER', data)
         if (data) {
           return data
         }
