@@ -324,7 +324,7 @@ const rootMutation = new GraphQLObjectType({
       async resolve(parent, args) {
         try {
           const meeting = await db.models.meeting.create({
-            location: [args.invitation[0], args.invitation[1]],
+            location: args.invitation.coords,
             name: args.invitation.name,
             rating: args.invitation.rating,
             address: args.invitation.address,

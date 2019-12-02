@@ -18,7 +18,7 @@ import CustomDatePicker from '../components/CustomDatePicker'
 import {colors} from '../placesData'
 import {placesAPI} from '../secrets'
 import {updatePendingLocation} from '../redux/invitation'
-import {createMeeting} from '../redux/meeting'
+import {createMeeting} from '../redux/currentMeeting'
 import axios from 'axios'
 import Spinner from '../components/Spinner'
 

@@ -137,7 +137,8 @@ const MapStateToProps = state => {
   return {
     user: state.user,
     messages: state.messages,
-    currentChat: state.currentChat
+    currentChat: state.currentChat,
+    currentMeeting: state.currentMeeting
   }
 }
 const MapDispatchToProps = dispatch => {
