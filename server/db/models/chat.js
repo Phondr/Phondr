@@ -35,6 +35,16 @@ const Chat = db.define('chat', {
   }
 })
 
+Chat.prototype.sinceMins = function(date) {
+  const start = date || this.getDataValue('createdAt')
+  const now = new Date()
+
+  const diffMs = now - start
+
+  const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000)
+
+  return diffMins
+}
 Chat.beforeCreate(chat => {
   chat.sinceCreation = new Date()
 })

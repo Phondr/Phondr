@@ -1,6 +1,14 @@
 import React, {Component} from 'react'
 import {ImageBackground, View, StatusBar, StyleSheet, Text} from 'react-native'
-import {Container, Button, Icon, Content, Left, Right} from 'native-base'
+import {
+  Container,
+  Button,
+  Icon,
+  Content,
+  Left,
+  Right,
+  Spinner
+} from 'native-base'
 import {Platform} from '@unimodules/core'
 
 import {withNavigation} from 'react-navigation'
@@ -13,6 +21,8 @@ import ActiveComp from '../components/ActiveComp'
 import PendingComp from '../components/PendingComp'
 import {ScrollView} from 'react-native-gesture-handler'
 import {setUser} from '../redux/user'
+import {fetchUserLogin} from '../redux/user'
+import {setLoading} from '../redux/loading'
 import Dialog, {
   DialogTitle,
   DialogContent,
@@ -25,7 +35,8 @@ class Home extends Component {
     super()
     this.state = {
       user: {fullName: 'Avaree Warrick', id: 1, isNoob: true},
-      defaultAnimationDialog: true
+      defaultAnimationDialog: true,
+      loading:true
     }
   }
   static navigationOptions = {
@@ -38,14 +49,18 @@ class Home extends Component {
     //this is just for testing
     // this.props.setUser(this.state.user)
 
-    console.log('home mounted')
-    console.log(this.props.user)
-    this.props.fetchMyChats(this.props.user.id)
-
+    if (!this.props.user.id) {
+      this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
+    }
+    if (this.props.user.id) {
+      console.log('in comp did mouth fmc')
+      this.props.fetchMyChats(this.props.user.id)
+    }
     //console.log('HOME PROPS', this.props)
   }
   componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id) {
+      console.log('in comp did update fmc')
       this.props.fetchMyChats(this.props.user.id)
     }
   }
@@ -125,7 +140,7 @@ class Home extends Component {
                 bordered
                 rounded
                 info
-                onPress={() => this.props.findOrCreateChat(1)}
+                onPress={() => this.props.findOrCreateChat(this.props.user.id)}
               >
                 <Icon name="pluscircle" type="AntDesign">
                   <Text> New Chat</Text>
@@ -142,5 +157,6 @@ class Home extends Component {
 export default connect(({myChats, user}) => ({myChats, user}), {
   fetchMyChats,
   findOrCreateChat,
-  setUser
+  setUser,
+  fetchUserLogin
 })(Home)

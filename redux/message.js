@@ -1,22 +1,24 @@
-import client from './apolloClient';
-import gql from 'graphql-tag';
-import axios from 'axios';
-import { url } from '../secrets';
+import client from './apolloClient'
+import gql from 'graphql-tag'
+import axios from 'axios'
+import {url} from '../secrets'
 
-const GET_MESSAGES = 'GET_MESSAGES';
-const NEW_MESSAGE = 'NEW_MESSAGE';
+const GET_MESSAGES = 'GET_MESSAGES'
+const NEW_MESSAGE = 'NEW_MESSAGE'
 
 const getMessages = messages => {
-  return { type: GET_MESSAGES, messages };
-};
-const setNewMessage = message => {
-  return { type: NEW_MESSAGE, message };
-};
+  return {type: GET_MESSAGES, messages}
+}
+export const setNewMessage = message => {
+  return {type: NEW_MESSAGE, message}
+}
 
 export const fetchMessages = chatId => {
   return async dispatch => {
-    try { //Add in user{avatar: profilePicture} when they unlock this to show profile picture in chat instead of initials
-      const { data } = await axios({
+    try {
+      //Add in user{avatar: profilePicture} when they unlock this to show profile picture in chat instead of initials
+      console.log('chat id in fetchMessages', chatId)
+      const {data} = await axios({
         url: url + '/graphql',
         method: 'POST',
         data: {
@@ -34,27 +36,29 @@ export const fetchMessages = chatId => {
                 name: fullName,
                 email,
               }
+              
             }
           }
-          `,
-        },
-      });
+          `
+        }
+      })
+
       const formatedMessage = data.data.messages.map(message => {
-        message.createdAt = new Date(Number(message.createdAt));
-        return message;
-      });
-      // console.log('data in thunk', formatedMessage);
-      dispatch(getMessages(formatedMessage));
+        message.createdAt = new Date(Number(message.createdAt))
+        return message
+      })
+      console.log('data in thunk', formatedMessage)
+      dispatch(getMessages(formatedMessage))
     } catch (e) {
-      console.error('messed up in fetchMyChats, error: ', e);
+      console.error('messed up in fetchMes, error: ', e)
     }
-  };
-};
+  }
+}
 
 export const newMessage = message => {
   return async dispatch => {
     try {
-      const { data } = await axios.post(url + '/graphql', {
+      const {data} = await axios.post(url + '/graphql', {
         query: `
           mutation{
             newMessage(content: "${message.content}", length: ${message.length}, userId: ${message.userId}, chatId: ${message.chatId}) {
@@ -71,26 +75,28 @@ export const newMessage = message => {
               }
             }
           }
-          `,
-      });
+          `
+      })
       //Format into readable date by gifted chat
-      data.data.newMessage.createdAt = new Date(Number(data.data.newMessage.createdAt))
-      await dispatch(setNewMessage(data.data.newMessage));
+      data.data.newMessage.createdAt = new Date(
+        Number(data.data.newMessage.createdAt)
+      )
+      return data.data.newMessage
     } catch (e) {
-      console.error('messed up in fetchMyChats, error: ', e);
+      console.error('messed up in newMessages, error: ', e)
     }
-  };
-};
+  }
+}
 
 const reducer = (state = [], action) => {
   switch (action.type) {
     case GET_MESSAGES:
-      return action.messages;
+      return action.messages
     case NEW_MESSAGE:
-      return [action.message, ...state];
+      return [action.message, ...state]
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default reducer;
+export default reducer

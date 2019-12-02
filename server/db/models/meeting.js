@@ -3,13 +3,24 @@ const db = require('../db')
 
 const Meeting = db.define('meeting', {
   location: {
-    type: Sequelize.STRING,
-    allowNull: false,
+    type: Sequelize.ARRAY(Sequelize.FLOAT)
+  },
+  name: {
+    type: Sequelize.STRING
+  },
+  rating: {
+    type: Sequelize.FLOAT
+  },
+  address: {
+    type: Sequelize.STRING
+  },
+  senderId: {
+    type: Sequelize.INTEGER
   },
   date: {
-    type: Sequelize.STRING,
+    type: Sequelize.DATE
     // allowNull: false,
-  },
+  }
 })
 
 module.exports = Meeting

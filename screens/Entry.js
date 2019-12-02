@@ -1,17 +1,28 @@
 import React, {Component} from 'react'
 import {Text, View, StyleSheet, Image, Button} from 'react-native'
+import Spinner from '../components/Spinner'
 import {navigation} from 'react-navigation'
 import Login from './Login'
 import Signup from './Signup'
 import {AsyncStorage} from 'react-native'
+import {fetchUserLogin, setUser} from '../redux/user'
+import {connect} from 'react-redux'
 
 export class Entry extends Component {
+  constructor() {
+    super()
+    this.state = {user: '', loading: true}
+  }
   async componentDidMount() {
-    //const user = JSON.parse(await AsyncStorage.getItem('userKey'))
-    // if (user) {
-    //   this.props.navigation.navigate('Home', {user})
-    // }
-    // console.log('LOGIN VALUE', user)
+    const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+
+    if (user.email) {
+      await this.props.setUser(user)
+      this.props.navigation.navigate('Home', {user})
+    }
+    if (this.state.loading) {
+      this.setState({loading: false})
+    }
   }
 
   gotToLogin() {
@@ -27,6 +38,9 @@ export class Entry extends Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
       <View style={styles.container}>
         <View style={styles.title}>
@@ -94,4 +108,4 @@ export const styles = StyleSheet.create({
   }
 })
 
-export default Entry
+export default connect(({user}) => ({user}), {fetchUserLogin, setUser})(Entry)

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react'
 import {
   Container,
   Header,
@@ -11,15 +11,15 @@ import {
   Right,
   Body,
   Icon,
-  Text,
-} from 'native-base';
-import { ScrollView, View } from 'react-native';
+  Text
+} from 'native-base'
+import {ScrollView, View} from 'react-native'
 // import {gql} from 'apollo-boost'
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
-import { Query } from 'react-apollo';
-import ApolloClient from 'apollo-boost';
-const email = 'mike@email.com';
+import gql from 'graphql-tag'
+import {useQuery} from '@apollo/react-hooks'
+import {Query} from 'react-apollo'
+import ApolloClient from 'apollo-boost'
+const email = 'mike@email.com'
 const query = gql`
   {
     allUsers {
@@ -28,11 +28,10 @@ const query = gql`
       fullName
     }
   }
-`;
+`
 
 export default class AllChats extends Component {
   render() {
-    console.log(this.state.chats || '')
     return (
       <Container>
         <Header>
@@ -63,7 +62,7 @@ export default class AllChats extends Component {
               </Text>
             </View>
           </ScrollView>
-          <Button small primary style={{ width: '30%', alignSelf: 'center' }}>
+          <Button small primary style={{width: '30%', alignSelf: 'center'}}>
             <Text>Test me</Text>
           </Button>
         </Content>
@@ -75,6 +74,6 @@ export default class AllChats extends Component {
           </FooterTab>
         </Footer>
       </Container>
-    );
+    )
   }
 }
