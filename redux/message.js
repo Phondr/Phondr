@@ -29,6 +29,7 @@ export const fetchMessages = chatId => {
               _id: id,
               text: content,
               length,
+              image:imageRef,
               createdAt,
               userId,
               chatId,

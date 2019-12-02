@@ -11,8 +11,13 @@ const Message = db.define('message', {
   imageRef: {
     type: Sequelize.STRING,
     get() {
-      const googleImage = imageRequest(this.getDataValue('imageRef'))
-      return googleImage
+      const ref = this.getDataValue('imageRef')
+      if (ref && ref.length) {
+        const googleImage = imageRequest(ref)
+        return googleImage
+      }
+
+      return ''
     }
   },
   length: {
