@@ -123,7 +123,7 @@ export default class Mapv extends Component {
     this.setState({flag: true})
     let newTemp = text
     while (newTemp.includes(' ')) {
-      newTemp = newTemp.replace(' ', '20%')
+      newTemp = newTemp.replace(' ', '%20')
     }
     const theUrl =
       `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${newTemp}&inputtype=textquery&fields=geometry,place_id,name,rating,formatted_address&key=` +
