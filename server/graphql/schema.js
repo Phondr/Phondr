@@ -1,5 +1,6 @@
 const {
   GraphQLObjectType,
+  GraphQLInputObjectType,
   GraphQLInt,
   GraphQLString,
   GraphQLBoolean,
@@ -36,6 +37,17 @@ const UserType = new GraphQLObjectType({
     iAm: {type: GraphQLString},
     iPrefer: {type: new GraphQLList(GraphQLString)},
     distPref: {type: GraphQLInt}
+  })
+})
+
+const InvitationType = new GraphQLInputObjectType({
+  name: 'Invitation',
+  fields: () => ({
+    coords: {type: new GraphQLList(GraphQLFloat)},
+    name: {type: GraphQLString},
+    address: {type: GraphQLString},
+    rating: {type: GraphQLFloat},
+    date: {type: GraphQLString}
   })
 })
 
@@ -307,21 +319,16 @@ const rootMutation = new GraphQLObjectType({
       args: {
         chatId: {type: GraphQLInt},
         userId: {type: GraphQLInt},
-        latitude: {type: GraphQLFloat},
-        longitude: {type: GraphQLFloat},
-        name: {type: GraphQLString},
-        rating: {type: GraphQLFloat},
-        address: {type: GraphQLString},
-        date: {type: GraphQLString}
+        invitation: {type: InvitationType}
       },
       async resolve(parent, args) {
         try {
           const meeting = await db.models.meeting.create({
-            location: [args.latitude, args.longitude],
-            name: args.name,
-            rating: args.rating,
-            address: args.address,
-            date: new Date(args.date),
+            location: [args.invitation[0], args.invitation[1]],
+            name: args.invitation.name,
+            rating: args.invitation.rating,
+            address: args.invitation.address,
+            date: new Date(args.invitation.date),
             senderId: args.userId
           })
           const chat = await db.models.chat.findByPk(args.chatId)
