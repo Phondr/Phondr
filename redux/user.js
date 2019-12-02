@@ -98,7 +98,7 @@ export const fetchUserLogin = values => async dispatch => {
 
 export const userSignUp = (values, preferences) => async dispatch => {
   try {
-    console.log(values, preferences)
+    
 
     if (getData('userKey')) {
       removeData('userKey')

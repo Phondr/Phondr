@@ -1,7 +1,7 @@
 import {
   createAppContainer,
   createStackNavigator,
-  withNavigation,
+  withNavigation
 } from 'react-navigation'
 import React from 'react'
 import {
@@ -9,12 +9,21 @@ import {
   Text,
   Button,
   Icon,
+  Header,
+  Left,
+  Right,
+  Body,
+  Container,
+  Content
 } from 'native-base'
+import {StyleSheet, StatusBar} from 'react-native'
 import AllChats from './Allchat'
 import Profile from './Profile'
 import Mapv from './MapView'
 import SingleChats from './SingleChat'
+import {Platform} from '@unimodules/core'
 import CustomHeader from '../components/CustomHeader'
+import MeetingModal from '../screens/MeetingModal'
 
 class Stack extends React.Component {
   render() {
@@ -55,6 +64,13 @@ class Stack extends React.Component {
         >
           <Text>singlechat</Text>
         </Button>
+        <Button
+          onPress={() => {
+            this.props.navigation.navigate('MeetingModal')
+          }}
+        >
+          <Text>meetingmodal</Text>
+        </Button>
       </View>
     )
   }
@@ -63,32 +79,31 @@ class Stack extends React.Component {
 const Temp = createStackNavigator(
   {
     stack: {
-      screen: Stack,
+      screen: Stack
     },
     allchat: {
-      screen: AllChats,
+      screen: AllChats
     },
     profile: {
-      screen: Profile,
+      screen: Profile
     },
     mapview: {
-      screen: Mapv,
+      screen: Mapv
     },
     singlechat: {
-      screen: SingleChats,
-    }
+      screen: SingleChats
+    },
+    MeetingModal
   },
-  { initialRouteName: 'stack' }
+  {initialRouteName: 'stack'}
 )
 const StackContainer = createAppContainer(Temp)
 //export default StackContainer
 class New extends React.Component {
   static navigationOptions = {
-    drawerIcon: ({ tintColor }) => {
-      return (
-        <Icon name='home' style={{ fontSize: 24, color: tintColor }}></Icon>
-      )
-    },
+    drawerIcon: ({tintColor}) => {
+      return <Icon name="home" style={{fontSize: 24, color: tintColor}}></Icon>
+    }
   }
   render() {
     return (

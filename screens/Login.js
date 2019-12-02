@@ -5,6 +5,8 @@ import {
   StyleSheet,
   Button,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
   Dimensions,
   ScrollView
 } from 'react-native'
@@ -15,6 +17,7 @@ import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
 import {throwServerError} from 'apollo-link-http-common'
 import {navigate} from 'react-navigation'
+import Spinner from '../components/Spinner'
 
 const User = t.struct({
   email: t.String,
@@ -39,56 +42,67 @@ const Form = t.form.Form
 export class Login extends Component {
   constructor() {
     super()
+    this.state = {loading: false}
     this.login = this.login.bind(this)
   }
 
-  componentDidUpdate() {
-    const user = this.props.user
+  componentDidMount() {}
+
+  //this is what eric changed
+  componentDidUpdate(prevProps) {
     if (this.props.user.id) {
-      this.props.navigation.navigate('Home', {user})
+      console.log('go home')
+      this.props.navigation.navigate('Home')
     }
   }
-
   static navigationOptions = {
     drawerLabel: () => null
   }
 
   async login() {
+    this.setState({loading: true})
     const values = this._form.getValue()
+    console.log('TCL: values', values)
+
     try {
-      await this.props.getUser(values)
+      this.props.getUser(values)
     } catch (error) {
+      this.setState({loading: false})
       alert('COULD NOT LOGIN')
       console.log(error)
     }
   }
 
   render() {
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
-      <ScrollView>
-        <View styles={styles.container}>
-          <Form
-            ref={c => (this._form = c)}
-            type={User}
-            options={options}
-            style={styles.formcontainer}
-          />
-          <TouchableOpacity style={styles.submitButton} onPress={this.login}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
+          <Form ref={c => (this._form = c)} type={User} options={options} />
+          <TouchableOpacity onPress={this.login} style={styles.submitButton}>
             <Text style={styles.submitButtonText}>Login</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </TouchableWithoutFeedback>
     )
   }
 }
 
 export const styles = StyleSheet.create({
   container: {
-    margin: 20,
-    padding: 30,
-    // width: Dimensions.get('window').width,
-    // height: Dimensions.get('window').height,
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 10,
+    paddingRight: 10,
     backgroundColor: '#F5FCFF'
+  },
+  input: {
+    margin: 15,
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 1
   },
   submitButton: {
     backgroundColor: 'black',
@@ -100,10 +114,9 @@ export const styles = StyleSheet.create({
   submitButtonText: {
     color: 'white'
   },
-  formcontainer: {
-    justifyContent: 'center',
-    width: '100%',
-    backgroundColor: '#ffffff'
+  logintext: {
+    margin: 2,
+    fontSize: 30
   }
 })
 

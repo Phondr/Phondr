@@ -5,7 +5,11 @@ import * as Font from 'expo-font'
 import React, {Component, useState, useEffect} from 'react'
 import {Platform, StatusBar, StyleSheet, View, Text, Image} from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
-import {createDrawerNavigator, createAppContainer} from 'react-navigation'
+import {
+  createDrawerNavigator,
+  createAppContainer,
+  createStackNavigator
+} from 'react-navigation'
 import Home from './screens/Home'
 import {Container, Content, Header, Body, Drawer} from 'native-base'
 import drawerStyles from './styles/drawerStyle'
@@ -25,14 +29,34 @@ import Entry from './screens/Entry'
 import SignOut from './screens/SignOut'
 import PendingScreen from './screens/PendingScreen'
 import ActiveScreen from './screens/ActiveScreen'
+import SingleChat from './components/SingleChat'
+import ActiveComponent from './components/ActiveComp'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 import Profile from './screens/Profile'
-import MapV from './components/MapView'
 import PendingMeetings from './screens/PendingMeetings'
 import UserProfileEdit from './screens/UserProfileEdit'
+import Spinner from './components/Spinner'
+import MapV from './components/MapView'
 
 const {url} = require('./secrets')
+import PlaceSearch from './components/PlaceSearch'
+import MeetingModal from './screens/MeetingModal'
+
+const ActiveScreenStack = createStackNavigator({
+  ActiveScreen: {
+    screen: ActiveScreen,
+    navigationOptions: {
+      header: null
+    }
+  },
+  SingleChat: {
+    screen: SingleChat,
+    navigationOptions: {
+      header: null
+    }
+  }
+})
 
 var drawer = createDrawerNavigator(
   {
@@ -42,9 +66,9 @@ var drawer = createDrawerNavigator(
     Home: {
       screen: Home
     },
-    // New: {
-    //   screen: New
-    // },
+    New: {
+      screen: New
+    },
     Login: {
       screen: Login
     },
@@ -64,14 +88,15 @@ var drawer = createDrawerNavigator(
       screen: PendingMeetings
     },
     'Active Chats': {
-      screen: ActiveScreen
+      screen: ActiveScreenStack
     },
     'Sign Out': {
       screen: SignOut
     },
     UserProfileEdit: {
       screen: UserProfileEdit
-    }
+    },
+    MeetingModal: {}
   },
   {
     initialRouteName: 'Entry',

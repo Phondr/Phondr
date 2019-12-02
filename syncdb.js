@@ -1,22 +1,34 @@
 const db = require('./server/db')
+const faker = require('faker')
 
 async function seed() {
   await db.sync({ force: true })
   try {
     await db.models.user.create({
-      name: 'joe',
-      email: 'fjsdfks@email.com',
-      homeLocation: [-75.343, 39.984],
+      fullName: `Avaree Warrick`,
+      age: 24,
+      homeLocation: [
+        faker.address.latitude(),
+        faker.address.longitude(),
+      ],
+      incentivePoints: faker.random.number(),
+      created_at: faker.date.recent(),
+      profilePicture: faker.random.image(),
+      email: 'test@test.com',
+      password: 'test',
     })
     await db.models.user.create({
-      name: 'dode',
-      email: 'fjsdfddfks@email.com',
-      homeLocation: [-75.534, 39.123],
-    })
-    await db.models.user.create({
-      name: 'dsode',
-      email: 'fjsdfddasdks@email.com',
-      homeLocation: [-75.53, 39.209],
+      fullName: `Mike Lim`,
+      age: 23,
+      homeLocation: [
+        faker.address.latitude(),
+        faker.address.longitude(),
+      ],
+      incentivePoints: faker.random.number(),
+      created_at: faker.date.recent(),
+      profilePicture: faker.random.image(),
+      email: 'mike@email.com',
+      password: '123',
     })
   } catch (e) {
     console.error(e)
