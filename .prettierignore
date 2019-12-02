@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-
-package-lock.json
-package.json
-=======
 # public/bundle.js
 # public/bundle.js.map
 package-lock.json
 package.json
->>>>>>> 707a2936fde71b417132197aeb061453781a1050

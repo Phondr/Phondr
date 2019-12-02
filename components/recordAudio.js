@@ -1,18 +1,18 @@
 import React from 'react'
 import {StatusBar, Dimensions} from 'react-native'
 import {View, Text, Button, Icon} from 'native-base'
-import CustomHeader from '../components/CustomHeader'
+import CustomHeader from './CustomHeader'
 import * as Permissions from 'expo-permissions'
 import {Audio} from 'expo-av'
 import {RNS3} from 'react-native-s3-upload'
 import {amazonConfig} from '../secrets'
 
-export default class AudioTest extends React.Component {
+export default class RecordAudio extends React.Component {
   constructor() {
     super()
     this.state = {
       hasAudioPermission: false,
-      isRecording: false,
+      isRecording: false
     }
     this.playSound = this.playSound.bind(this)
     this.stopSound = this.stopSound.bind(this)
@@ -94,49 +94,52 @@ export default class AudioTest extends React.Component {
     console.log(this.recording.getURI())
     this.uri = await this.recording.getURI()
     RNS3.put(
-      {uri: this.uri, name: `Chat-${this.props.chat.id}-Message-${this.props.messageLength+1}.aac`, type: `audio/aac`},
+      {
+        uri: this.uri,
+        name: `Chat-${this.props.chat.id}-Message-${this.props.messageLength +
+          1}.aac`,
+        type: `audio/aac`
+      },
       amazonConfig
     ).then(response => {
       if (response.status !== 201) {
         throw new Error('Failed to upload image to S3')
       }
-      const formattedMessage = [{
-        text: response.headers.Location,
-        user: {_id: this.props.user.id},
-      }];
+      const formattedMessage = [
+        {
+          text: response.headers.Location,
+          user: {_id: this.props.user.id}
+        }
+      ]
       this.props.onSend(formattedMessage)
     })
   }
   render() {
     return (
-      <React.Fragment>
-        <View
-          style={{
-            alignSelf: 'center',
-            position: 'absolute',
-            zIndex: 2,
-            backgroundColor: 'transparent',
-            marginTop: Dimensions.get('window').height*.85
-          }}
-        >
-          {/* <Button onPress={() => this.playSound()}>
-            <Text>Start Playback</Text>
-          </Button>
-          <Button onPress={() => this.stopSound()}>
-            <Text>Stop Playback</Text>
-          </Button> */}
-          {this.state.isRecording === false ? <Icon
+      <View
+        style={{
+          // alignSelf: 'center',
+          position: 'absolute',
+          zIndex: 2,
+          backgroundColor: 'transparent',
+          marginTop: Dimensions.get('window').height * 0.91,
+          marginLeft: Dimensions.get('window').width * 0.9
+        }}
+      >
+        {this.state.isRecording === false ? (
+          <Icon
             name="ios-mic"
             style={{alignSelf: 'center', fontSize: 40}}
             onPress={() => this.startRecording()}
-          /> :
+          />
+        ) : (
           <Icon
             name="mic-off"
             style={{alignSelf: 'center', color: 'red', fontSize: 40}}
             onPress={() => this.stopRecording()}
-          />}
-        </View>
-      </React.Fragment>
+          />
+        )}
+      </View>
     )
   }
 }

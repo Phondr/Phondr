@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Dimensions,
+  ScrollView
 } from 'react-native'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
@@ -15,6 +17,7 @@ import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
 import {throwServerError} from 'apollo-link-http-common'
 import {navigate} from 'react-navigation'
+import Spinner from '../components/Spinner'
 
 const User = t.struct({
   email: t.String,
@@ -34,55 +37,54 @@ const options = {
   }
 }
 
-// const query = gql`
-//   {
-//     userLogin(email: "test@test.com") {
-//       id
-//       email
-//     }
-//   }
-// `;
-
 const Form = t.form.Form
 
 export class Login extends Component {
   constructor() {
     super()
+    this.state = {loading: false}
     this.login = this.login.bind(this)
   }
 
-  componentDidMount() {
-    console.log('LOGIN PROPS', this.props)
-  }
+  componentDidMount() {}
 
+  //this is what eric changed
+  componentDidUpdate(prevProps) {
+    if (this.props.user.id) {
+      console.log('go home')
+      this.props.navigation.navigate('Home')
+    }
+  }
   static navigationOptions = {
     drawerLabel: () => null
   }
 
   async login() {
+    this.setState({loading: true})
     const values = this._form.getValue()
+    console.log('TCL: values', values)
+
     try {
-      await this.props.getUser(values)
-      const user = this.props.user
-      if (user.fullName) {
-        console.log('go home')
-        this.props.navigation.navigate('Home')
-      }
+      this.props.getUser(values)
     } catch (error) {
+      this.setState({loading: false})
       alert('COULD NOT LOGIN')
       console.log(error)
     }
   }
 
   render() {
+    // if (this.state.loading) {
+    //   return <Spinner />
+    // }
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
-        <Form ref={c => (this._form = c)} type={User} options={options} />
-        <TouchableOpacity onPress={this.login} style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>Login</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.container}>
+          <Form ref={c => (this._form = c)} type={User} options={options} />
+          <TouchableOpacity onPress={this.login} style={styles.submitButton}>
+            <Text style={styles.submitButtonText}>Login</Text>
+          </TouchableOpacity>
+        </View>
       </TouchableWithoutFeedback>
     )
   }
@@ -115,7 +117,7 @@ export const styles = StyleSheet.create({
   logintext: {
     margin: 2,
     fontSize: 30
-  },
+  }
 })
 
 const mapStateToProps = state => ({

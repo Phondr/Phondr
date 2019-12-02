@@ -1,4 +1,3 @@
-
 const SET_CHAT = 'SET_CHAT'
 
 export const setChat = chat => {
@@ -12,6 +11,6 @@ const reducer = (chat = {}, action) => {
     default:
       return chat
   }
-};
+}
 
-export default reducer;
+export default reducer

@@ -1,22 +1,34 @@
 import React, {Component} from 'react'
 import {Text, View, StyleSheet, Image, Button} from 'react-native'
+import Spinner from '../components/Spinner'
 import {navigation} from 'react-navigation'
 import Login from './Login'
 import Signup from './Signup'
 import {AsyncStorage} from 'react-native'
+import {fetchUserLogin, setUser} from '../redux/user'
+import {connect} from 'react-redux'
 
 export class Entry extends Component {
   constructor() {
     super()
-    this.state = {user: ''}
+    this.state = {user: '', loading: true}
   }
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
-    if (this.state.user === '') {
-      this.setState({user}) //Sets user if user was previously logged in through asyncStorage
-    }
-    if (this.state.user !== '') {
-      this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
+    //Current Settings
+    // if (user) {      
+    //   await this.props.setUser(user)
+    //   this.props.navigation.navigate('Home', {user})
+    if (user !== null) {
+      if (this.state.user === '') {
+        this.setState({user}) //Sets user if user was previously logged in through asyncStorage
+      }
+      if (this.state.user !== '') {
+        this.props.setUser(user)
+        this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
+      }}
+    if (this.state.loading) {
+      this.setState({loading: false})
     }
   }
 
@@ -25,7 +37,6 @@ export class Entry extends Component {
   }
 
   goToSignUp() {
-    console.log('navigate to signup')
     this.props.navigation.navigate('Signup')
   }
   static navigationOptions = {
@@ -33,6 +44,9 @@ export class Entry extends Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
       <View style={styles.container}>
         <View style={styles.title}>
@@ -75,18 +89,6 @@ export const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center'
   },
-  textInput: {
-    //borderBottomColor: "#CCCCCC",
-    // borderTopWidth: 1,
-    //borderBottomWidth: 1,
-    // height: 50,
-    // width: 400,
-    // fontSize: 25,
-    // paddingLeft: 10,
-    // paddingRight: 10,
-    // textAlign: "center",
-    // margin: 5
-  },
   logintext: {
     margin: 2,
     fontSize: 30
@@ -100,4 +102,4 @@ export const styles = StyleSheet.create({
   }
 })
 
-export default Entry
+export default connect(({user}) => ({user}), {fetchUserLogin, setUser})(Entry)

@@ -55,11 +55,14 @@ const User = db.define('user', {
   },
   distPref: {
     type: Sequelize.INTEGER
-  }
+  },
   // radius: {
   //   type: Sequelize.INTEGER,
   //   defaultValue: 0
   // }
+  isNoob:{
+    type:Sequelize.BOOLEAN
+  }
 })
 
 module.exports = User

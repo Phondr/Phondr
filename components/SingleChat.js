@@ -14,16 +14,18 @@ import {
   Text,
   Form,
   Item,
-  Input
+  Input,
+  Fab
 } from 'native-base'
-import {ScrollView, View, StatusBar} from 'react-native'
+import {ScrollView, View, StatusBar, KeyboardAvoidingView, Platform} from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {connect} from 'react-redux'
 import socket from '../redux/socketClient'
 import {showMessage} from 'react-native-flash-message'
 import CustomHeader from '../components/CustomHeader'
-import AudioTest from './audioTest'
+import RecordAudio from './recordAudio'
+import RenderAudio from './renderAudio'
 
 class SingleChats extends Component {
   constructor(props) {
@@ -62,6 +64,7 @@ class SingleChats extends Component {
     socket.on('receiveMessage', ({message}) => {
       this.props.setNewMessage(message)
     })
+
     this.props.fetchMessages(this.props.currentChat.id)
   }
 
@@ -72,8 +75,6 @@ class SingleChats extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('prevProps', prevProps)
-    console.log('newProps', this.props)
     if (prevProps.currentChat !== this.props.currentChat) {
       console.log('got here')
     }
@@ -101,6 +102,12 @@ class SingleChats extends Component {
   }
 
   renderBubble(props) {
+    if(props.currentMessage.text.includes('.aac')) {
+      console.log(props)
+      return (
+        <RenderAudio message={props.currentMessage}/>
+      )
+    }
     return (
       <View>
         <Bubble {...props}/>
@@ -112,8 +119,18 @@ class SingleChats extends Component {
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
-        <CustomHeader title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`} />
-        <AudioTest onSend={this.onSend} user={this.props.user} chat={this.props.currentChat} messageLength={this.props.messages.length}/>
+        <CustomHeader title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`} currentChat={this.props.currentChat} />
+        <Fab
+          active={true}
+          direction="up"
+          containerStyle={{}}
+          style={{backgroundColor: '#5067FF'}}
+          position="topRight"
+          onPress={() => this.props.navigation.navigate('MeetingModal')}
+        >
+          <Icon name="meetup" type={'FontAwesome'} />
+        </Fab>
+        <RecordAudio onSend={this.onSend} user={this.props.user} chat={this.props.currentChat} messageLength={this.props.messages.length}/>
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
@@ -123,6 +140,9 @@ class SingleChats extends Component {
           }}
           renderBubble = {this.renderBubble}
         />
+        {Platform.OS === 'android' && (
+          <KeyboardAvoidingView behavior="padding" />
+        )}
       </React.Fragment>
     )
   }
@@ -132,7 +152,8 @@ const MapStateToProps = state => {
   return {
     user: state.user,
     messages: state.messages,
-    currentChat: state.currentChat
+    currentChat: state.currentChat,
+    currentMeeting: state.currentMeeting
   }
 }
 const MapDispatchToProps = dispatch => {
