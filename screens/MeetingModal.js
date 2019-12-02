@@ -15,7 +15,7 @@ import Modal from 'react-native-modal'
 import MapView, {Marker, Callout, PROVIDER_GOOGLE} from 'react-native-maps'
 import {connect} from 'react-redux'
 import CustomDatePicker from '../components/CustomDatePicker'
-import {colors} from '../placesData'
+import colors from '../util'
 import {placesAPI} from '../secrets'
 import {updatePendingLocation} from '../redux/invitation'
 import {createMeeting} from '../redux/currentMeeting'
@@ -185,7 +185,7 @@ const MeetingModal = ({
                       }}
                       title={`${x.name}(${x.rating} rating)`}
                       description={`In the vicinity of : ${x.vicinity} `}
-                      //pinColor={colors[i]}
+                      pinColor={colors[i]}
                       //style={{position: 'absolute'}}
                       onPress={() => updateInvitation(x)}
                       onCalloutPress={() => updateInvitation(x)}

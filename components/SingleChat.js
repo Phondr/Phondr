@@ -1,29 +1,6 @@
 import React, {Component} from 'react'
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Footer,
-  FooterTab,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  Text,
-  Form,
-  Item,
-  Input,
-  Fab
-} from 'native-base'
-import {
-  ScrollView,
-  View,
-  StatusBar,
-  KeyboardAvoidingView,
-  Platform
-} from 'react-native'
+import {Icon, Fab, Button, View} from 'native-base'
+import {StatusBar, KeyboardAvoidingView, Platform} from 'react-native'
 import {GiftedChat} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {connect} from 'react-redux'
@@ -34,7 +11,9 @@ import CustomHeader from '../components/CustomHeader'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
+    this.state = {active: false}
     this.onSend = this.onSend.bind(this)
+    this.setActive = this.setActive.bind(this)
   }
   // componentWillMount() {
   //   this.setState({
@@ -99,6 +78,9 @@ class SingleChats extends Component {
       chatId: this.props.currentChat.id
     })
   }
+  setActive() {
+    this.setState({active: true})
+  }
   render() {
     return (
       <React.Fragment>
@@ -107,16 +89,12 @@ class SingleChats extends Component {
           title={`Chat Room ${this.props.currentChat.id}`}
           currentChat={this.props.currentChat}
         />
-        <Fab
-          active={true}
-          direction="up"
-          containerStyle={{}}
-          style={{backgroundColor: '#5067FF'}}
-          position="topRight"
+        <Button
+          style={{backgroundColor:'#85754E', width: '16%', alignSelf:"center"}}
           onPress={() => this.props.navigation.navigate('MeetingModal')}
         >
-          <Icon name="meetup" type={'FontAwesome'} />
-        </Fab>
+          <Icon style={{alignSelf:"center", backgroundColor:'#85754E' }} name="meetup" type={'FontAwesome'} />
+        </Button>
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
@@ -125,6 +103,7 @@ class SingleChats extends Component {
             name: this.props.user.fullName
           }}
         />
+
         {Platform.OS === 'android' && (
           <KeyboardAvoidingView behavior="padding" />
         )}
