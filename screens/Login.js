@@ -5,7 +5,9 @@ import {
   StyleSheet,
   Button,
   TouchableOpacity,
-  Image
+  Image,
+  TouchableWithoutFeedback,
+  Keyboard
 } from 'react-native'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
@@ -15,6 +17,7 @@ import gql from 'graphql-tag'
 import {throwServerError} from 'apollo-link-http-common'
 import {navigate} from 'react-navigation'
 import {relative} from 'path'
+import Spinner from '../components/Spinner'
 
 const User = t.struct({
   email: t.String,
@@ -48,62 +51,61 @@ const Form = t.form.Form
 export class Login extends Component {
   constructor() {
     super()
+    this.state = {loading: false}
     this.login = this.login.bind(this)
   }
 
-  componentDidMount() {
-    console.log('LOGIN PROPS', this.props)
-  }
+  componentDidMount() {}
 
+  //this is what eric changed
+  componentDidUpdate(prevProps) {
+    if (this.props.user.id) {
+      console.log('go home')
+      this.props.navigation.navigate('Home')
+    }
+  }
   static navigationOptions = {
     drawerLabel: () => null
   }
 
   async login() {
+    this.setState({loading: true})
     const values = this._form.getValue()
+    console.log('TCL: values', values)
+
     try {
-      await this.props.getUser(values)
-      const user = this.props.user
-      if (user.fullName) {
-        console.log('go home')
-        this.props.navigation.navigate('Home')
-      }
+      this.props.getUser(values)
     } catch (error) {
+      this.setState({loading: false})
       alert('COULD NOT LOGIN')
       console.log(error)
     }
   }
 
   render() {
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
-      <View style={{backgroundColor:	'#343434'}}>
-        <View style={{alignItems:'center',backgroundColor:'#343434'}}>
+      <View style={{backgroundColor: '#343434'}}>
+        <View style={{alignItems: 'center', backgroundColor: '#343434'}}>
           <Image
-            style={{width: '80%', height: 150, marginTop:30}}
+            style={{width: '80%', height: 150, marginTop: 30}}
             source={require('../assets/images/fog.jpg')}
             resizeMode="cover"
           />
         </View>
-
-        <View style={styles.formcontainer}>
-          <Form ref={c => (this._form = c)} type={User} options={options} />
-
-          <TouchableOpacity style={styles.submitButton} onPress={this.login}>
-            <Text style={styles.submitButtonText}>Login</Text>
-          </TouchableOpacity>
-
-          {/* <Query query={query}>
-            {({ loading, error, data }) => {
-              // console.log("loading", loading);
-              // console.log("error", error);
-              console.log(data);
-              return <Text>hiiii</Text>;
-            }}
-          </Query> */}
-        </View>
-        <View style={{alignItems:'center', backgroundColor:	'#343434'}}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.container}>
+            <Form ref={c => (this._form = c)} type={User} options={options} />
+            <TouchableOpacity onPress={this.login} style={styles.submitButton}>
+              <Text style={styles.submitButtonText}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableWithoutFeedback>
+        <View style={{alignItems: 'center', backgroundColor: '#343434'}}>
           <Image
-            style={{width: '80%', height: 180, marginTop:30}}
+            style={{width: '80%', height: 180, marginTop: 30}}
             source={require('../assets/images/fog.jpg')}
             resizeMode="cover"
           />
@@ -126,7 +128,7 @@ export const styles = StyleSheet.create({
   },
   formcontainer: {
     marginTop: 30,
-    backgroundColor:'#343434'
+    backgroundColor: '#343434'
   }
 })
 

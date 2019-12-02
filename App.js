@@ -24,20 +24,24 @@ import Signup from './screens/Signup'
 import Entry from './screens/Entry'
 import PendingScreen from './screens/PendingScreen'
 import ActiveScreen from './screens/ActiveScreen'
+import SingleChat from './components/SingleChat'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
+import Spinner from './components/Spinner'
 import MapV from './components/MapView'
 
 const {url} = require('./secrets')
+import PlaceSearch from './components/PlaceSearch'
+import MeetingModal from './screens/MeetingModal'
 
 var drawer = createDrawerNavigator(
   {
     Home: {
       screen: Home
     },
-    // New: {
-    //   screen: New
-    // },
+    New: {
+      screen: New
+    },
     Login: {
       screen: Login
     },
@@ -47,7 +51,10 @@ var drawer = createDrawerNavigator(
     Entry: {
       screen: Entry
     },
-    MapV:{
+    SingleChat: {
+      screen: SingleChat
+    },
+    MapV: {
       screen: MapV
     },
     'Pending Chats': {
@@ -56,9 +63,10 @@ var drawer = createDrawerNavigator(
     'Active Chats': {
       screen: ActiveScreen
     },
+    MeetingModal
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Entry',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'
@@ -95,17 +103,15 @@ function App(props) {
   } else {
     return (
       <Provider store={store}>
-        <ApolloProvider client={apClient}>
-          <View style={styles.container}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            {/* <AppNavigator /> */}
-            {/* <AnatomyExample /> */}
-            {/* <AuthPages /> */}
-            <DrawerContainer />
-            <FlashMessage position='top'/>
-            {/* <New /> */}
-          </View>
-        </ApolloProvider>
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          {/* <AppNavigator /> */}
+          {/* <AnatomyExample /> */}
+          {/* <AuthPages /> */}
+          <DrawerContainer />
+          <FlashMessage position="top" />
+          {/* <New /> */}
+        </View>
       </Provider>
     )
   }
