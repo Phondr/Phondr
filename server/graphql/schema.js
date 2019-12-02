@@ -29,6 +29,7 @@ const UserType = new GraphQLObjectType({
     googleId: {type: GraphQLString},
     gender: {type: GraphQLString},
     age: {type: GraphQLString},
+    password: {type: GraphQLString},
     homeLocation: {type: new GraphQLList(GraphQLFloat)},
     incentivePoints: {type: GraphQLInt},
     profilePicture: {type: GraphQLString},
@@ -90,6 +91,7 @@ const MeetingType = new GraphQLObjectType({
     senderId: {type: GraphQLInt}
   })
 })
+
 //Query Requests(grab information from the database)
 const rootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -196,16 +198,20 @@ const rootMutation = new GraphQLObjectType({
     userSignup: {
       type: UserType,
       args: {
-        email: {type: GraphQLString},
         fullName: {type: GraphQLString},
-        gender: {type: GraphQLString},
-        age: {type: GraphQLString},
-        homeLocation: {type: new GraphQLList(GraphQLFloat)},
-        profilePicture: {type: GraphQLString}
+        email: {type: GraphQLString},
+        password: {type: GraphQLString}
       },
       async resolve(parent, args) {
         console.log('ARGS', args)
-        const data = await db.models.user.create(args)
+
+        const data = await db.models.user.create({
+          fullName: args.fullName,
+          email: args.email,
+          password: args.password
+        })
+
+        console.log('CREATED USER', data)
         if (data) {
           return data
         }

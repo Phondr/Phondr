@@ -37,7 +37,9 @@ const MeetingModal = ({
 
   const updateInvitation = data => {
     const coords = [data.geometry.location.lat, data.geometry.location.lng]
-    const link = data.photos[0].html_attributions[0].split('"')[1]
+    console.log('data photos', data.photos)
+    const link =
+      data.photos[0].html_attributions[0].split('"')[1] || 'no photos'
     console.log('TCL: link', link)
 
     console.log('updateInv', data)
@@ -98,6 +100,7 @@ const MeetingModal = ({
       `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=1500&type=cafe&key=` +
       placesAPI
     const {data} = await axios.get(theUrl)
+    console.log('TCL: data results', data.results)
 
     setNearby(data.results)
   }

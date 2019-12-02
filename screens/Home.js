@@ -45,17 +45,20 @@ class Home extends Component {
     }
   }
 
-  componentDidMount() {
+  // componentDidMount() {
     //this is just for testing
     // this.props.setUser(this.state.user)
 
-    if (!this.props.user.id) {
-      this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
-    }
+    // if (!this.props.user.id) {
+    //   this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
+    // }
+    // if (this.props.user.id) {
+    //   console.log('in comp did mouth fmc')
+  async componentDidMount() {
     if (this.props.user.id) {
-      console.log('in comp did mouth fmc')
+      //If brought from login screen, there is already user data on redux. Just grab chats.
       this.props.fetchMyChats(this.props.user.id)
-    }
+    } 
     //console.log('HOME PROPS', this.props)
   }
   componentDidUpdate(prevProps) {
@@ -66,6 +69,7 @@ class Home extends Component {
   }
 
   render() {
+    console.log(this.props.user)
     return (
       <Container>
         <ScrollView>

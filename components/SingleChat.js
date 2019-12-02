@@ -24,17 +24,19 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native'
-import {GiftedChat} from 'react-native-gifted-chat'
+import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {connect} from 'react-redux'
 import socket from '../redux/socketClient'
 import {showMessage} from 'react-native-flash-message'
 import CustomHeader from '../components/CustomHeader'
-
+import PreviewLink from '../components/PreviewLink'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
     this.onSend = this.onSend.bind(this)
+    this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
+    this.renderBubble = this.renderBubble.bind(this)
   }
   // componentWillMount() {
   //   this.setState({
@@ -85,6 +87,21 @@ class SingleChats extends Component {
     }
   }
 
+  renderBubble(props) {
+    if (this.props.currentMeeting) {
+      console.log('props current meeting', this.props.currentMeeting)
+    }
+    if (
+      props.currentMessage.text.includes('New Invitation To Meet!') &&
+      this.props.currentMeeting.name
+    ) {
+      console.log('inside conditional preview link')
+      return <PreviewLink currentMeeting={this.props.currentMeeting} />
+    }
+    console.log('rendering bubble')
+    return <Bubble {...props} />
+  }
+
   componentWillUnmount() {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
     socket.off('loginLogoutMessage')
@@ -119,12 +136,17 @@ class SingleChats extends Component {
       chatId: this.props.currentChat.id
     })
   }
+
+  getOtherUserInChat(chat) {
+    return chat.users.find(user => user.fullName !== this.props.user.fullName)
+  }
+
   render() {
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
         <CustomHeader
-          title={`Chat Room ${this.props.currentChat.id}`}
+          title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
           currentChat={this.props.currentChat}
         />
         <Fab
@@ -144,6 +166,7 @@ class SingleChats extends Component {
             _id: this.props.user.id,
             name: this.props.user.fullName
           }}
+          renderBubble={this.renderBubble}
         />
         {Platform.OS === 'android' && (
           <KeyboardAvoidingView behavior="padding" />

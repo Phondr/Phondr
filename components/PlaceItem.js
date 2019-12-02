@@ -14,7 +14,7 @@ const PlaceItem = ({
 }) => {
   const handlePress = async () => {
     const res = await fetchDetails(place_id)
-    console.log('res', res)
+    console.log('res in placeitem', res)
     const {geometry, name, rating, url} = res
 
     console.log('TCL: link', url)
