@@ -29,6 +29,7 @@ const UserType = new GraphQLObjectType({
     googleId: {type: GraphQLString},
     gender: {type: GraphQLString},
     age: {type: GraphQLString},
+    password: {type: GraphQLString},
     homeLocation: {type: new GraphQLList(GraphQLFloat)},
     incentivePoints: {type: GraphQLInt},
     profilePicture: {type: GraphQLString},
@@ -39,18 +40,6 @@ const UserType = new GraphQLObjectType({
     distPref: {type: GraphQLInt}
   })
 })
-
-const InvitationType = new GraphQLInputObjectType({
-  name: 'Invitation',
-  fields: () => ({
-    coords: {type: new GraphQLList(GraphQLFloat)},
-    name: {type: GraphQLString},
-    address: {type: GraphQLString},
-    rating: {type: GraphQLFloat},
-    date: {type: GraphQLString}
-  })
-})
-
 const MessageType = new GraphQLObjectType({
   name: 'Message',
   fields: () => ({
@@ -86,6 +75,16 @@ const MeetingType = new GraphQLObjectType({
     date: {type: GraphQLString},
     chatId: {type: GraphQLInt},
     senderId: {type: GraphQLInt}
+  })
+})
+const InvitationType = new GraphQLInputObjectType({
+  name: 'Invitation',
+  fields: () => ({
+    coords: {type: new GraphQLList(GraphQLFloat)},
+    name: {type: GraphQLString},
+    address: {type: GraphQLString},
+    rating: {type: GraphQLFloat},
+    date: {type: GraphQLString}
   })
 })
 //Query Requests(grab information from the database)
@@ -194,16 +193,20 @@ const rootMutation = new GraphQLObjectType({
     userSignup: {
       type: UserType,
       args: {
-        email: {type: GraphQLString},
         fullName: {type: GraphQLString},
-        gender: {type: GraphQLString},
-        age: {type: GraphQLString},
-        homeLocation: {type: new GraphQLList(GraphQLFloat)},
-        profilePicture: {type: GraphQLString}
+        email: {type: GraphQLString},
+        password: {type: GraphQLString}
       },
       async resolve(parent, args) {
         console.log('ARGS', args)
-        const data = await db.models.user.create(args)
+
+        const data = await db.models.user.create({
+          fullName: args.fullName,
+          email: args.email,
+          password: args.password
+        })
+
+        console.log('CREATED USER', data)
         if (data) {
           return data
         }
