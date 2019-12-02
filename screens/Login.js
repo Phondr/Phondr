@@ -74,9 +74,9 @@ export class Login extends Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return <Spinner />
-    }
+    // if (this.state.loading) {
+    //   return <Spinner />
+    // }
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
