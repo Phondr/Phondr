@@ -12,6 +12,7 @@ export class Entry extends Component {
   }
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+    console.log('USER', user)
     if (user !== null) {
       if (this.state.user === '') {
         this.setState({user}) //Sets user if user was previously logged in through asyncStorage

@@ -37,8 +37,20 @@ export class Profile extends Component {
     }
   }
 
+  async componentDidUpdate(prevProps) {
+    if (prevProps.user !== this.props.user) {
+      try {
+        await this.props.getUser()
+      } catch (error) {
+        alert('COULD NOT GET USER AFTER EDITING')
+        console.log(error)
+      }
+    }
+  }
+
   render() {
     const user = this.props.user
+    console.log('USER', user)
     return (
       <ScrollView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -49,7 +61,7 @@ export class Profile extends Component {
           <View style={styles.bodyContent}>
             <Text style={styles.name}>{user.fullName}</Text>
             <Text style={styles.info}>
-              {user.gender} | {user.age}
+              {user.iAm} | {user.age}
             </Text>
             <View style={styles.bodyDescription}>
               <Text style={styles.description}>Email: {user.email}</Text>
@@ -58,9 +70,14 @@ export class Profile extends Component {
               </Text>
             </View>
 
-            {/* <TouchableOpacity style={styles.buttonContainer}>
-              <Text>Opcion 1</Text>
-            </TouchableOpacity> */}
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => {
+                this.props.navigation.navigate('UserProfileEdit', {user})
+              }}
+            >
+              <Text>Edit Profile</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -95,7 +112,7 @@ const styles = StyleSheet.create({
   bodyContent: {
     flex: 1,
     alignItems: 'center',
-    padding: 30
+    padding: 28
   },
   name: {
     fontSize: 28,
@@ -103,7 +120,7 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   info: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#00BFFF',
     marginTop: 10
   },

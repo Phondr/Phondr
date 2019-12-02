@@ -29,6 +29,8 @@ import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 import Profile from './screens/Profile'
 import MapV from './components/MapView'
+import PendingMeetings from './screens/PendingMeetings'
+import UserProfileEdit from './screens/UserProfileEdit'
 
 const {url} = require('./secrets')
 
@@ -52,17 +54,23 @@ var drawer = createDrawerNavigator(
     Entry: {
       screen: Entry
     },
-    MapV:{
+    MapV: {
       screen: MapV
     },
     'Pending Chats': {
       screen: PendingScreen
+    },
+    'Pending Meetings': {
+      screen: PendingMeetings
     },
     'Active Chats': {
       screen: ActiveScreen
     },
     'Sign Out': {
       screen: SignOut
+    },
+    UserProfileEdit: {
+      screen: UserProfileEdit
     }
   },
   {

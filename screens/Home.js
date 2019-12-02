@@ -42,7 +42,7 @@ class Home extends Component {
       await this.props.setUser(this.props.navigation.getParam('user')) //If brought through async storage, need to set user data from navigation prop to redux store of user.
     }
   }
-  
+
   componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id) {
       this.props.fetchMyChats(this.props.user.id)
@@ -53,7 +53,7 @@ class Home extends Component {
     return (
       <Container>
         <ScrollView>
-          {this.state.user.isNoob === true? (
+          {this.state.user.isNoob === true ? (
             <Dialog
               onDismiss={() => {
                 this.setState({defaultAnimationDialog: false})
@@ -78,7 +78,10 @@ class Home extends Component {
                     text="Turn off intro"
                     bordered
                     onPress={() => {
-                      this.setState({defaultAnimationDialog: false, isNoob: false})
+                      this.setState({
+                        defaultAnimationDialog: false,
+                        isNoob: false
+                      })
                     }}
                     key="button-1"
                   />

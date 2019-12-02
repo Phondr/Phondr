@@ -106,6 +106,7 @@ const rootQuery = new GraphQLObjectType({
           where: {email: args.email}
           // where: { email: args.email, password: args.password },
         })
+
         console.log('PASSWORD', args.password)
         console.log(usermodel.correctPassword(args.password))
 
@@ -124,7 +125,7 @@ const rootQuery = new GraphQLObjectType({
               password: usermodel.cryptPassword(args.password)
             }
           })
-          console.log('USER', use)
+          //console.log('USER', use)
           return use
         }
       }
@@ -190,6 +191,32 @@ const rootMutation = new GraphQLObjectType({
         console.log('CREATED USER', data)
         if (data) {
           return data
+        }
+      }
+    },
+    editUser: {
+      type: UserType,
+      args: {
+        fullName: {type: GraphQLString},
+        id: {type: GraphQLInt},
+        email: {type: GraphQLString},
+        iAm: {type: GraphQLString},
+        distPref: {type: GraphQLInt},
+        age: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        let User = await db.models.user.findByPk(args.id)
+
+        let updateduser = await User.update({
+          fullName: args.fullName,
+          email: args.email,
+          iAm: args.iAm,
+          distPref: args.distPref,
+          age: args.age
+        })
+
+        if (updateduser) {
+          return updateduser
         }
       }
     },
