@@ -8,29 +8,37 @@ const setCurrentMeeting = meeting => {
 }
 
 export const createMeeting = (chatId, userId, invitation) => {
-  console.log('TCL: userId', userId)
-  console.log('TCL: chatId', chatId)
-  console.log('TCL: invitation', invitation)
-  console.log('url', url)
   return async dispatch => {
     try {
       const dateString = invitation.date.toDateString()
-      console.log('TCL: dateString', dateString)
-
-      const {data} = await axios.post(`${url}/graphql`, {
-        query: `mutation{
-             newMeeting(chatId:${chatId}, userId:${userId}, latitude:${invitation.coords[0]},longitude:${invitation.coords[1]},name:${invitation.name},rating:${invitation.rating},address:${invitation.address},date:${dateString}){
-                location
-                name
-                rating
-                address
-                date
-                senderId
-                chatId
-             }
-          }`
+      let {data} = await axios({
+        url: `${url}/graphql`,
+        method: 'POST',
+        data: {
+          query: `mutation{
+            newMeeting(chatId:${chatId}, userId:${userId}, latitude:${invitation.coords[0]},longitude:${invitation.coords[1]},name:"${invitation.name}",rating:${invitation.rating},address:"${invitation.address}",date:"${dateString}"){
+               location
+               name
+               rating
+               date
+               senderId
+               chatId
+            }
+         }`
+        }
       })
-      console.log('TCL: data', data)
+      // const {data} = await axios.post(`${url}/graphql`, {
+      //   query: `mutation{
+      //        newMeeting(chatId:${chatId}, userId:${userId}, latitude:${invitation.coords[0]},longitude:${invitation.coords[1]},name:"${invitation.name}",rating:${invitation.rating},address:"${invitation.address}",date:"${dateString}"){
+      //           location
+      //           name
+      //           rating
+      //           date
+      //           senderId
+      //           chatId
+      //        }
+      //     }`
+      // })
       dispatch(setCurrentMeeting(data.data.newMeeting))
       clearInvitation()
     } catch (error) {

@@ -115,7 +115,7 @@ class SingleChats extends Component {
           position="topRight"
           onPress={() => this.props.navigation.navigate('MeetingModal')}
         >
-          <Icon name="meetup" type={'Zocial'} />
+          <Icon name="meetup" type={'FontAwesome'} />
         </Fab>
         <GiftedChat
           messages={this.props.messages || []}
