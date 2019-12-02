@@ -30,8 +30,12 @@ import ActiveComponent from './components/ActiveComp'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 import Profile from './screens/Profile'
+import Spinner from './components/Spinner'
+import MapV from './components/MapView'
 
 const {url} = require('./secrets')
+import PlaceSearch from './components/PlaceSearch'
+import MeetingModal from './screens/MeetingModal'
 
 const ActiveScreenStack = createStackNavigator({
   ActiveScreen: {
@@ -68,6 +72,9 @@ var drawer = createDrawerNavigator(
     Entry: {
       screen: Entry
     },
+    MapV: {
+      screen: MapV
+    },
     'Pending Chats': {
       screen: PendingScreen
     },
@@ -76,7 +83,8 @@ var drawer = createDrawerNavigator(
     },
     'Sign Out': {
       screen: SignOut
-    }
+    },
+    MeetingModal
   },
   {
     initialRouteName: 'Entry',
@@ -116,15 +124,15 @@ function App(props) {
   } else {
     return (
       <Provider store={store}>
-          <View style={styles.container}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            {/* <AppNavigator /> */}
-            {/* <AnatomyExample /> */}
-            {/* <AuthPages /> */}
-            <DrawerContainer />
-            <FlashMessage position="top" />
-            {/* <New /> */}
-          </View>
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          {/* <AppNavigator /> */}
+          {/* <AnatomyExample /> */}
+          {/* <AuthPages /> */}
+          <DrawerContainer />
+          <FlashMessage position="top" />
+          {/* <New /> */}
+        </View>
       </Provider>
     )
   }

@@ -11,13 +11,9 @@ export const calcProgress = chat => {
     }
   })
   const hoursSince = chat.sinceCreation / 60
-  console.log(
-    'in calcProgress',
-    sum,
-    hoursSince,
-    ((sum / (hoursSince * 0.1)) * sum) / 4 / 100
-  )
-  return ((sum / hoursSince) * sum) / 4 / 100
+  const progress = ((sum / (hoursSince * 0.5)) * sum) / 500
+  console.log('in calcProgress', sum, hoursSince, progress)
+  return progress
 }
 // const sum = 200;
 // const hoursSince = 48;

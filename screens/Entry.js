@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Text, View, StyleSheet, Image, Button} from 'react-native'
+import Spinner from '../components/Spinner'
 import {navigation} from 'react-navigation'
 import Login from './Login'
 import Signup from './Signup'
@@ -10,7 +11,7 @@ import {connect} from 'react-redux'
 export class Entry extends Component {
   constructor() {
     super()
-    this.state = {user: ''}
+    this.state = {user: '', loading: true}
   }
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
@@ -18,14 +19,21 @@ export class Entry extends Component {
     // if (user) {      
     //   await this.props.setUser(user)
     //   this.props.navigation.navigate('Home', {user})
-    if (user !== null) {
-      if (this.state.user === '') {
-        this.setState({user}) //Sets user if user was previously logged in through asyncStorage
-      }
-      if (this.state.user !== '') {
-        this.props.setUser(user)
-        this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
-      }
+    // if (user !== null) {
+    //   if (this.state.user === '') {
+    //     this.setState({user}) //Sets user if user was previously logged in through asyncStorage
+    //   }
+    //   if (this.state.user !== '') {
+    //     this.props.setUser(user)
+    //     this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
+    //   }
+
+    if (user.email) {
+      await this.props.setUser(user)
+      this.props.navigation.navigate('Home', {user})
+    }
+    if (this.state.loading) {
+      this.setState({loading: false})
     }
   }
 
@@ -41,6 +49,9 @@ export class Entry extends Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
       <View style={styles.container}>
         <View style={styles.title}>

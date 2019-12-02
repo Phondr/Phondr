@@ -14,7 +14,8 @@ import {
   Text,
   Form,
   Item,
-  Input
+  Input,
+  Fab
 } from 'native-base'
 import {
   ScrollView,
@@ -108,7 +109,17 @@ class SingleChats extends Component {
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
-        <CustomHeader title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`} />
+        <CustomHeader title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`} currentChat={this.props.currentChat} />
+        <Fab
+          active={true}
+          direction="up"
+          containerStyle={{}}
+          style={{backgroundColor: '#5067FF'}}
+          position="topRight"
+          onPress={() => this.props.navigation.navigate('MeetingModal')}
+        >
+          <Icon name="meetup" type={'FontAwesome'} />
+        </Fab>
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
@@ -129,7 +140,8 @@ const MapStateToProps = state => {
   return {
     user: state.user,
     messages: state.messages,
-    currentChat: state.currentChat
+    currentChat: state.currentChat,
+    currentMeeting: state.currentMeeting
   }
 }
 const MapDispatchToProps = dispatch => {

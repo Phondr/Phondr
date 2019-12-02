@@ -1,5 +1,6 @@
 const {
   GraphQLObjectType,
+  GraphQLInputObjectType,
   GraphQLInt,
   GraphQLString,
   GraphQLBoolean,
@@ -39,6 +40,18 @@ const UserType = new GraphQLObjectType({
     distPref: {type: GraphQLInt}
   })
 })
+const MessageType = new GraphQLObjectType({
+  name: 'Message',
+  fields: () => ({
+    id: {type: GraphQLInt},
+    content: {type: GraphQLString},
+    length: {type: GraphQLInt},
+    userId: {type: GraphQLInt},
+    chatId: {type: GraphQLInt},
+    createdAt: {type: GraphQLString},
+    user: {type: UserType}
+  })
+})
 const ChatType = new GraphQLObjectType({
   name: 'Chat',
   fields: () => ({
@@ -52,22 +65,25 @@ const ChatType = new GraphQLObjectType({
     messages: {type: new GraphQLList(MessageType)}
   })
 })
-const MessageType = new GraphQLObjectType({
-  name: 'Message',
-  fields: () => ({
-    id: {type: GraphQLInt},
-    content: {type: GraphQLString},
-    length: {type: GraphQLInt},
-    userId: {type: GraphQLInt},
-    chatId: {type: GraphQLInt},
-    createdAt: {type: GraphQLString},
-    user: {type: UserType}
-  })
-})
 const MeetingType = new GraphQLObjectType({
   name: 'Meeting',
   fields: () => ({
-    location: {type: GraphQLString},
+    location: {type: new GraphQLList(GraphQLFloat)},
+    name: {type: GraphQLString},
+    rating: {type: GraphQLFloat},
+    address: {type: GraphQLString},
+    date: {type: GraphQLString},
+    chatId: {type: GraphQLInt},
+    senderId: {type: GraphQLInt}
+  })
+})
+const InvitationType = new GraphQLInputObjectType({
+  name: 'Invitation',
+  fields: () => ({
+    coords: {type: new GraphQLList(GraphQLFloat)},
+    name: {type: GraphQLString},
+    address: {type: GraphQLString},
+    rating: {type: GraphQLFloat},
     date: {type: GraphQLString}
   })
 })
@@ -299,6 +315,31 @@ const rootMutation = new GraphQLObjectType({
           include: [db.models.user]
         })
         return createdMessage
+      }
+    },
+    newMeeting: {
+      type: MeetingType,
+      args: {
+        chatId: {type: GraphQLInt},
+        userId: {type: GraphQLInt},
+        invitation: {type: InvitationType}
+      },
+      async resolve(parent, args) {
+        try {
+          const meeting = await db.models.meeting.create({
+            location: args.invitation.coords,
+            name: args.invitation.name,
+            rating: args.invitation.rating,
+            address: args.invitation.address,
+            date: new Date(args.invitation.date),
+            senderId: args.userId
+          })
+          const chat = await db.models.chat.findByPk(args.chatId)
+          const updated = await meeting.setChat(chat)
+          return updated
+        } catch (error) {
+          console.error('in newMeeting route: ', error)
+        }
       }
     }
   }
