@@ -14,12 +14,22 @@ export class Entry extends Component {
     this.state = {user: '', loading: true}
   }
   async componentDidMount() {
-    const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+    // const user = JSON.parse(await AsyncStorage.getItem('userKey'))
 
-    //Current Settings
-    // if (user) {
-    //   await this.props.setUser(user)
-    //   this.props.navigation.navigate('Home', {user})
+    // //Current Settings
+    // // if (user) {
+    // //   await this.props.setUser(user)
+    // //   this.props.navigation.navigate('Home', {user})
+    // // if (user !== null) {
+    // //   if (this.state.user === '') {
+    // //     this.setState({user}) //Sets user if user was previously logged in through asyncStorage
+    // //   }
+    // //   if (this.state.user !== '') {
+    // //     this.props.setUser(user)
+    // //     this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
+    // //   }
+
+    // console.log('USER', user)
     // if (user !== null) {
     //   if (this.state.user === '') {
     //     this.setState({user}) //Sets user if user was previously logged in through asyncStorage
@@ -28,17 +38,7 @@ export class Entry extends Component {
     //     this.props.setUser(user)
     //     this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
     //   }
-
-    console.log('USER', user)
-    if (user !== null) {
-      if (this.state.user === '') {
-        this.setState({user}) //Sets user if user was previously logged in through asyncStorage
-      }
-      if (this.state.user !== '') {
-        this.props.setUser(user)
-        this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
-      }
-    }
+    // }
     if (this.state.loading) {
       this.setState({loading: false})
     }

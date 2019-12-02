@@ -36,7 +36,7 @@ class Home extends Component {
     this.state = {
       user: {fullName: 'Avaree Warrick', id: 1, isNoob: true},
       defaultAnimationDialog: true,
-      loading:true
+      loading: true
     }
   }
   static navigationOptions = {
@@ -46,19 +46,19 @@ class Home extends Component {
   }
 
   // componentDidMount() {
-    //this is just for testing
-    // this.props.setUser(this.state.user)
+  //this is just for testing
+  // this.props.setUser(this.state.user)
 
-    // if (!this.props.user.id) {
-    //   this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
-    // }
-    // if (this.props.user.id) {
-    //   console.log('in comp did mouth fmc')
+  // if (!this.props.user.id) {
+  //   this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
+  // }
+  // if (this.props.user.id) {
+  //   console.log('in comp did mouth fmc')
   async componentDidMount() {
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
       this.props.fetchMyChats(this.props.user.id)
-    } 
+    }
     //console.log('HOME PROPS', this.props)
   }
 
@@ -134,7 +134,7 @@ class Home extends Component {
               flex: 1
             }}
           >
-            {this.props.myChats.length ? (
+            {this.props.myChats && this.props.myChats.length ? (
               <>
                 <ActiveComp />
                 <PendingComp />

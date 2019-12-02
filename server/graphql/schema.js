@@ -196,7 +196,11 @@ const rootMutation = new GraphQLObjectType({
       args: {
         fullName: {type: GraphQLString},
         email: {type: GraphQLString},
-        password: {type: GraphQLString}
+        password: {type: GraphQLString},
+        iAm: {type: GraphQLString},
+        age: {type: GraphQLInt},
+        distPref: {type: GraphQLInt},
+        iPrefer: {type: new GraphQLList(GraphQLString)}
       },
       async resolve(parent, args) {
         console.log('ARGS', args)
@@ -204,7 +208,11 @@ const rootMutation = new GraphQLObjectType({
         const data = await db.models.user.create({
           fullName: args.fullName,
           email: args.email,
-          password: args.password
+          password: args.password,
+          iAm: args.iAm,
+          age: args.age,
+          iPrefer: args.iPrefer,
+          distPref: args.distPref
         })
 
         console.log('CREATED USER', data)

@@ -98,26 +98,34 @@ export const fetchUserLogin = values => async dispatch => {
 
 export const userSignUp = (values, preferences) => async dispatch => {
   try {
-    
-
     if (getData('userKey')) {
       removeData('userKey')
     }
 
-    const fullName = values.fullName
+    const fullName = values.name
     const age = values.age
     const password = values.password
     const email = values.email
-    const address = values.address
-    const radius = values.radius
+    // const address = values.address
+    const distPref = values.radius
+    const iPrefer = preferences
+    const iAm = values.gender
+    console.log('SIGNUP STUFF', values, iPrefer)
 
     let {data} = await client.mutate({
       mutation: gql`mutation{
-        userSignup(fullName: "${fullName}", email: "${email}", password: "${password}") {
+        userSignup(fullName: "${fullName}", email: "${email}", iAm: "${iAm}", age: ${age}, distPref: ${distPref}, iPrefer: [${iPrefer.map(
+        i => `"${i}"`
+      )}], password: "${password}") {
           id
           email
           fullName
-          password
+          homeLocation
+          incentivePoints
+          profilePicture
+          age
+          iAm
+          iPrefer
           }
               }`
     })

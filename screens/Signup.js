@@ -30,7 +30,7 @@ import t, {MultiSelectExample} from 'tcomb-form-native'
 // const EnumChoices = t.enums(Choices, 'Choices')
 
 const User = t.struct({
-  fullName: t.String,
+  name: t.String,
   age: t.Integer,
   //address: t.String,
   radius: t.Integer,
@@ -42,7 +42,7 @@ const User = t.struct({
 
 const options = {
   fields: {
-    fullName: {
+    name: {
       error: 'You need your fullname to sign up'
     },
     age: {
@@ -155,7 +155,7 @@ export class Signup extends Component {
                 <Title>Gender Preference</Title>
               </Left>
             </Header>
-            <Content>
+            <Content style={styles.checkboxcontent}>
               <ListItem>
                 <CheckBox
                   checked={this.state.checked1}
@@ -195,7 +195,6 @@ export class Signup extends Component {
               </ListItem>
             </Content>
           </View>
-
           <Form
             ref={c => (this._form = c)}
             type={User}
@@ -203,8 +202,7 @@ export class Signup extends Component {
             style={styles.formcontainer}
           />
 
-          <CameraComponent />
-
+          {/* <CameraComponent /> */}
           <TouchableOpacity style={styles.submitButton} onPress={this.signup}>
             <Text style={styles.submitButtonText}>Sign Up</Text>
           </TouchableOpacity>
@@ -218,7 +216,6 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 35,
-
     padding: 20,
     backgroundColor: '#F5FCFF'
   },
@@ -226,6 +223,10 @@ export const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     backgroundColor: '#F5FCFF',
     flex: 1,
+    margin: 10
+  },
+  checkboxcontent: {
+    padding: 10,
     margin: 10
   },
   logintext: {
