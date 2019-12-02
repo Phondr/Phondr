@@ -46,6 +46,7 @@ const InvitationType = new GraphQLInputObjectType({
   fields: () => ({
     coords: {type: new GraphQLList(GraphQLFloat)},
     link: {type: GraphQLString},
+    imageRef: {type: GraphQLString},
     name: {type: GraphQLString},
     address: {type: GraphQLString},
     rating: {type: GraphQLFloat},
@@ -59,6 +60,7 @@ const MessageType = new GraphQLObjectType({
     id: {type: GraphQLInt},
     content: {type: GraphQLString},
     length: {type: GraphQLInt},
+    imageRef: {type: GraphQLString},
     userId: {type: GraphQLInt},
     chatId: {type: GraphQLInt},
     createdAt: {type: GraphQLString},
@@ -84,6 +86,7 @@ const MeetingType = new GraphQLObjectType({
     location: {type: new GraphQLList(GraphQLFloat)},
     name: {type: GraphQLString},
     link: {type: GraphQLString},
+    imageRef: {type: GraphQLString},
     rating: {type: GraphQLFloat},
     address: {type: GraphQLString},
     date: {type: GraphQLString},
@@ -311,6 +314,7 @@ const rootMutation = new GraphQLObjectType({
       args: {
         content: {type: GraphQLString},
         length: {type: GraphQLInt},
+        imageRef: {type: GraphQLString},
         userId: {type: GraphQLInt},
         chatId: {type: GraphQLInt}
       },
@@ -334,6 +338,7 @@ const rootMutation = new GraphQLObjectType({
           const meeting = await db.models.meeting.create({
             location: args.invitation.coords,
             link: args.invitation.link,
+            imageRef: args.invitation.imageRef,
             name: args.invitation.name,
             rating: args.invitation.rating,
             address: args.invitation.address,

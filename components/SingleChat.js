@@ -31,12 +31,15 @@ import socket from '../redux/socketClient'
 import {showMessage} from 'react-native-flash-message'
 import CustomHeader from '../components/CustomHeader'
 import PreviewLink from '../components/PreviewLink'
+import {placesAPI} from '../secrets'
+import axios from 'axios'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
-    this.renderBubble = this.renderBubble.bind(this)
+    this.imageRequest = this.imageRequest.bind(this)
+    //this.renderBubble = this.renderBubble.bind(this)
   }
   // componentWillMount() {
   //   this.setState({
@@ -72,13 +75,31 @@ class SingleChats extends Component {
 
     this.props.fetchMessages(this.props.currentChat.id)
   }
+
+  async imageRequest(ref) {
+    const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
+    const image = await axios.post(url)
+    console.log('TCL: image', image)
+
+    return image
+  }
+
   UNSAFE_componentWillUpdate(nextProps) {
     if (nextProps.currentMeeting !== this.props.currentMeeting) {
-      const {name, address, link, location, date} = nextProps.currentMeeting
+      const {
+        name,
+        address,
+        link,
+        location,
+        date,
+        imageRef
+      } = nextProps.currentMeeting
       const formattedMessage = {
-        content: `New Invitation To Meet! Address: ${address}, date: ${new Date(
-          +date
-        ).toString()}`,
+        content: `${link} \
+        New Invitation To Meet!
+        Address: ${address}
+        Date: ${new Date(+date).toString()}`,
+        imageRef: imageRef,
         userId: nextProps.user.id,
         length: 10,
         chatId: nextProps.currentChat.id
@@ -87,20 +108,26 @@ class SingleChats extends Component {
     }
   }
 
-  renderBubble(props) {
-    if (this.props.currentMeeting) {
-      console.log('props current meeting', this.props.currentMeeting)
-    }
-    if (
-      props.currentMessage.text.includes('New Invitation To Meet!') &&
-      this.props.currentMeeting.name
-    ) {
-      console.log('inside conditional preview link')
-      return <PreviewLink currentMeeting={this.props.currentMeeting} />
-    }
-    console.log('rendering bubble')
-    return <Bubble {...props} />
-  }
+  // async renderBubble(props) {
+  //   // if (this.props.currentMeeting) {
+  //   //   console.log('props current meeting', this.props.currentMeeting)
+  //   // }
+  //   // if (
+  //   //   props.currentMessage.text.includes('New Invitation To Meet!') &&
+  //   //   this.props.currentMeeting.name
+  //   // ) {
+  //   //   console.log('inside conditional preview link')
+  //   //   return <PreviewLink currentMeeting={this.props.currentMeeting} />
+  //   // }
+  //   // console.log('rendering bubble')
+  //   let image = ''
+  //   if (this.props.currentMeeting && this.props.currentMeeting.name) {
+  //     image = this.imageRequest(this.props.currentMeeting.imageRef)
+  //     props.currentMessage.image = image
+  //   }
+  //   //console.log(props)
+  //   return <Bubble {...props} />
+  //}
 
   componentWillUnmount() {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
@@ -166,7 +193,7 @@ class SingleChats extends Component {
             _id: this.props.user.id,
             name: this.props.user.fullName
           }}
-          renderBubble={this.renderBubble}
+          //renderBubble={this.renderBubble}
         />
         {Platform.OS === 'android' && (
           <KeyboardAvoidingView behavior="padding" />

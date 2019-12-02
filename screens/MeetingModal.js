@@ -37,18 +37,20 @@ const MeetingModal = ({
 
   const updateInvitation = data => {
     const coords = [data.geometry.location.lat, data.geometry.location.lng]
-    console.log('data photos', data.photos)
+    //console.log('data photos', data.photos)
     const link =
       data.photos[0].html_attributions[0].split('"')[1] || 'no photos'
+    const imageRef = data.photos[0].photo_reference
     console.log('TCL: link', link)
 
-    console.log('updateInv', data)
+    //console.log('updateInv', data)
     updatePendingLocation(
       coords,
       data.name,
       `${data.name}, ${data.vicinity}`,
       data.rating,
-      link
+      link,
+      imageRef
     )
   }
 
@@ -100,7 +102,7 @@ const MeetingModal = ({
       `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=1500&type=cafe&key=` +
       placesAPI
     const {data} = await axios.get(theUrl)
-    console.log('TCL: data results', data.results)
+    //console.log('TCL: nearby data results', data.results)
 
     setNearby(data.results)
   }
@@ -130,7 +132,7 @@ const MeetingModal = ({
     }
   }
   if (invitation.name) {
-    console.log('TCL: invitation', invitation)
+    //console.log('TCL: invitation', invitation)
     //console.log('formated invitation', formatRegion(invitation))
   }
 
@@ -182,7 +184,7 @@ const MeetingModal = ({
               />
               {nearby.length > 0 &&
                 nearby.map((x, i) => {
-                  console.log('mapping')
+                  //console.log('mapping')
                   return (
                     <Marker
                       key={x.id}
