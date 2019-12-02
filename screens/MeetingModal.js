@@ -21,6 +21,7 @@ import {updatePendingLocation} from '../redux/invitation'
 import {createMeeting} from '../redux/currentMeeting'
 import axios from 'axios'
 import Spinner from '../components/Spinner'
+import CustomHeader from '../components/CustomHeader'
 
 const MeetingModal = ({
   invitation,
@@ -140,7 +141,9 @@ const MeetingModal = ({
     //   isVisible={true} // this will be tied to state from parent
     //   onBackdropPress={() => {}}
     // >
+
     <Container style={{backgroundColor: "#2a3439"}}>
+      <CustomHeader title="Meeting" />
       <Content contentContainerStyle={{marginTop: 20}}>
         <PlaceSearch />
 
