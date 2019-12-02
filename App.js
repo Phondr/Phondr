@@ -10,7 +10,6 @@ import Home from './screens/Home'
 import {Container, Content, Header, Body, Drawer} from 'native-base'
 import drawerStyles from './styles/drawerStyle'
 import CustomDrawer from './components/CustomDrawer'
-import AnatomyExample from './components/hellowworld'
 import New from './components/route'
 import ApolloClient from 'apollo-boost'
 import {ApolloProvider} from '@apollo/react-hooks'
@@ -25,6 +24,7 @@ import Entry from './screens/Entry'
 import PendingScreen from './screens/PendingScreen'
 import ActiveScreen from './screens/ActiveScreen'
 import SingleChat from './components/SingleChat'
+import Audio from './components/audioTest'
 import ActiveComponent from './components/ActiveComp'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
@@ -62,6 +62,9 @@ var drawer = createDrawerNavigator(
     },
     Entry: {
       screen: Entry
+    },
+    Audio: {
+      screen: Audio
     },
     'Pending Chats': {
       screen: PendingScreen

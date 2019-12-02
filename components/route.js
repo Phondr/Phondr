@@ -17,7 +17,6 @@ import {
   Content,
 } from 'native-base'
 import { StyleSheet, StatusBar } from 'react-native'
-import AllChats from './Allchat'
 import Profile from './Profile'
 import MapView from './MapView'
 import Meetview from './Meetview'
@@ -30,13 +29,6 @@ class Stack extends React.Component {
   render() {
     return (
       <View>
-        <Button
-          onPress={() => {
-            this.props.navigation.navigate('allchat')
-          }}
-        >
-          <Text>allchat</Text>
-        </Button>
         <Button
           onPress={() => {
             this.props.navigation.navigate('profile')
@@ -81,9 +73,6 @@ const Temp = createStackNavigator(
   {
     stack: {
       screen: Stack,
-    },
-    allchat: {
-      screen: AllChats,
     },
     profile: {
       screen: Profile,

@@ -17,12 +17,13 @@ import {
   Input
 } from 'native-base'
 import {ScrollView, View, StatusBar} from 'react-native'
-import {GiftedChat} from 'react-native-gifted-chat'
+import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {connect} from 'react-redux'
 import socket from '../redux/socketClient'
 import {showMessage} from 'react-native-flash-message'
 import CustomHeader from '../components/CustomHeader'
+import AudioTest from './audioTest'
 
 class SingleChats extends Component {
   constructor(props) {
@@ -99,11 +100,20 @@ class SingleChats extends Component {
     return chat.users.find(user=> user.fullName!==this.props.user.fullName)
   }
 
+  renderBubble(props) {
+    return (
+      <View>
+        <Bubble {...props}/>
+      </View>
+    )
+  }
+
   render() {
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
         <CustomHeader title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`} />
+        <AudioTest onSend={this.onSend} user={this.props.user} chat={this.props.currentChat} messageLength={this.props.messages.length}/>
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
@@ -111,6 +121,7 @@ class SingleChats extends Component {
             _id: this.props.user.id,
             name: this.props.user.fullName
           }}
+          renderBubble = {this.renderBubble}
         />
       </React.Fragment>
     )
