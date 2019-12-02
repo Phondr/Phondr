@@ -17,7 +17,7 @@ import {
 } from 'native-base'
 import {connect} from 'react-redux'
 import {userSignUp} from '../redux/user'
-import SignUpCheckbox from './signupCheckbox/SignUpCheckbox'
+import CameraComponent from './CameraComponent'
 
 import t, {MultiSelectExample} from 'tcomb-form-native'
 
@@ -202,6 +202,9 @@ export class Signup extends Component {
             options={options}
             style={styles.formcontainer}
           />
+
+          <CameraComponent />
+
           <TouchableOpacity style={styles.submitButton} onPress={this.signup}>
             <Text style={styles.submitButtonText}>Sign Up</Text>
           </TouchableOpacity>
