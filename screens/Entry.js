@@ -38,9 +38,9 @@ export class Entry extends Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return <Spinner />
-    }
+    // if (this.state.loading) {
+    //   return <Spinner />
+    // }
     return (
       <View style={styles.container}>
         <View style={styles.title}>

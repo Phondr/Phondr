@@ -83,9 +83,9 @@ export class Login extends Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return <Spinner />
-    }
+    // if (this.state.loading) {
+    //   return <Spinner />
+    // }
     return (
       <View style={{backgroundColor: '#343434'}}>
         <View style={{alignItems: 'center', backgroundColor: '#343434'}}>

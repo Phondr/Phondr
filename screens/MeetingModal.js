@@ -127,13 +127,13 @@ const MeetingModal = ({
     //console.log('formated invitation', formatRegion(invitation))
   }
   console.log('nearby', nearby)
-  if (loading || !currentCoord.latitude || !region.latitude) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Spinner />
-      </View>
-    )
-  }
+  // if (loading || !currentCoord.latitude || !region.latitude) {
+  //   return (
+  //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+  //       <Spinner />
+  //     </View>
+  //   )
+  // }
   return (
     // <Modal
     //   coverScreen={false}
