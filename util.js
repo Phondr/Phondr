@@ -19,3 +19,12 @@ export const calcProgress = chat => {
   )
   return ((sum / hoursSince) * sum) / 4 / 100
 }
+// const sum = 200;
+// const hoursSince = 48;
+// console.log(
+//   'in calcProgress',
+//   sum,
+//   hoursSince, 
+//   (sum*sum / (hoursSince*hoursSince* 0.1*2)), //After 3 days
+//   (sum*sum / (hoursSince*hoursSince*0.15))   //First 3 days
+// )
