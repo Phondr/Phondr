@@ -62,10 +62,11 @@ var drawer = createDrawerNavigator(
     },
     'Active Chats': {
       screen: ActiveScreen
-    }
+    },
+    MeetingModal
   },
   {
-    initialRouteName: 'New',
+    initialRouteName: 'Entry',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'

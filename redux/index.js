@@ -5,6 +5,7 @@ import messages from './message'
 import currentChat from './currentChat'
 import loading from './loading'
 import invitation from './invitation'
+import meeting from './meeting'
 
 const appReducer = combineReducers({
   user,
@@ -12,7 +13,8 @@ const appReducer = combineReducers({
   messages,
   currentChat,
   loading,
-  invitation
+  invitation,
+  meeting
 })
 
 export default appReducer

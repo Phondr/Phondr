@@ -14,7 +14,8 @@ import {
   Text,
   Form,
   Item,
-  Input
+  Input,
+  Fab
 } from 'native-base'
 import {
   ScrollView,
@@ -106,6 +107,16 @@ class SingleChats extends Component {
           title={`Chat Room ${this.props.currentChat.id}`}
           currentChat={this.props.currentChat}
         />
+        <Fab
+          active={true}
+          direction="up"
+          containerStyle={{}}
+          style={{backgroundColor: '#5067FF'}}
+          position="topRight"
+          onPress={() => this.props.navigation.navigate('MeetingModal')}
+        >
+          <Icon name="meetup" type={'Zocial'} />
+        </Fab>
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}

@@ -18,9 +18,18 @@ import CustomDatePicker from '../components/CustomDatePicker'
 import {colors} from '../placesData'
 import {placesAPI} from '../secrets'
 import {updatePendingLocation} from '../redux/invitation'
+import {createMeeting} from '../redux/meeting'
 import axios from 'axios'
 import Spinner from '../components/Spinner'
-const MeetingModal = ({invitation, updatePendingLocation}) => {
+
+const MeetingModal = ({
+  invitation,
+  updatePendingLocation,
+  createMeeting,
+  currentChat,
+  user,
+  navigation
+}) => {
   const [region, setRegion] = useState({})
   const [currentCoord, setCurrentCoord] = useState({})
   const [nearby, setNearby] = useState([])
@@ -89,6 +98,10 @@ const MeetingModal = ({invitation, updatePendingLocation}) => {
     setNearby(data.results)
   }
 
+  const submitMeeting = (chatId, userId, inv) => {
+    createMeeting(chatId, userId, inv)
+    navigation.navigate('SingleChat')
+  }
   useEffect(() => {
     setLocation()
     setLoading(false)
@@ -114,7 +127,7 @@ const MeetingModal = ({invitation, updatePendingLocation}) => {
     //console.log('formated invitation', formatRegion(invitation))
   }
   console.log('nearby', nearby)
-  if (loading) {
+  if (loading || !currentCoord.latitude || !region.latitude) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Spinner />
@@ -204,6 +217,17 @@ const MeetingModal = ({invitation, updatePendingLocation}) => {
             </CardItem>
           </Card>
         )}
+        {!!invitation.date && !!invitation.name ? (
+          <Button
+            onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
+          >
+            <Text>Send</Text>
+          </Button>
+        ) : (
+          <Button disabled bordered>
+            <Text>Send</Text>
+          </Button>
+        )}
       </Content>
     </Container>
     // </Modal>
@@ -212,6 +236,10 @@ const MeetingModal = ({invitation, updatePendingLocation}) => {
 
 const styles = StyleSheet.create({})
 
-export default connect(({invitation}) => ({invitation}), {
-  updatePendingLocation
-})(MeetingModal)
+export default connect(
+  ({invitation, user, currentChat}) => ({invitation, user, currentChat}),
+  {
+    updatePendingLocation,
+    createMeeting
+  }
+)(MeetingModal)

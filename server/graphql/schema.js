@@ -67,8 +67,13 @@ const ChatType = new GraphQLObjectType({
 const MeetingType = new GraphQLObjectType({
   name: 'Meeting',
   fields: () => ({
-    location: {type: GraphQLString},
-    date: {type: GraphQLString}
+    location: {type: new GraphQLList(GraphQLFloat)},
+    name: {type: GraphQLString},
+    rating: {type: GraphQLFloat},
+    address: {type: GraphQLString},
+    date: {type: GraphQLString},
+    chatId: {type: GraphQLInt},
+    senderId: {type: GraphQLInt}
   })
 })
 //Query Requests(grab information from the database)
@@ -295,6 +300,36 @@ const rootMutation = new GraphQLObjectType({
           include: [db.models.user]
         })
         return createdMessage
+      }
+    },
+    newMeeting: {
+      type: MeetingType,
+      args: {
+        chatId: {type: GraphQLInt},
+        userId: {type: GraphQLInt},
+        latitude: {type: GraphQLFloat},
+        longitude: {type: GraphQLFloat},
+        name: {type: GraphQLString},
+        rating: {type: GraphQLFloat},
+        address: {type: GraphQLString},
+        date: {type: GraphQLString}
+      },
+      async resolve(parent, args) {
+        try {
+          const meeting = await db.models.meeting.create({
+            location: [args.latitude, args.longitude],
+            name: args.name,
+            rating: args.rating,
+            address: args.address,
+            date: new Date(args.date),
+            senderId: args.userId
+          })
+          const chat = await db.models.chat.findByPk(args.chatId)
+          const updated = await meeting.setChat(chat)
+          return updated
+        } catch (error) {
+          console.error('in newMeeting route: ', error)
+        }
       }
     }
   }
