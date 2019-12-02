@@ -16,7 +16,7 @@ export class Entry extends Component {
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
     //Current Settings
-    // if (user) {      
+    // if (user) {
     //   await this.props.setUser(user)
     //   this.props.navigation.navigate('Home', {user})
     // if (user !== null) {
@@ -63,18 +63,22 @@ export class Entry extends Component {
             }}
           />
         </View>
-        <Button
-          title="Login"
-          onPress={() => {
-            this.gotToLogin()
-          }}
-        />
-        <Button
-          title="Sign Up"
-          onPress={() => {
-            this.goToSignUp()
-          }}
-        />
+        <View style={{backgroundColor: 'black', width:'50%', margin: 30}}>
+          <Button
+            title="Login"
+            onPress={() => {
+              this.gotToLogin()
+            }}
+          />
+        </View>
+        <View style={{backgroundColor: 'black', width:'50%'}}>
+          <Button
+            title="Sign Up"
+            onPress={() => {
+              this.goToSignUp()
+            }}
+          />
+        </View>
       </View>
     )
   }
@@ -86,7 +90,7 @@ export const styles = StyleSheet.create({
     paddingTop: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#353839'
   },
   phonderimage: {
     width: 350,

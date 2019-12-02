@@ -21,13 +21,6 @@ class Stack extends React.Component {
       <View>
         <Button
           onPress={() => {
-            this.props.navigation.navigate('profile')
-          }}
-        >
-          <Text>profile</Text>
-        </Button>
-        <Button
-          onPress={() => {
             this.props.navigation.navigate('mapview')
           }}
         >

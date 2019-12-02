@@ -146,7 +146,6 @@ const MeetingModal = ({
       <CustomHeader title="Meeting" />
       <Content contentContainerStyle={{marginTop: 20}}>
         <PlaceSearch />
-
         <View>
           {invitation.name && (
             <Card>
