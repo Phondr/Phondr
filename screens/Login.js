@@ -1,29 +1,37 @@
-import React, { Component } from 'react'
-import { Text, View, StyleSheet, Button, TouchableOpacity } from 'react-native'
+import React, {Component} from 'react'
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  Image
+} from 'react-native'
 import t from 'tcomb-form-native'
-import { connect } from 'react-redux'
-import { fetchUserLogin } from '../redux/user'
-import { Query } from 'react-apollo'
+import {connect} from 'react-redux'
+import {fetchUserLogin} from '../redux/user'
+import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
-import { throwServerError } from 'apollo-link-http-common'
-import { navigate } from 'react-navigation'
+import {throwServerError} from 'apollo-link-http-common'
+import {navigate} from 'react-navigation'
+import {relative} from 'path'
 
 const User = t.struct({
   email: t.String,
-  password: t.String,
+  password: t.String
 })
 
 const options = {
   fields: {
     email: {
-      error: 'You need a valid email to login to your account',
+      error: 'You need a valid email to login to your account'
     },
     password: {
       password: true,
       secureTextEntry: true,
-      error: 'You need a valid password to login to your account',
-    },
-  },
+      error: 'You need a valid password to login to your account'
+    }
+  }
 }
 
 // const query = gql`
@@ -48,7 +56,7 @@ export class Login extends Component {
   }
 
   static navigationOptions = {
-    drawerLabel: () => null,
+    drawerLabel: () => null
   }
 
   async login() {
@@ -68,14 +76,17 @@ export class Login extends Component {
 
   render() {
     return (
-      <View styles={styles.container}>
-        <View>
-          <Form
-            ref={c => (this._form = c)}
-            type={User}
-            options={options}
-            style={styles.formcontainer}
+      <View style={{backgroundColor:	'#343434'}}>
+        <View style={{alignItems:'center',backgroundColor:'#343434'}}>
+          <Image
+            style={{width: '80%', height: 150, marginTop:30}}
+            source={require('../assets/images/fog.jpg')}
+            resizeMode="cover"
           />
+        </View>
+
+        <View style={styles.formcontainer}>
+          <Form ref={c => (this._form = c)} type={User} options={options} />
 
           <TouchableOpacity style={styles.submitButton} onPress={this.login}>
             <Text style={styles.submitButtonText}>Login</Text>
@@ -90,57 +101,41 @@ export class Login extends Component {
             }}
           </Query> */}
         </View>
+        <View style={{alignItems:'center', backgroundColor:	'#343434'}}>
+          <Image
+            style={{width: '80%', height: 180, marginTop:30}}
+            source={require('../assets/images/fog.jpg')}
+            resizeMode="cover"
+          />
+        </View>
       </View>
     )
   }
 }
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 2,
-    justifyContent: 'center',
-    // alignItems: "center",
-    backgroundColor: '#F5FCFF',
-  },
-  input: {
-    margin: 15,
-    height: 40,
-    borderColor: 'black',
-    borderWidth: 1,
-  },
   submitButton: {
     backgroundColor: 'black',
     padding: 10,
     margin: 15,
     alignItems: 'center',
-    height: 40,
+    height: 40
   },
   submitButtonText: {
-    color: 'white',
-  },
-  phonderimage: {
-    width: 200,
-    height: 200,
-    position: 'relative',
-    justifyContent: 'center',
-  },
-  logintext: {
-    margin: 2,
-    fontSize: 30,
+    color: 'white'
   },
   formcontainer: {
-    justifyContent: 'center',
-    width: '100%',
-    backgroundColor: '#ffffff',
-  },
+    marginTop: 30,
+    backgroundColor:'#343434'
+  }
 })
 
 const mapStateToProps = state => ({
-  user: state.user,
+  user: state.user
 })
 
 const mapDispatchToProps = dispatch => ({
-  getUser: values => dispatch(fetchUserLogin(values)),
+  getUser: values => dispatch(fetchUserLogin(values))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

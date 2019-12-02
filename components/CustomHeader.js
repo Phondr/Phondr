@@ -22,7 +22,8 @@ const CustomHeader = ({title = '', navigation}) => {
 const styles = StyleSheet.create({
   header: {
     marginTop: Platform.OS !== 'ios' ? StatusBar.currentHeight : 0,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    backgroundColor: '#727472'
   }
 })
 

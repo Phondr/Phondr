@@ -24,7 +24,7 @@ class ActiveScreen extends React.Component {
   render() {
     const {myChats, navigation} = this.props
     return (
-      <Container>
+      <Container style={{backgroundColor:	'#343434'}}>
         <ScrollView>
           <CustomHeader title="Active Chats" />
           <Content>

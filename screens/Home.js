@@ -52,9 +52,9 @@ class Home extends Component {
 
   render() {
     return (
-      <Container>
+      <Container style={{backgroundColor: '#343434'}}>
         <ScrollView>
-          {this.state.user.isNoob === true? (
+          {this.state.user.isNoob === true ? (
             <Dialog
               onDismiss={() => {
                 this.setState({defaultAnimationDialog: false})
@@ -79,7 +79,10 @@ class Home extends Component {
                     text="Turn off intro"
                     bordered
                     onPress={() => {
-                      this.setState({defaultAnimationDialog: false, isNoob: false})
+                      this.setState({
+                        defaultAnimationDialog: false,
+                        isNoob: false
+                      })
                     }}
                     key="button-1"
                   />
@@ -119,7 +122,6 @@ class Home extends Component {
             ) : (
               <Text>user has no chats</Text>
             )}
-
             <Right>
               <Button
                 bordered
