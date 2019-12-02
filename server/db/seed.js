@@ -54,7 +54,9 @@ const createMessages = async () => {
   try {
     let message = await Message.create({
       content: faker.random.words(),
-      length: faker.random.number()
+      length: faker.random.number(),
+      userId: randomizer(10),
+      chatId: randomizer(10)
     })
     return message
   } catch (err) {
@@ -108,13 +110,29 @@ async function seed() {
     iPrefer: ['male', 'female'],
     distPref: randomizer(50)
   })
+  await User.create({
+    fullName: `Mike Lim`,
+    age: 24,
+    homeLocation: [
+      round(faker.address.latitude()),
+      round(faker.address.longitude())
+    ],
+    incentivePoints: faker.random.number(),
+    created_at: faker.date.recent(),
+    profilePicture: faker.random.image(),
+    email: 'mike@email.com',
+    password: '123',
+    iAm: idents[randomizer(2)],
+    iPrefer: ['male', 'female'],
+    distPref: randomizer(50)
+  })
   for (let i = 0; i < 50; i++) {
     const user = await createUser()
-    console.log('iPrefer in forloop', user.iPrefer)
+
     //await createChat();
-    await createMeetings()
-    await createMessages()
+    //await createMeetings()
   }
+
   for (let i = 1; i < 10; i++) {
     const {
       data: {
@@ -136,6 +154,9 @@ async function seed() {
     })
 
     console.log(`chat ${i}: ${JSON.stringify(findOrCreateChat)}`)
+  }
+  for (let i = 0; i < 500; i++) {
+    await createMessages()
   }
   console.log(`seeded successfully`)
 }

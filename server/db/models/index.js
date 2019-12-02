@@ -17,7 +17,7 @@ User.hasMany(Message)
 Message.belongsTo(Chat)
 Chat.hasMany(Message)
 Meeting.belongsTo(Chat)
-Chat.hasOne(Meeting)
+Chat.hasMany(Meeting)
 const userChats = db.model('userChats')
 /**
  * We'll export all of our models here, so that any time a module needs a model,

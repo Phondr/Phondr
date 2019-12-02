@@ -55,22 +55,8 @@ export const findOrCreateChat = uid => {
           }
         }`
       })
-      console.log('findOrCreateChat info in thunk', findOrCreateChat)
+
       dispatch(addChat(findOrCreateChat))
-      // const {data} = await client.mutate({
-      //   mutation: gql`mutation{
-      //               findOrCreateChat(userId:${uid}){
-      //                 id
-      //                   status
-      //                   users{
-      //                       id
-      //                       fullName
-      //                   }
-      //               }
-      //           }`
-      // })
-      // console.log('TCL: findOrCreateChat', data)
-      // dispatch(addChat(data.findOrCreateChat))
     } catch (e) {
       console.error('messed up in focc thunk: ', e)
     }
@@ -79,50 +65,34 @@ export const findOrCreateChat = uid => {
 export const fetchMyChats = uid => {
   return async dispatch => {
     try {
-      const {data} = await myAxios.post('', {
+      console.log('uid in chat', uid)
+      const {data} = await axios.post(`${url}/graphql`, {
         query: `query{
                myChats(userId:${uid}){
                  progress
                  status
-                  sinceCreation
-   			   id
-   			   users{
-                   id
-                   fullName
+                 sinceCreation
+				          id
+				           messages{
+					           id
+					            userId
+				          }
+   			           users{
+                     id
+                     fullName
                       }
                   }
               }
              `
       })
-      console.log('data object in myChats', data)
-      dispatch(getMyChats(data.data.myChats))
 
-      //    axios({
-      //     url: url + '/graphql',
-      //     method: 'post',
-      //     data: {
-      //      query: `query{
-      // 		            myChats(userId:1){
-      // 		              progress
-      // 		              status
-      // 		               sinceCreation
-      // 					   id
-      // 					   users{
-      // 		                id
-      // 		                fullName
-      // 		                   }
-      // 		               }
-      // 		           }
-      // 		          `
-      //     }
-      //    }).then(result => {
-      //     console.log(result.data)
-      //    })
+      console.log('TCL: data.data.myChats', data.data.myChats)
+      dispatch(getMyChats(data.data.myChats))
     } catch (e) {
-      console.error('messed up in fetchMyChats, error: ', e);
+      console.error('messed up in fetchMyChats, error: ', e)
     }
-  };
-};
+  }
+}
 
 const reducer = (chats = [], action) => {
   switch (action.type) {
@@ -136,6 +106,6 @@ const reducer = (chats = [], action) => {
     default:
       return chats
   }
-};
+}
 
-export default reducer;
+export default reducer
