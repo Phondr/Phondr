@@ -37,12 +37,16 @@ const MeetingModal = ({
 
   const updateInvitation = data => {
     const coords = [data.geometry.location.lat, data.geometry.location.lng]
+    const link = data.photos[0].html_attributions[0].split('"')[1]
+    console.log('TCL: link', link)
+
     console.log('updateInv', data)
     updatePendingLocation(
       coords,
       data.name,
       `${data.name}, ${data.vicinity}`,
-      data.rating
+      data.rating,
+      link
     )
   }
 
@@ -94,7 +98,7 @@ const MeetingModal = ({
       `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=1500&type=cafe&key=` +
       placesAPI
     const {data} = await axios.get(theUrl)
-    console.log('data from searchnearby', data)
+
     setNearby(data.results)
   }
 
@@ -126,7 +130,7 @@ const MeetingModal = ({
     console.log('TCL: invitation', invitation)
     //console.log('formated invitation', formatRegion(invitation))
   }
-  console.log('nearby', nearby)
+
   if (loading || !currentCoord.latitude || !region.latitude) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -184,7 +188,7 @@ const MeetingModal = ({
                         longitude: x.geometry.location.lng
                       }}
                       title={`${x.name}(${x.rating} rating)`}
-                      description={`In the vicinity of : ${x.vicinity} `}
+                      description={`${x.name}, ${x.vicinity} `}
                       //pinColor={colors[i]}
                       //style={{position: 'absolute'}}
                       onPress={() => updateInvitation(x)}

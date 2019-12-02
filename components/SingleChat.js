@@ -70,6 +70,20 @@ class SingleChats extends Component {
 
     this.props.fetchMessages(this.props.currentChat.id)
   }
+  UNSAFE_componentWillUpdate(nextProps) {
+    if (nextProps.currentMeeting !== this.props.currentMeeting) {
+      const {name, address, link, location, date} = nextProps.currentMeeting
+      const formattedMessage = {
+        content: `New Invitation To Meet! Address: ${address}, date: ${new Date(
+          +date
+        ).toString()}`,
+        userId: nextProps.user.id,
+        length: 10,
+        chatId: nextProps.currentChat.id
+      }
+      this.onSend(formattedMessage, true)
+    }
+  }
 
   componentWillUnmount() {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
@@ -83,14 +97,20 @@ class SingleChats extends Component {
     }
   }
 
-  async onSend(message) {
+  async onSend(message, noFormat) {
     //Format message for input into thunk
-    const formattedMessage = {
-      content: message[0].text,
-      userId: message[0].user._id,
-      length: message[0].text.length,
-      chatId: this.props.currentChat.id
+    let formattedMessage
+    if (noFormat) {
+      formattedMessage = message
+    } else {
+      formattedMessage = {
+        content: message[0].text,
+        userId: message[0].user._id,
+        length: message[0].text.length,
+        chatId: this.props.currentChat.id
+      }
     }
+
     //Create the message ONCE after click send but don't set to redux yet
     const newMessage = await this.props.newMessage(formattedMessage)
     //Send created message to sockets with event sendMessage

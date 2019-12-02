@@ -44,6 +44,7 @@ const InvitationType = new GraphQLInputObjectType({
   name: 'Invitation',
   fields: () => ({
     coords: {type: new GraphQLList(GraphQLFloat)},
+    link: {type: GraphQLString},
     name: {type: GraphQLString},
     address: {type: GraphQLString},
     rating: {type: GraphQLFloat},
@@ -81,6 +82,7 @@ const MeetingType = new GraphQLObjectType({
   fields: () => ({
     location: {type: new GraphQLList(GraphQLFloat)},
     name: {type: GraphQLString},
+    link: {type: GraphQLString},
     rating: {type: GraphQLFloat},
     address: {type: GraphQLString},
     date: {type: GraphQLString},
@@ -325,6 +327,7 @@ const rootMutation = new GraphQLObjectType({
         try {
           const meeting = await db.models.meeting.create({
             location: args.invitation.coords,
+            link: args.invitation.link,
             name: args.invitation.name,
             rating: args.invitation.rating,
             address: args.invitation.address,
