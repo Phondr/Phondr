@@ -4,14 +4,21 @@ import {navigation} from 'react-navigation'
 import Login from './Login'
 import Signup from './Signup'
 import {AsyncStorage} from 'react-native'
+import {fetchUserLogin, setUser} from '../redux/user'
+import {connect} from 'react-redux'
 
 export class Entry extends Component {
+  constructor() {
+    super()
+    this.state = {user: ''}
+  }
   async componentDidMount() {
-    //const user = JSON.parse(await AsyncStorage.getItem('userKey'))
-    // if (user) {
-    //   this.props.navigation.navigate('Home', {user})
-    // }
-    // console.log('LOGIN VALUE', user)
+    const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+
+    if (user) {
+      await this.props.setUser(user)
+      this.props.navigation.navigate('Home', {user})
+    }
   }
 
   gotToLogin() {
@@ -21,6 +28,9 @@ export class Entry extends Component {
   goToSignUp() {
     console.log('navigate to signup')
     this.props.navigation.navigate('Signup')
+  }
+  static navigationOptions = {
+    drawerLabel: () => null
   }
 
   render() {
@@ -35,7 +45,6 @@ export class Entry extends Component {
             }}
           />
         </View>
-
         <Button
           title="Login"
           onPress={() => {
@@ -92,4 +101,4 @@ export const styles = StyleSheet.create({
   }
 })
 
-export default Entry
+export default connect(({user}) => ({user}), {fetchUserLogin, setUser})(Entry)

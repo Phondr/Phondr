@@ -1,110 +1,102 @@
-import client from './apolloClient';
-import gql from 'graphql-tag';
-import axios from 'axios';
+import client from './apolloClient'
+import gql from 'graphql-tag'
+import axios from 'axios'
+import {url} from '../secrets'
 
-//Action
-const GET_MESSAGES = 'GET_MESSAGES';
-const NEW_MESSAGE = 'NEW_MESSAGE';
+const GET_MESSAGES = 'GET_MESSAGES'
+const NEW_MESSAGE = 'NEW_MESSAGE'
 
-//Action Creator
 const getMessages = messages => {
-  return { type: GET_MESSAGES, messages };
-};
-const getNewMessage = message => {
-  return { type: NEW_MESSAGE, message };
-};
+  return {type: GET_MESSAGES, messages}
+}
+export const setNewMessage = message => {
+  return {type: NEW_MESSAGE, message}
+}
 
 export const fetchMessages = chatId => {
   return async dispatch => {
     try {
-      // const { data } = await client.query({
-      //   query: gql`
-      //     query {
-      //       messages(chatId: ${chatId}) {
-      //         _id: id,
-      //         text: content,
-      //         length,
-      //         createdAt,
-      //         userId,
-      //         chatId,
-      //         user {
-      //           _id: id,
-      //           email,
-      //         }
-      //       }
-      //     }
-      //   `,
-      // });
-      let {data} = await axios({
-        url: 'https://741ec670.ngrok.io/graphql',
+      //Add in user{avatar: profilePicture} when they unlock this to show profile picture in chat instead of initials
+      console.log('chat id in fetchMessages', chatId)
+      const {data} = await axios({
+        url: url + '/graphql',
         method: 'POST',
         data: {
           query: `
           {
             messages(chatId: ${chatId}) {
-              _id: id, 
-              content,
+              _id: id,
               text: content,
               length,
               createdAt,
               userId,
-              chatId, 
+              chatId,
               user {
                 _id: id,
+                name: fullName,
                 email,
               }
+              
             }
           }
           `
         }
       })
-      //Convert timestamp string into a number and then a readable date for usage within Gifted Chat
-      const formattedMessages = data.data.messages.map(message=>{message.createdAt = new Date(Number(message.createdAt)); return message})
-      dispatch(getMessages(formattedMessages));
-    } catch (e) {
-      console.error('messed up in fetchMessages, error: ', e);
-    }
-  };
-};
 
-export const newMessage = (message) => {
+      const formatedMessage = data.data.messages.map(message => {
+        message.createdAt = new Date(Number(message.createdAt))
+        return message
+      })
+      console.log('data in thunk', formatedMessage)
+      dispatch(getMessages(formatedMessage))
+    } catch (e) {
+      console.error('messed up in fetchMes, error: ', e)
+    }
+  }
+}
+
+export const newMessage = message => {
   return async dispatch => {
     try {
-      const { data } = await client.mutate({
-        mutation: gql`
-          mutation {
-            newMessage(content: "${message.content}", length: ${message.length}, chatId: ${message.chatId}, userId: ${message.userId}) {
-              _id: id
-              content
-              length
-              userId
-              chatId
+      const {data} = await axios.post(url + '/graphql', {
+        query: `
+          mutation{
+            newMessage(content: "${message.content}", length: ${message.length}, userId: ${message.userId}, chatId: ${message.chatId}) {
+              _id: id,
+              text: content,
+              createdAt,
+              length,
+              userId,
+              chatId,
               user {
                 _id: id,
                 email,
+                name: fullName,
               }
             }
           }
-        `,
-      });
-      // console.log('dsfdsfdsfdsfds', data.newMessage)
-      dispatch(getNewMessage(data.newMessage))
-    } catch (err) {
-      console.error(err);
+          `
+      })
+      //Format into readable date by gifted chat
+      data.data.newMessage.createdAt = new Date(
+        Number(data.data.newMessage.createdAt)
+      )
+      return data.data.newMessage
+    } catch (e) {
+      console.error('messed up in newMessages, error: ', e)
     }
-  };
-};
+  }
+}
 
 const reducer = (state = [], action) => {
-  console.log(action)
   switch (action.type) {
     case GET_MESSAGES:
-      return action.messages;
+      return action.messages
     case NEW_MESSAGE:
-      return [...state, action.message];
+      return [action.message, ...state]
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default reducer;
+export default reducer

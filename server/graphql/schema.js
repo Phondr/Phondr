@@ -12,7 +12,12 @@ const Op = require('sequelize').Op
 const Distance = require('geo-distance')
 const turf = require('@turf/turf')
 const point = require('turf-point')
+const {User, Chat, Message, Meeting} = require('../db/models')
 
+;(async function hi() {
+  const user = await User.findByPk(1)
+  console.log('iPrefer outside scope', user.iPrefer)
+})()
 //Type Definitions for GraphQL(what info should graphql expect from each model)
 const UserType = new GraphQLObjectType({
   name: 'User',
@@ -27,7 +32,23 @@ const UserType = new GraphQLObjectType({
     incentivePoints: {type: GraphQLInt},
     profilePicture: {type: GraphQLString},
     chats: {type: new GraphQLList(ChatType)},
-    messages: {type: new GraphQLList(MessageType)}
+    messages: {type: new GraphQLList(MessageType)},
+    iAm: {type: GraphQLString},
+    iPrefer: {type: new GraphQLList(GraphQLString)},
+    distPref: {type: GraphQLInt}
+  })
+})
+
+const MessageType = new GraphQLObjectType({
+  name: 'Message',
+  fields: () => ({
+    id: {type: GraphQLInt},
+    content: {type: GraphQLString},
+    length: {type: GraphQLInt},
+    userId: {type: GraphQLInt},
+    chatId: {type: GraphQLInt},
+    createdAt: {type: GraphQLString},
+    user: {type: UserType}
   })
 })
 const ChatType = new GraphQLObjectType({
@@ -39,15 +60,8 @@ const ChatType = new GraphQLObjectType({
     status: {type: GraphQLString},
     meeting: {type: MeetingType},
     users: {type: new GraphQLList(UserType)},
-    sinceCreation: {type: GraphQLFloat}
-  })
-})
-const MessageType = new GraphQLObjectType({
-  name: 'Message',
-  fields: () => ({
-    id: {type: GraphQLInt},
-    content: {type: GraphQLString},
-    length: {type: GraphQLInt}
+    sinceCreation: {type: GraphQLFloat},
+    messages: {type: new GraphQLList(MessageType)}
   })
 })
 const MeetingType = new GraphQLObjectType({
@@ -125,11 +139,31 @@ const rootQuery = new GraphQLObjectType({
         try {
           let user = await db.models.user.findByPk(args.userId)
           console.log('TCL: user', user)
-          const chats = await user.getChats({include: [db.models.user]})
+          const chats = await user.getChats({
+            include: [{model: db.models.user}, {model: db.models.message}]
+          })
           console.log('TCL: chats.users', chats[0].users)
           return chats
         } catch (e) {
           console.error(e)
+        }
+      }
+    },
+    messages: {
+      type: new GraphQLList(MessageType),
+      args: {
+        chatId: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        try {
+          const messages = await db.models.message.findAll({
+            where: {chatId: args.chatId},
+            include: [db.models.user],
+            order: [['createdAt', 'DESC']]
+          })
+          return messages
+        } catch (err) {
+          console.error(err)
         }
       }
     }
@@ -147,8 +181,8 @@ const rootMutation = new GraphQLObjectType({
         fullName: {type: GraphQLString},
         gender: {type: GraphQLString},
         age: {type: GraphQLString},
-        homeLocation: {type: new GraphQLList(GraphQLFloat)}
-        //radius: {type: new GraphQLList(GraphQLFloat)}
+        homeLocation: {type: new GraphQLList(GraphQLFloat)},
+        profilePicture: {type: GraphQLString}
       },
       async resolve(parent, args) {
         console.log('ARGS', args)
@@ -158,7 +192,18 @@ const rootMutation = new GraphQLObjectType({
         }
       }
     },
-
+    deleteChat: {
+      type: ChatType,
+      args: {
+        chatId: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        console.log('in delete chat')
+        let chat = await db.models.chat.findByPk(args.chatId)
+        await chat.destroy()
+        return chat
+      }
+    },
     findOrCreateChat: {
       type: ChatType,
       args: {
@@ -166,21 +211,31 @@ const rootMutation = new GraphQLObjectType({
       },
       async resolve(parent, args) {
         let chosen
-        const user = await db.models.user.findByPk(args.userId)
+        const user = await User.findByPk(args.userId)
+        console.log(
+          'TCL: iPrefer in schema',
+          user.iPrefer,
+          'typeof',
+          typeof user.iPrefer
+        )
         console.log(user.fullName)
-
+        const formatted = Array.isArray(user.iPrefer)
+          ? user.iPrefer
+          : user.iPrefer.slice(1, -1).split(',')
+        console.log(formatted)
         const chats = await db.models.chat.findAll({
           include: {
             model: db.models.user,
             where: {
-              id: {[Op.ne]: args.userId}
+              id: {[Op.ne]: args.userId},
+              iPrefer: {[Op.contains]: [user.iAm]},
+              iAm: {[Op.in]: formatted}
             }
           },
           where: {
             status: 'pending'
           }
         })
-        console.log('TCL: chats', chats)
 
         let filtered = []
         if (chats.length) {
@@ -217,12 +272,29 @@ const rootMutation = new GraphQLObjectType({
             meeting: null
           })
         }
+        console.log('TCL: chosen', chosen)
 
         await user.addChat(chosen)
         const updated = await db.models.chat.findByPk(chosen.id, {
           include: [db.models.user]
         })
         return updated
+      }
+    },
+    newMessage: {
+      type: MessageType,
+      args: {
+        content: {type: GraphQLString},
+        length: {type: GraphQLInt},
+        userId: {type: GraphQLInt},
+        chatId: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        const message = await db.models.message.create({...args})
+        const createdMessage = await db.models.message.findByPk(message.id, {
+          include: [db.models.user]
+        })
+        return createdMessage
       }
     }
   }

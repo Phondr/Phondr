@@ -13,7 +13,22 @@ import {
   Icon,
   Text
 } from 'native-base'
-import {ScrollView,View} from 'react-native'
+import {ScrollView, View} from 'react-native'
+// import {gql} from 'apollo-boost'
+import gql from 'graphql-tag'
+import {useQuery} from '@apollo/react-hooks'
+import {Query} from 'react-apollo'
+import ApolloClient from 'apollo-boost'
+const email = 'mike@email.com'
+const query = gql`
+  {
+    allUsers {
+      id
+      email
+      fullName
+    }
+  }
+`
 
 export default class AllChats extends Component {
   render() {
@@ -26,6 +41,14 @@ export default class AllChats extends Component {
             </Button>
           </Left>
           <Body>
+            {/* <Query query={query}>
+              {({ loading, error, data }) => {
+                console.log('loading', loading);
+                console.log('error', error);
+                console.log(data);
+                return <Text>hiiii</Text>;
+              }}
+            </Query> */}
             <Title>These are all my preys</Title>
           </Body>
           <Right />
@@ -34,12 +57,14 @@ export default class AllChats extends Component {
           <ScrollView>
             <View>
               <Text>
-                This will be where the list of the chats be.
-                Each chat will have its own progress bar
+                This will be where the list of the chats be. Each chat will have
+                its own progress bar
               </Text>
             </View>
           </ScrollView>
-            <Button small primary style={{width: '30%', alignSelf:'center'}}><Text>Test me</Text></Button>
+          <Button small primary style={{width: '30%', alignSelf: 'center'}}>
+            <Text>Test me</Text>
+          </Button>
         </Content>
         <Footer>
           <FooterTab>

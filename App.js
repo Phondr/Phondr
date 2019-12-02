@@ -19,8 +19,12 @@ import store from './redux/store'
 import AppNavigator from './navigation/AppNavigator'
 import AuthPages from './navigation/MainLoginNavigator'
 import Login from './screens/Login'
+import FlashMessage from 'react-native-flash-message'
 import Signup from './screens/Signup'
 import Entry from './screens/Entry'
+import PendingScreen from './screens/PendingScreen'
+import ActiveScreen from './screens/ActiveScreen'
+import SingleChat from './components/SingleChat'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 
@@ -42,6 +46,15 @@ var drawer = createDrawerNavigator(
     },
     Entry: {
       screen: Entry
+    },
+    SingleChat: {
+      screen: SingleChat
+    },
+    'Pending Chats': {
+      screen: PendingScreen
+    },
+    'Active Chats': {
+      screen: ActiveScreen
     }
   },
   {
@@ -82,17 +95,15 @@ function App(props) {
   } else {
     return (
       <Provider store={store}>
-        <ApolloProvider client={apClient}>
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
             {/* <AppNavigator /> */}
             {/* <AnatomyExample /> */}
             {/* <AuthPages /> */}
             <DrawerContainer />
-
+            <FlashMessage position="top" />
             {/* <New /> */}
           </View>
-        </ApolloProvider>
       </Provider>
     )
   }
