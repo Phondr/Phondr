@@ -95,8 +95,8 @@ var drawer = createDrawerNavigator(
     },
     UserProfileEdit: {
       screen: UserProfileEdit
-    },
-    MeetingModal: {}
+    }
+    // MeetingModal: {}
   },
   {
     initialRouteName: 'Entry',
