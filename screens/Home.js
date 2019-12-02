@@ -9,15 +9,23 @@ import {connect} from 'react-redux'
 import {useQuery} from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import {fetchMyChats, findOrCreateChat} from '../redux/myChats'
-import ActiveChats from '../components/ActiveChats'
-import PendingChats from '../components/PendingChats'
+import ActiveComp from '../components/ActiveComp'
+import PendingComp from '../components/PendingComp'
 import {ScrollView} from 'react-native-gesture-handler'
+import {setUser} from '../redux/user'
+import Dialog, {
+  DialogTitle,
+  DialogContent,
+  DialogFooter,
+  DialogButton
+} from 'react-native-popup-dialog'
 
 class Home extends Component {
   constructor() {
     super()
     this.state = {
-      user: {fullName: 'Avaree Warrick', id: 1}
+      user: {fullName: 'Avaree Warrick', id: 1, isNoob: true},
+      defaultAnimationDialog: true
     }
   }
   static navigationOptions = {
@@ -27,17 +35,77 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    //this.props.fetchMyChats(1)
+    //this is just for testing
+    // this.props.setUser(this.state.user)
+
     console.log('home mounted')
+    console.log(this.props.user)
+    this.props.fetchMyChats(this.props.user.id)
+
     //console.log('HOME PROPS', this.props)
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.user.id !== this.props.user.id) {
+      this.props.fetchMyChats(this.props.user.id)
+    }
   }
 
   render() {
     return (
       <Container>
         <ScrollView>
+          {this.state.user.isNoob === true? (
+            <Dialog
+              onDismiss={() => {
+                this.setState({defaultAnimationDialog: false})
+              }}
+              width={0.9}
+              visible={this.state.defaultAnimationDialog}
+              rounded
+              actionsBordered
+              dialogTitle={
+                <DialogTitle
+                  title="Intro to the App"
+                  style={{
+                    backgroundColor: '#F7F7F8'
+                  }}
+                  hasTitleBar={false}
+                  align="left"
+                />
+              }
+              footer={
+                <DialogFooter>
+                  <DialogButton
+                    text="Turn off intro"
+                    bordered
+                    onPress={() => {
+                      this.setState({defaultAnimationDialog: false, isNoob: false})
+                    }}
+                    key="button-1"
+                  />
+                  <DialogButton
+                    text="OK"
+                    bordered
+                    onPress={() => {
+                      this.setState({defaultAnimationDialog: false})
+                    }}
+                    key="button-2"
+                  />
+                </DialogFooter>
+              }
+            >
+              <DialogContent
+                style={{
+                  backgroundColor: '#F7F7F8'
+                }}
+              >
+                <Text>INPUT THE INTRO HERE</Text>
+              </DialogContent>
+            </Dialog>
+          ) : null}
+
           <StatusBar barStyle="light-content" />
-          <CustomHeader />
+          <CustomHeader title="Home" />
           <Content
             contentContainerStyle={{
               flex: 1
@@ -45,8 +113,8 @@ class Home extends Component {
           >
             {this.props.myChats.length ? (
               <>
-                <ActiveChats user={this.state.user} />
-                <PendingChats user={this.state.user} />
+                <ActiveComp />
+                <PendingComp />
               </>
             ) : (
               <Text>user has no chats</Text>
@@ -60,7 +128,7 @@ class Home extends Component {
                 onPress={() => this.props.findOrCreateChat(1)}
               >
                 <Icon name="pluscircle" type="AntDesign">
-                  <Text>New Chat</Text>
+                  <Text> New Chat</Text>
                 </Icon>
               </Button>
             </Right>
@@ -73,5 +141,6 @@ class Home extends Component {
 
 export default connect(({myChats, user}) => ({myChats, user}), {
   fetchMyChats,
-  findOrCreateChat
+  findOrCreateChat,
+  setUser
 })(Home)

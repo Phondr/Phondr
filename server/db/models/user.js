@@ -45,11 +45,24 @@ const User = db.define('user', {
   },
   profilePicture: {
     type: Sequelize.STRING
-  }
+  },
+  iAm: {
+    type: Sequelize.ENUM(['male', 'female', 'non-binary']),
+    defaultValue: 'non-binary'
+  },
+  iPrefer: {
+    type: Sequelize.ARRAY(Sequelize.STRING)
+  },
+  distPref: {
+    type: Sequelize.INTEGER
+  },
   // radius: {
   //   type: Sequelize.INTEGER,
   //   defaultValue: 0
   // }
+  isNoob:{
+    type:Sequelize.BOOLEAN
+  }
 })
 
 module.exports = User
@@ -70,6 +83,7 @@ User.prototype.cryptPassword = function(candidatePwd) {
 /**
  * classMethods
  */
+
 User.generateSalt = function() {
   return crypto.randomBytes(16).toString('base64')
 }
@@ -92,7 +106,20 @@ const setSaltAndPassword = user => {
   }
 }
 
-User.beforeCreate(setSaltAndPassword)
+User.beforeSave(user => {
+  const prefs = ['male', 'female', 'non-binary']
+  user.iPrefer.forEach(cur => {
+    if (!prefs.includes(cur)) {
+      throw new Error('pref must be list of male,female, or non-binary')
+    }
+  })
+})
+User.beforeCreate(user => {
+  setSaltAndPassword(user)
+  if (!user.iPrefer.length) {
+    user.iPrefer = ['non-binary']
+  }
+})
 User.beforeUpdate(setSaltAndPassword)
 User.beforeBulkCreate(users => {
   users.forEach(setSaltAndPassword)

@@ -12,3 +12,4 @@ web-report/
 secrets.js
 .vscode
 .vscode/**/*
+**/.vscode

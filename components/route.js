@@ -9,21 +9,11 @@ import {
   Text,
   Button,
   Icon,
-  Header,
-  Left,
-  Right,
-  Body,
-  Container,
-  Content,
 } from 'native-base'
-import { StyleSheet, StatusBar } from 'react-native'
 import AllChats from './Allchat'
 import Profile from './Profile'
-import MapView from './MapView'
-import Meetview from './Meetview'
-import Sendmeetings from './Sendmeeting'
+import Mapv from './MapView'
 import SingleChats from './SingleChat'
-import { Platform } from '@unimodules/core'
 import CustomHeader from '../components/CustomHeader'
 
 class Stack extends React.Component {
@@ -63,13 +53,6 @@ class Stack extends React.Component {
             this.props.navigation.navigate('sendmeeting')
           }}
         >
-          <Text>sendmeeting</Text>
-        </Button>
-        <Button
-          onPress={() => {
-            this.props.navigation.navigate('singlechat')
-          }}
-        >
           <Text>singlechat</Text>
         </Button>
       </View>
@@ -89,17 +72,11 @@ const Temp = createStackNavigator(
       screen: Profile,
     },
     mapview: {
-      screen: MapView,
-    },
-    meetview: {
-      screen: Meetview,
-    },
-    sendmeeting: {
-      screen: Sendmeetings,
+      screen: Mapv,
     },
     singlechat: {
       screen: SingleChats,
-    },
+    }
   },
   { initialRouteName: 'stack' }
 )
@@ -116,7 +93,7 @@ class New extends React.Component {
   render() {
     return (
       <>
-        <CustomHeader />
+        {/* <CustomHeader /> */}
         <StackContainer />
       </>
     )
