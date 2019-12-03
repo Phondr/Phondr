@@ -16,9 +16,28 @@ export class Entry extends Component {
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
 
-    if (user.email) {
-      await this.props.setUser(user)
-      this.props.navigation.navigate('Home', {user})
+    //Current Settings
+    // if (user) {
+    //   await this.props.setUser(user)
+    //   this.props.navigation.navigate('Home', {user})
+    // if (user !== null) {
+    //   if (this.state.user === '') {
+    //     this.setState({user}) //Sets user if user was previously logged in through asyncStorage
+    //   }
+    //   if (this.state.user !== '') {
+    //     this.props.setUser(user)
+    //     this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
+    //   }
+
+    console.log('USER', user)
+    if (user !== null) {
+      if (this.state.user === '') {
+        this.setState({user}) //Sets user if user was previously logged in through asyncStorage
+      }
+      if (this.state.user !== '') {
+        this.props.setUser(user)
+        this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
+      }
     }
     if (this.state.loading) {
       this.setState({loading: false})
@@ -30,7 +49,6 @@ export class Entry extends Component {
   }
 
   goToSignUp() {
-    console.log('navigate to signup')
     this.props.navigation.navigate('Signup')
   }
   static navigationOptions = {
@@ -38,9 +56,9 @@ export class Entry extends Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return <Spinner />
-    }
+    // if (this.state.loading) {
+    //   return <Spinner />
+    // }
     return (
       <View style={styles.container}>
         <View style={styles.title}>
@@ -82,18 +100,6 @@ export const styles = StyleSheet.create({
     height: 350,
     position: 'relative',
     justifyContent: 'center'
-  },
-  textInput: {
-    //borderBottomColor: "#CCCCCC",
-    // borderTopWidth: 1,
-    //borderBottomWidth: 1,
-    // height: 50,
-    // width: 400,
-    // fontSize: 25,
-    // paddingLeft: 10,
-    // paddingRight: 10,
-    // textAlign: "center",
-    // margin: 5
   },
   logintext: {
     margin: 2,

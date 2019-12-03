@@ -5,6 +5,12 @@ const Meeting = db.define('meeting', {
   location: {
     type: Sequelize.ARRAY(Sequelize.FLOAT)
   },
+  link: {
+    type: Sequelize.STRING
+  },
+  imageRef: {
+    type: Sequelize.STRING
+  },
   name: {
     type: Sequelize.STRING
   },

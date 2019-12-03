@@ -45,19 +45,23 @@ class Home extends Component {
     }
   }
 
-  componentDidMount() {
+  // componentDidMount() {
     //this is just for testing
     // this.props.setUser(this.state.user)
 
-    if (!this.props.user.id) {
-      this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
-    }
+    // if (!this.props.user.id) {
+    //   this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
+    // }
+    // if (this.props.user.id) {
+    //   console.log('in comp did mouth fmc')
+  async componentDidMount() {
     if (this.props.user.id) {
-      console.log('in comp did mouth fmc')
+      //If brought from login screen, there is already user data on redux. Just grab chats.
       this.props.fetchMyChats(this.props.user.id)
-    }
+    } 
     //console.log('HOME PROPS', this.props)
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id) {
       console.log('in comp did update fmc')
@@ -66,10 +70,11 @@ class Home extends Component {
   }
 
   render() {
+    console.log(this.props.user)
     return (
       <Container>
         <ScrollView>
-          {this.state.user.isNoob === true? (
+          {this.state.user.isNoob === true ? (
             <Dialog
               onDismiss={() => {
                 this.setState({defaultAnimationDialog: false})
@@ -94,7 +99,10 @@ class Home extends Component {
                     text="Turn off intro"
                     bordered
                     onPress={() => {
-                      this.setState({defaultAnimationDialog: false, isNoob: false})
+                      this.setState({
+                        defaultAnimationDialog: false,
+                        isNoob: false
+                      })
                     }}
                     key="button-1"
                   />

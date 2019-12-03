@@ -6,7 +6,9 @@ import {
   Button,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  Dimensions,
+  ScrollView
 } from 'react-native'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
@@ -34,15 +36,6 @@ const options = {
     }
   }
 }
-
-// const query = gql`
-//   {
-//     userLogin(email: "test@test.com") {
-//       id
-//       email
-//     }
-//   }
-// `;
 
 const Form = t.form.Form
 

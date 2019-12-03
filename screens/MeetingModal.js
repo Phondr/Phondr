@@ -35,15 +35,42 @@ const MeetingModal = ({
   const [nearby, setNearby] = useState([])
   const [loading, setLoading] = useState(true)
 
-  const updateInvitation = data => {
-    const coords = [data.geometry.location.lat, data.geometry.location.lng]
-    console.log('updateInv', data)
+  const getDetails = async id => {
+    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${placesAPI}`
+    const {data} = await axios.post(url)
+
+    return data.result
+  }
+
+  const updateInvitation = async ({place_id}) => {
+    console.log('placeid', place_id)
+    const res = await getDetails(place_id.toString())
+
+    const {geometry, name, rating, url, photos, formatted_address} = res
+    const coords = [geometry.location.lat, geometry.location.lng]
+    const imageRef = photos[0].photo_reference
     updatePendingLocation(
       coords,
-      data.name,
-      `${data.name}, ${data.vicinity}`,
-      data.rating
+      name,
+      formatted_address,
+      rating,
+      url,
+      imageRef
     )
+    // const coords = [data.geometry.location.lat, data.geometry.location.lng]
+    // const link =
+    //   data.photos[0].html_attributions[0].split('"')[1] || 'no photos'
+    // const imageRef = data.photos[0].photo_reference
+
+    //console.log('updateInv', data)
+    // updatePendingLocation(
+    //   coords,
+    //   data.name,
+    //   `${data.name}, ${data.vicinity}`,
+    //   data.rating,
+    //   link,
+    //   imageRef
+    // )
   }
 
   const setLocation = inv => {
@@ -94,7 +121,8 @@ const MeetingModal = ({
       `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${long}&radius=1500&type=cafe&key=` +
       placesAPI
     const {data} = await axios.get(theUrl)
-    console.log('data from searchnearby', data)
+    //console.log('TCL: nearby data results', data.results)
+
     setNearby(data.results)
   }
 
@@ -123,10 +151,10 @@ const MeetingModal = ({
     }
   }
   if (invitation.name) {
-    console.log('TCL: invitation', invitation)
+    //console.log('TCL: invitation', invitation)
     //console.log('formated invitation', formatRegion(invitation))
   }
-  console.log('nearby', nearby)
+
   if (loading || !currentCoord.latitude || !region.latitude) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -175,7 +203,7 @@ const MeetingModal = ({
               />
               {nearby.length > 0 &&
                 nearby.map((x, i) => {
-                  console.log('mapping')
+                  //console.log('mapping')
                   return (
                     <Marker
                       key={x.id}
@@ -184,7 +212,7 @@ const MeetingModal = ({
                         longitude: x.geometry.location.lng
                       }}
                       title={`${x.name}(${x.rating} rating)`}
-                      description={`In the vicinity of : ${x.vicinity} `}
+                      description={`${x.name}, ${x.vicinity} `}
                       //pinColor={colors[i]}
                       //style={{position: 'absolute'}}
                       onPress={() => updateInvitation(x)}

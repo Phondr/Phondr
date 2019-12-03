@@ -3,14 +3,17 @@ const {url} = require('../secrets')
 import gql from 'graphql-tag'
 import {AsyncStorage} from 'react-native'
 import AsyncUtils from '../server/AsyncUtils'
-console.log('URL', url)
+import client from './apolloClient'
+import myAxios from './axios-config'
 
 //action type
 const GETUSER = 'GETUSER'
 const ADDUSER = 'ADDUSER'
+const EDITUSER = 'EDITUSER'
 
 //action creator
 export const setUser = user => ({type: GETUSER, user})
+export const editUser = user => ({type: EDITUSER, user})
 export const addUser = user => ({type: ADDUSER, user})
 
 //state
@@ -20,7 +23,6 @@ export const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value)
     const data = await getData(key)
-    
   } catch (e) {
     // saving error
     console.log(e)
@@ -40,11 +42,25 @@ export const getData = async key => {
   }
 }
 
+export const removeData = async key => {
+  try {
+    await AsyncStorage.removeItem(key)
+    console.log('REMOVED KEY')
+  } catch (e) {
+    // error reading value
+    console.log(e)
+  }
+}
+
 //thunk
 export const fetchUserLogin = values => async dispatch => {
   try {
     const email = values.email
     const password = values.password
+
+    if (getData('userKey')) {
+      removeData('userKey')
+    }
 
     let {data} = await axios({
       url: `${url}/graphql`,
@@ -59,13 +75,15 @@ export const fetchUserLogin = values => async dispatch => {
               homeLocation
               incentivePoints
               profilePicture
+              iAm
+              iPrefer
+              distPref
             }
         }
         `
       }
     })
 
-    
     if (data.data.userLogin) {
       //console.log('USERLOGIN', data.data.userLogin.email)
       storeData('userKey', JSON.stringify(data.data.userLogin))
@@ -82,6 +100,10 @@ export const userSignUp = (values, preferences) => async dispatch => {
   try {
     
 
+    if (getData('userKey')) {
+      removeData('userKey')
+    }
+
     const fullName = values.fullName
     const age = values.age
     const password = values.password
@@ -89,24 +111,94 @@ export const userSignUp = (values, preferences) => async dispatch => {
     const address = values.address
     const radius = values.radius
 
-    let {data} = await axios({
-      url: `${url}/graphql`,
-      method: 'POST',
-      data: {
-        query: `
-        {
-          userSignup(fullName: "${fullName}", age: "${age}", homeLocation: "${address}", email: "${email}", password: "${password}") {
-            id
-            email
-            fullName
-            }
-        }
-        `
-      }
+    let {data} = await client.mutate({
+      mutation: gql`mutation{
+        userSignup(fullName: "${fullName}", email: "${email}", password: "${password}") {
+          id
+          email
+          fullName
+          password
+          }
+              }`
     })
-    dispatch(setUser(data.data.userSignup))
+
+    if (data.userSignup) {
+      storeData('userKey', JSON.stringify(data.userSignup))
+    }
+
+    dispatch(setUser(data.userSignup))
   } catch (error) {
     alert('COULD NOT SIGN-UP')
+    console.log(error)
+  }
+}
+
+export const fetchUserFromAsync = () => async dispatch => {
+  try {
+    const user = JSON.parse(await getData('userKey'))
+
+    let {data} = await client.query({
+      query: gql`query{
+        user(id: ${user.id}) {
+          id
+          email
+          fullName
+          homeLocation
+          incentivePoints
+          profilePicture
+          age
+          iAm
+          iPrefer
+        }
+              }`
+    })
+
+    if (data.user) {
+      dispatch(setUser(data.user))
+    }
+  } catch (error) {
+    alert('COULD NOT GET PROFILE DATA')
+    console.log(error)
+  }
+}
+
+export const EditUser = (user, userId) => async dispatch => {
+  try {
+    //OVERWRITE KEY
+    if (getData('userKey')) {
+      console.log('REMOVED KEY')
+      removeData('userKey')
+    }
+
+    let {data} = await client.mutate({
+      mutation: gql`mutation{
+        editUser(id: ${userId}, email: "${user.email}", fullName: "${user.fullName}", iAm: "${user.iAm}"
+      ) {
+          id
+          email
+          fullName
+          homeLocation
+          incentivePoints
+          profilePicture
+          age
+          iAm
+          iPrefer
+        }
+              }`
+    })
+
+    //update User key async storage
+
+    if (data.editUser) {
+      storeData('userKey', JSON.stringify(data.editUser))
+      //dispatch(editUser(data.user))
+    }
+
+    if (data.editUser) {
+      dispatch(setUser(data.editUser))
+    }
+  } catch (error) {
+    alert('COULD NOT GET PROFILE DATA')
     console.log(error)
   }
 }
@@ -116,6 +208,8 @@ export default (state = initialState, action) => {
     case GETUSER:
       return action.user
     case ADDUSER:
+      return action.user
+    case EDITUSER:
       return action.user
     default:
       return state

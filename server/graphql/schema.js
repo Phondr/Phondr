@@ -29,6 +29,7 @@ const UserType = new GraphQLObjectType({
     googleId: {type: GraphQLString},
     gender: {type: GraphQLString},
     age: {type: GraphQLString},
+    password: {type: GraphQLString},
     homeLocation: {type: new GraphQLList(GraphQLFloat)},
     incentivePoints: {type: GraphQLInt},
     profilePicture: {type: GraphQLString},
@@ -44,6 +45,8 @@ const InvitationType = new GraphQLInputObjectType({
   name: 'Invitation',
   fields: () => ({
     coords: {type: new GraphQLList(GraphQLFloat)},
+    link: {type: GraphQLString},
+    imageRef: {type: GraphQLString},
     name: {type: GraphQLString},
     address: {type: GraphQLString},
     rating: {type: GraphQLFloat},
@@ -57,6 +60,7 @@ const MessageType = new GraphQLObjectType({
     id: {type: GraphQLInt},
     content: {type: GraphQLString},
     length: {type: GraphQLInt},
+    imageRef: {type: GraphQLString},
     userId: {type: GraphQLInt},
     chatId: {type: GraphQLInt},
     createdAt: {type: GraphQLString},
@@ -81,6 +85,8 @@ const MeetingType = new GraphQLObjectType({
   fields: () => ({
     location: {type: new GraphQLList(GraphQLFloat)},
     name: {type: GraphQLString},
+    link: {type: GraphQLString},
+    imageRef: {type: GraphQLString},
     rating: {type: GraphQLFloat},
     address: {type: GraphQLString},
     date: {type: GraphQLString},
@@ -88,6 +94,7 @@ const MeetingType = new GraphQLObjectType({
     senderId: {type: GraphQLInt}
   })
 })
+
 //Query Requests(grab information from the database)
 const rootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -124,6 +131,7 @@ const rootQuery = new GraphQLObjectType({
           where: {email: args.email}
           // where: { email: args.email, password: args.password },
         })
+
         console.log('PASSWORD', args.password)
         console.log(usermodel.correctPassword(args.password))
 
@@ -142,7 +150,7 @@ const rootQuery = new GraphQLObjectType({
               password: usermodel.cryptPassword(args.password)
             }
           })
-          console.log('USER', use)
+          //console.log('USER', use)
           return use
         }
       }
@@ -166,6 +174,25 @@ const rootQuery = new GraphQLObjectType({
         }
       }
     },
+    getCurrentChat: {
+      type: ChatType,
+      args: {
+        chatId: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        try {
+          console.log(args.chatId)
+          let chat = await db.models.chat.findByPk(args.chatId, {
+            include: [{model: db.models.user}, {model: db.models.message}]
+          })
+          console.log('chat', chat)
+          return chat
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    },
+
     messages: {
       type: new GraphQLList(MessageType),
       args: {
@@ -194,18 +221,48 @@ const rootMutation = new GraphQLObjectType({
     userSignup: {
       type: UserType,
       args: {
-        email: {type: GraphQLString},
         fullName: {type: GraphQLString},
-        gender: {type: GraphQLString},
-        age: {type: GraphQLString},
-        homeLocation: {type: new GraphQLList(GraphQLFloat)},
-        profilePicture: {type: GraphQLString}
+        email: {type: GraphQLString},
+        password: {type: GraphQLString}
       },
       async resolve(parent, args) {
         console.log('ARGS', args)
-        const data = await db.models.user.create(args)
+
+        const data = await db.models.user.create({
+          fullName: args.fullName,
+          email: args.email,
+          password: args.password
+        })
+
+        console.log('CREATED USER', data)
         if (data) {
           return data
+        }
+      }
+    },
+    editUser: {
+      type: UserType,
+      args: {
+        fullName: {type: GraphQLString},
+        id: {type: GraphQLInt},
+        email: {type: GraphQLString},
+        iAm: {type: GraphQLString},
+        distPref: {type: GraphQLInt},
+        age: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        let User = await db.models.user.findByPk(args.id)
+
+        let updateduser = await User.update({
+          fullName: args.fullName,
+          email: args.email,
+          iAm: args.iAm,
+          distPref: args.distPref,
+          age: args.age
+        })
+
+        if (updateduser) {
+          return updateduser
         }
       }
     },
@@ -303,6 +360,7 @@ const rootMutation = new GraphQLObjectType({
       args: {
         content: {type: GraphQLString},
         length: {type: GraphQLInt},
+        imageRef: {type: GraphQLString},
         userId: {type: GraphQLInt},
         chatId: {type: GraphQLInt}
       },
@@ -325,6 +383,8 @@ const rootMutation = new GraphQLObjectType({
         try {
           const meeting = await db.models.meeting.create({
             location: args.invitation.coords,
+            link: args.invitation.link,
+            imageRef: args.invitation.imageRef,
             name: args.invitation.name,
             rating: args.invitation.rating,
             address: args.invitation.address,
