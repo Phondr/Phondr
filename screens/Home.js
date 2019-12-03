@@ -61,6 +61,7 @@ class Home extends Component {
     } 
     //console.log('HOME PROPS', this.props)
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id) {
       console.log('in comp did update fmc')
