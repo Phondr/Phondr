@@ -5,14 +5,14 @@ import {DrawerItems} from 'react-navigation'
 
 const CustomDrawer = props => {
   return (
-    <Container style={{backgroundColor: '#F9429E'}}>
-      <Content>
+    <Container  style={{backgroundColor:'#D9004C'}}>
+      <Content >
         <Image
           style={styles.drawerImage}
           // source={require('../assets/images/robot-dev.png')}
         />
 
-        <DrawerItems {...props} />
+        <DrawerItems style={{marginBottom:10}} {...props} />
       </Content>
     </Container>
   )

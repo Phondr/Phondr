@@ -86,14 +86,19 @@ var drawer = createDrawerNavigator(
     },
     UserProfileEdit: {
       screen: UserProfileEdit
+    },
+    MeetingModal: {
+      screen: MeetingModal
     }
-    // MeetingModal: {}
   },
   {
     initialRouteName: 'Entry',
     contentComponent: CustomDrawer,
+
     contentOptions: {
-      activeTintColor: 'orange'
+      activeTintColor: 'black',
+      inactiveTintColor: 'white',
+      activeBackgroundColor:'#FF91AF',
     },
     drawerOpenRoute: 'DrawerOpen',
     drawerCloseRoute: 'DrawerClose',

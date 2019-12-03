@@ -12,7 +12,7 @@ const PendingChats = ({myChats, user, deleteChat}) => {
   return (
     <Card>
       <CardItem header style={{backgroundColor:'#E0115F'}}>
-        <Text>Pending Chats</Text>
+        <Text style={{color:'white'}}>Pending Chats</Text>
       </CardItem>
       <Modal
         style={styles.modal}
