@@ -1,29 +1,6 @@
 import React, {Component} from 'react'
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Footer,
-  FooterTab,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  Text,
-  Form,
-  Item,
-  Input,
-  Fab
-} from 'native-base'
-import {
-  ScrollView,
-  View,
-  StatusBar,
-  KeyboardAvoidingView,
-  Platform
-} from 'react-native'
+import {Icon, Fab} from 'native-base'
+import {View, StatusBar, KeyboardAvoidingView, Platform} from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {connect} from 'react-redux'
@@ -81,12 +58,6 @@ class SingleChats extends Component {
     socket.off('receiveMessage')
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.currentChat !== this.props.currentChat) {
-      console.log('got here')
-    }
-  }
-
   async onSend(message) {
     //Format message for input into thunk
     const formattedMessage = {
@@ -94,7 +65,7 @@ class SingleChats extends Component {
       userId: message[0].user._id,
       length: message[0].text.length,
       chatId: this.props.currentChat.id,
-      audio: message[0].audio || null,
+      audio: message[0].audio || null
     }
     //Create the message ONCE after click send but don't set to redux yet
     const newMessage = await this.props.newMessage(formattedMessage)
@@ -110,18 +81,15 @@ class SingleChats extends Component {
   }
 
   renderBubble(props) {
-    console.log('gothere', props.currentMessage)
-    if (props.currentMessage.audio) {
-      // console.log(props)
-      const message = JSON.parse(JSON.stringify(props.currentMessage))
+    if (props.currentMessage.audio) {//Render the play audio icon if the message has audio along with the timestamp
       return (
-       <View>
-          <RenderAudio message={message} user={this.props.user}/>
+        <View> 
+          <RenderAudio message={props.currentMessage} user={this.props.user} />
           <Bubble {...props} />
-          </View>
+        </View>
       )
     }
-    return (
+    return (//Render normal text bubble with timestamp
       <View>
         <Bubble {...props} />
       </View>

@@ -12,7 +12,6 @@ import drawerStyles from './styles/drawerStyle'
 import CustomDrawer from './components/CustomDrawer'
 import New from './components/route'
 import ApolloClient from 'apollo-boost'
-import {ApolloProvider} from '@apollo/react-hooks'
 import {connect, Provider} from 'react-redux'
 import store from './redux/store'
 import AppNavigator from './navigation/AppNavigator'
@@ -25,7 +24,6 @@ import SignOut from './screens/SignOut'
 import PendingScreen from './screens/PendingScreen'
 import ActiveScreen from './screens/ActiveScreen'
 import SingleChat from './components/SingleChat'
-import Audio from './components/recordAudio'
 import ActiveComponent from './components/ActiveComp'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
@@ -71,9 +69,6 @@ var drawer = createDrawerNavigator(
     },
     Entry: {
       screen: Entry
-    },
-    Audio: {
-      screen: Audio
     },
     MapV: {
       screen: MapV

@@ -1,11 +1,8 @@
 import React from 'react'
-import {StatusBar, Dimensions, StyleSheet} from 'react-native'
-import {View, Text, Button, Icon} from 'native-base'
-import CustomHeader from '../components/CustomHeader'
+import {StyleSheet} from 'react-native'
+import {View, Icon} from 'native-base'
 import * as Permissions from 'expo-permissions'
 import {Audio} from 'expo-av'
-import {RNS3} from 'react-native-s3-upload'
-import {amazonConfig} from '../secrets'
 
 export default class renderAudio extends React.Component {
   constructor() {
@@ -18,40 +15,50 @@ export default class renderAudio extends React.Component {
     this.stopSound = this.stopSound.bind(this)
   }
   async componentDidMount() {
-    const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING)
-    if (audio.status === 'granted') {
-      this.setState({hasAudioPermission: true})
+    try {
+      const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING)
+      if (audio.status === 'granted') {
+        this.setState({hasAudioPermission: true})
+      }
+      await Audio.setAudioModeAsync({
+        playsInSilentModeIOS: true,
+        interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+        staysActiveInBackground: false,
+        allowsRecordingIOS: true,
+        shouldDuckAndroid: true,
+        interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+        playThroughEarpieceAndroid: true
+      })
+    } catch (err) {
+      console.error(err)
     }
-    await Audio.setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-      staysActiveInBackground: false,
-      allowsRecordingIOS: true,
-      shouldDuckAndroid: true,
-      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-      playThroughEarpieceAndroid: true
-    })
   }
   async playSound() {
     if (this.soundObject) {
-      await this.soundObject.unloadAsync()
+      await this.soundObject.unloadAsync().catch(err => console.error(err))
     }
     this.soundObject = new Audio.Sound()
     this.setState({isPlaying: true})
-    await this.soundObject.loadAsync({
-      uri: `${this.props.message.audio}`
-    })
+    await this.soundObject
+      .loadAsync(
+        {
+          uri: `${this.props.message.audio}`
+        },
+        {androidImplementation: 'MediaPlayer'}
+      )
+      .catch(err => {
+        console.error(err)
+      })
     await this.soundObject
       .playAsync()
       .then(async playbackStatus => {
-        console.log('timer', await playbackStatus)
         setTimeout(() => {
           this.soundObject.unloadAsync()
           this.setState({isPlaying: false})
         }, playbackStatus.durationMillis)
       })
-      .catch(error => {
-        console.log(error)
+      .catch(err => {
+        console.error(err)
       })
   }
   stopSound() {
