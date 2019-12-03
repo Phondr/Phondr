@@ -15,7 +15,7 @@ import {
 import {calcProgress} from '../util'
 import {Bar} from 'react-native-progress'
 import round from 'lodash.round'
-const ProgressBar = ({currentChat = {}, navigation}) => {
+const ProgressBar = ({currentChat = {messages:[]}, navigation}) => {
   const progress = round(calcProgress(currentChat), 2)
 
   return (

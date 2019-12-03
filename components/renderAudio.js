@@ -1,5 +1,5 @@
 import React from 'react'
-import {StatusBar, Dimensions} from 'react-native'
+import {StatusBar, Dimensions, StyleSheet} from 'react-native'
 import {View, Text, Button, Icon} from 'native-base'
 import CustomHeader from '../components/CustomHeader'
 import * as Permissions from 'expo-permissions'
@@ -39,15 +39,16 @@ export default class renderAudio extends React.Component {
     this.soundObject = new Audio.Sound()
     this.setState({isPlaying: true})
     await this.soundObject.loadAsync({
-      uri: `${this.props.message.text}`
+      uri: `${this.props.message.audio}`
     })
     await this.soundObject
       .playAsync()
       .then(async playbackStatus => {
+        console.log('timer', await playbackStatus)
         setTimeout(() => {
           this.soundObject.unloadAsync()
           this.setState({isPlaying: false})
-        }, playbackStatus.playableDurationMillis)
+        }, playbackStatus.durationMillis)
       })
       .catch(error => {
         console.log(error)
@@ -59,23 +60,65 @@ export default class renderAudio extends React.Component {
   }
   render() {
     return (
-      <View
-        style={{
-          // alignSelf: 'center',
-          // left: 90,
-          position: 'relative',
-          shadowColor: '#000',
-          shadowOffset: {width: 0, height: 0},
-          shadowOpacity: 0.5,
-          backgroundColor: 'transparent'
-        }}
-      >
+      <View>
         {this.state.isPlaying === false ? (
-          <Icon name="ios-play" onPress={() => this.playSound()} />
+          <Icon
+            name="ios-play"
+            style={
+              this.props.message.userId === this.props.user.id
+                ? styles.senderBubble
+                : styles.receiverBubble
+            }
+            onPress={() => this.playSound()}
+          />
         ) : (
-          <Icon name="ios-play" style={{color: 'red'}} />
+          <Icon
+            name="ios-play"
+            style={
+              this.props.message.userId === this.props.user.id
+                ? styles.senderBubblePlaying
+                : styles.receiverBubblePlaying
+            }
+          />
         )}
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  senderBubble: {
+    left: 90,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 0.5,
+    backgroundColor: 'transparent'
+  },
+  receiverBubble: {
+    left: 25,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 0.5,
+    backgroundColor: 'transparent'
+  },
+  senderBubblePlaying: {
+    left: 90,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 0.5,
+    backgroundColor: 'transparent',
+    color: 'red'
+  },
+  receiverBubblePlaying: {
+    left: 25,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 0.5,
+    backgroundColor: 'transparent',
+    color: 'red'
+  }
+})

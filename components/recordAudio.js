@@ -107,7 +107,8 @@ export default class RecordAudio extends React.Component {
       }
       const formattedMessage = [
         {
-          text: response.headers.Location,
+          text: '',
+          audio: response.headers.Location,
           user: {_id: this.props.user.id}
         }
       ]

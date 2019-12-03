@@ -17,7 +17,13 @@ import {
   Input,
   Fab
 } from 'native-base'
-import {ScrollView, View, StatusBar, KeyboardAvoidingView, Platform} from 'react-native'
+import {
+  ScrollView,
+  View,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {connect} from 'react-redux'
@@ -32,6 +38,7 @@ class SingleChats extends Component {
     super(props)
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
+    this.renderBubble = this.renderBubble.bind(this)
   }
   // componentWillMount() {
   //   this.setState({
@@ -52,7 +59,7 @@ class SingleChats extends Component {
 
   static navigationOptions = {
     //This is here so it doesn't show up on the drawer pull out
-    drawerLabel: () => null,
+    drawerLabel: () => null
   }
 
   componentDidMount() {
@@ -86,7 +93,8 @@ class SingleChats extends Component {
       content: message[0].text,
       userId: message[0].user._id,
       length: message[0].text.length,
-      chatId: this.props.currentChat.id
+      chatId: this.props.currentChat.id,
+      audio: message[0].audio || null,
     }
     //Create the message ONCE after click send but don't set to redux yet
     const newMessage = await this.props.newMessage(formattedMessage)
@@ -97,20 +105,25 @@ class SingleChats extends Component {
     })
   }
 
-  getOtherUserInChat(chat){
-    return chat.users.find(user=> user.fullName!==this.props.user.fullName)
+  getOtherUserInChat(chat) {
+    return chat.users.find(user => user.fullName !== this.props.user.fullName)
   }
 
   renderBubble(props) {
-    if(props.currentMessage.text.includes('.aac')) {
-      console.log(props)
+    console.log('gothere', props.currentMessage)
+    if (props.currentMessage.audio) {
+      // console.log(props)
+      const message = JSON.parse(JSON.stringify(props.currentMessage))
       return (
-        <RenderAudio message={props.currentMessage}/>
+       <View>
+          <RenderAudio message={message} user={this.props.user}/>
+          <Bubble {...props} />
+          </View>
       )
     }
     return (
       <View>
-        <Bubble {...props}/>
+        <Bubble {...props} />
       </View>
     )
   }
@@ -119,7 +132,10 @@ class SingleChats extends Component {
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
-        <CustomHeader title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`} currentChat={this.props.currentChat} />
+        <CustomHeader
+          title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
+          currentChat={this.props.currentChat}
+        />
         <Fab
           active={true}
           direction="up"
@@ -130,7 +146,12 @@ class SingleChats extends Component {
         >
           <Icon name="meetup" type={'FontAwesome'} />
         </Fab>
-        <RecordAudio onSend={this.onSend} user={this.props.user} chat={this.props.currentChat} messageLength={this.props.messages.length}/>
+        <RecordAudio
+          onSend={this.onSend}
+          user={this.props.user}
+          chat={this.props.currentChat}
+          messageLength={this.props.messages.length}
+        />
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
@@ -138,7 +159,7 @@ class SingleChats extends Component {
             _id: this.props.user.id,
             name: this.props.user.fullName
           }}
-          renderBubble = {this.renderBubble}
+          renderBubble={this.renderBubble}
         />
         {Platform.OS === 'android' && (
           <KeyboardAvoidingView behavior="padding" />

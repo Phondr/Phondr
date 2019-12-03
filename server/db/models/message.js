@@ -10,6 +10,10 @@ const Message = db.define('message', {
     type: Sequelize.INTEGER,
     // allowNull: false,
   },
+  audio: {
+    type: Sequelize.STRING,
+    defaultValue: null,
+  }
 })
 
 module.exports = Message
