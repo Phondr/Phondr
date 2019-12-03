@@ -20,12 +20,12 @@ const ProgressBar = ({currentChat = {}, navigation}) => {
 
   return (
     <>
-      <Content>
+      <Content >
         <Left>
-          <Bar progress={progress / 100} width={100} animated={false} />
+          <Bar borderColor='#C21E56' color='#C21E56' progress={progress / 100} width={100} animated={false} />
         </Left>
         <Body>
-          <Text style={{color: 'blue'}}>{progress}%</Text>
+          <Text style={{color:'#C21E56'}}>{progress}%</Text>
         </Body>
         <Right />
       </Content>

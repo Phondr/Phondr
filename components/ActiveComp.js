@@ -37,7 +37,7 @@ const ActiveChats = ({myChats, user, setChat, fetchMyChats, navigation}) => {
             key={cur.id}
             style={{backgroundColor:'#FF91AF'}}
           >
-            <ProgressBar currentChat={cur} />
+      <ProgressBar currentChat={cur}/>
             <Left>
               <Icon name="person" />
             </Left>
