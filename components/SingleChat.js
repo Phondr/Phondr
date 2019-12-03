@@ -26,6 +26,7 @@ import {
 } from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
+import {fetchCurrentChat} from '../redux/currentChat'
 import {connect} from 'react-redux'
 import socket from '../redux/socketClient'
 import {showMessage} from 'react-native-flash-message'
@@ -138,6 +139,9 @@ class SingleChats extends Component {
     if (prevProps.currentChat !== this.props.currentChat) {
       console.log('got here')
     }
+    if (this.props.messages.length !== this.props.currentChat.messages.length) {
+      this.props.fetchCurrentChat(this.props.currentChat.id)
+    }
   }
 
   async onSend(message, noFormat) {
@@ -214,7 +218,8 @@ const MapDispatchToProps = dispatch => {
   return {
     fetchMessages: chatId => dispatch(fetchMessages(chatId)),
     newMessage: message => dispatch(newMessage(message)),
-    setNewMessage: message => dispatch(setNewMessage(message))
+    setNewMessage: message => dispatch(setNewMessage(message)),
+    fetchCurrentChat: chatId => dispatch(fetchCurrentChat(chatId))
   }
 }
 

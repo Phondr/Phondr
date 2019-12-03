@@ -17,25 +17,34 @@ import {Bar} from 'react-native-progress'
 import round from 'lodash.round'
 import {setCurrentProgress} from '../redux/currentProgress'
 const ProgressBar = ({
-  currentChat = {},
-  navigation,
+  currentChat,
   currentProgress,
+  header = false,
+  navigation,
+
   setCurrentProgress
 }) => {
   let progress = round(calcProgress(currentChat), 2)
+
   useEffect(() => {
-    if (currentChat.id) {
-      setCurrentProgress(round(calcProgress(currentChat), 2))
+    if (header) {
+      setCurrentProgress(progress)
     }
-  }, [currentChat.id, currentChat.messages.length])
-  if (currentChat.id) {
-    progress = currentProgress
-  }
+  }, [currentChat.messages.length])
+
   return (
     <>
       <Content>
         <Left>
-          <Bar progress={progress / 100} width={100} animated={false} />
+          {header == true ? (
+            <Bar
+              progress={currentProgress / 100}
+              width={100}
+              animated={false}
+            />
+          ) : (
+            <Bar progress={progress / 100} width={100} animated={false} />
+          )}
         </Left>
         <Body>
           <Text style={{color: 'blue'}}>{progress}%</Text>

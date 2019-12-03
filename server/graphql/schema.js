@@ -173,6 +173,25 @@ const rootQuery = new GraphQLObjectType({
         }
       }
     },
+    getCurrentChat: {
+      type: ChatType,
+      args: {
+        chatId: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        try {
+          console.log(args.chatId)
+          let chat = await db.models.chat.findByPk(args.chatId, {
+            include: [{model: db.models.user}, {model: db.models.message}]
+          })
+          console.log('chat', chat)
+          return chat
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    },
+
     messages: {
       type: new GraphQLList(MessageType),
       args: {
