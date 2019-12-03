@@ -6,6 +6,7 @@ import currentChat from './currentChat'
 import loading from './loading'
 import invitation from './invitation'
 import currentMeeting from './currentMeeting'
+import currentProgress from './currentProgress'
 
 const appReducer = combineReducers({
   user,
@@ -14,7 +15,8 @@ const appReducer = combineReducers({
   currentChat,
   loading,
   invitation,
-  currentMeeting
+  currentMeeting,
+  currentProgress
 })
 
 export default appReducer

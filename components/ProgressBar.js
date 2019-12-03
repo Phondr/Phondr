@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {connect} from 'react-redux'
 import {
   Icon,
@@ -15,9 +15,22 @@ import {
 import {calcProgress} from '../util'
 import {Bar} from 'react-native-progress'
 import round from 'lodash.round'
-const ProgressBar = ({currentChat = {}, navigation}) => {
-  const progress = round(calcProgress(currentChat), 2)
-
+import {setCurrentProgress} from '../redux/currentProgress'
+const ProgressBar = ({
+  currentChat = {},
+  navigation,
+  currentProgress,
+  setCurrentProgress
+}) => {
+  let progress = round(calcProgress(currentChat), 2)
+  useEffect(() => {
+    if (currentChat.id) {
+      setCurrentProgress(round(calcProgress(currentChat), 2))
+    }
+  }, [currentChat.id, currentChat.messages.length])
+  if (currentChat.id) {
+    progress = currentProgress
+  }
   return (
     <>
       <Content>
@@ -33,4 +46,6 @@ const ProgressBar = ({currentChat = {}, navigation}) => {
   )
 }
 
-export default ProgressBar
+export default connect(({currentProgress}) => ({currentProgress}), {
+  setCurrentProgress
+})(ProgressBar)
