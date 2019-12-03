@@ -71,21 +71,24 @@ export class Entry extends Component {
             }}
           />
         </View>
+        <View style={{width: '50%'}}>
           <Button
-            title="Login"
             onPress={() => {
               this.gotToLogin()
             }}
-            style={{backgroundColor: '#E0115F', width:'50%', margin: 30, alignSelf='center', alignItems='center'}}
-          ><Text>Login</Text> </Button>
-
+            style={styles.buttonNav}
+          >
+            <Text>Login</Text>
+          </Button>
           <Button
-            title="Sign Up"
             onPress={() => {
               this.goToSignUp()
             }}
-            style={{backgroundColor: 'black', width:'50%'}}
-          ><Text>Sign Up</Text></Button>
+            style={styles.buttonNav}
+          >
+            <Text>Sign Up</Text>
+          </Button>
+        </View>
       </View>
     )
   }
@@ -116,8 +119,10 @@ export const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: '#ffffff'
   },
-  loginStyle:{
-
+  buttonNav: {
+    backgroundColor: '#E0115F',
+    marginTop: 30,
+    justifyContent: 'center'
   }
 })
 

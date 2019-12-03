@@ -98,7 +98,7 @@ export class Login extends Component {
         </TouchableWithoutFeedback>
         <View style={{alignItems: 'center', backgroundColor: '#343434'}}>
           <Image
-            style={{width: '80%', height: 180, marginTop: 30}}
+            style={{width: '80%', height: 200, marginTop: 30}}
             source={require('../assets/images/fog.jpg')}
             resizeMode="cover"
           />
@@ -110,14 +110,14 @@ export class Login extends Component {
 
 export const styles = StyleSheet.create({
   submitButton: {
-    backgroundColor: 'black',
+    backgroundColor: '#E0115F',
     padding: 10,
     margin: 15,
     alignItems: 'center',
     height: 40
   },
   submitButtonText: {
-    color: 'white'
+    color: 'black'
   },
   formcontainer: {
     marginTop: 30,

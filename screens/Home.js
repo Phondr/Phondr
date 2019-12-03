@@ -58,7 +58,7 @@ class Home extends Component {
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
       this.props.fetchMyChats(this.props.user.id)
-    } 
+    }
     //console.log('HOME PROPS', this.props)
   }
 
@@ -148,9 +148,10 @@ class Home extends Component {
                 rounded
                 info
                 onPress={() => this.props.findOrCreateChat(this.props.user.id)}
+                style={{backgroundColor:'#E0115F'}}
               >
-                <Icon name="pluscircle" type="AntDesign">
-                  <Text> New Chat</Text>
+                <Icon style={{color:'#9B111E'}} name="pluscircle" type="AntDesign">
+                  <Text style={{color:'#9B111E'}}> New Chat</Text>
                 </Icon>
               </Button>
             </Right>

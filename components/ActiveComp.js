@@ -16,13 +16,13 @@ const ActiveChats = ({myChats, user, setChat, fetchMyChats, navigation}) => {
   //   })
   // }, [])
   return (
-    <Card>
+    <Card >
       <NavigationEvents
         onWillFocus={payload => {
           fetchMyChats(user.id)
         }}
       />
-      <CardItem header>
+      <CardItem header style={{backgroundColor:'#E0115F'}}>
         <Text>Active Chats</Text>
       </CardItem>
 
@@ -35,6 +35,7 @@ const ActiveChats = ({myChats, user, setChat, fetchMyChats, navigation}) => {
               navigation.navigate('SingleChat')
             }}
             key={cur.id}
+            style={{backgroundColor:'#FF91AF'}}
           >
             <ProgressBar currentChat={cur} />
             <Left>
