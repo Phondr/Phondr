@@ -63,8 +63,8 @@ export class UserProfileEdit extends Component {
     const user = this.props.user || {}
     return (
       <ScrollView style={styles.container}>
-        <StatusBar barStyle="light-content" />
         <CustomHeader title="Profile" />
+        <StatusBar barStyle="light-content" />
         <View style={styles.header}></View>
         <Image
           style={styles.avatar}
@@ -84,7 +84,7 @@ export class UserProfileEdit extends Component {
                           console.log(this.state)
                         }}
                       >
-                        <Text>Edit Name</Text>
+                        <Text style={{color: 'white'}}>Edit Name</Text>
                       </TouchableOpacity>
                     ) : (
                       <Input
@@ -107,7 +107,9 @@ export class UserProfileEdit extends Component {
                           console.log(this.state)
                         }}
                       >
-                        <Text>Edit Distance Prefered</Text>
+                        <Text style={{color: 'white'}}>
+                          Edit Distance Prefered
+                        </Text>
                       </TouchableOpacity>
                     ) : (
                       <Input
@@ -130,7 +132,7 @@ export class UserProfileEdit extends Component {
                           console.log(this.state)
                         }}
                       >
-                        <Text>Edit Email</Text>
+                        <Text style={{color: 'white'}}>Edit Email</Text>
                       </TouchableOpacity>
                     ) : (
                       <Input
@@ -153,7 +155,7 @@ export class UserProfileEdit extends Component {
                           console.log(this.state)
                         }}
                       >
-                        <Text>Edit Gender</Text>
+                        <Text style={{color: 'white'}}>Edit Gender</Text>
                       </TouchableOpacity>
                     ) : (
                       <Input
@@ -169,12 +171,14 @@ export class UserProfileEdit extends Component {
                   </Item>
                 </View>
               </Form>
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={this.submitHandler}
-              >
-                <Text>Save</Text>
-              </TouchableOpacity>
+              <View style={{ justifyContent:'center'}}>
+                <TouchableOpacity
+                  style={styles.buttonContainer}
+                  onPress={this.submitHandler}
+                >
+                  <Text style={{color: 'white'}}>Save</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -186,13 +190,10 @@ export class UserProfileEdit extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 35,
-    marginBottom: 20,
-    paddingBottom: 20,
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#FC89AC'
   },
   header: {
-    backgroundColor: '#00BFFF',
+    backgroundColor: '#DE6FA1',
     height: 200
   },
   avatar: {
@@ -212,7 +213,8 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   body: {
-    marginTop: 5
+    marginTop: 5,
+    backgroundColor: '#FC89AC'
   },
   bodyContent: {
     flex: 1,
@@ -246,11 +248,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 10,
-    height: 45,
+    height: 30,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 250,
+    width: '100%',
     borderRadius: 30,
     backgroundColor: '#00BFFF'
   },
@@ -264,10 +266,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width
   },
   formAlign: {
-    flex: 1,
-    padding: 2.5,
-    justifyContent: 'center',
-    alignItems: 'center',
     textAlign: 'center'
   }
 })

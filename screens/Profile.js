@@ -76,7 +76,7 @@ export class Profile extends Component {
                 this.props.navigation.navigate('UserProfileEdit', {user})
               }}
             >
-              <Text >Edit Profile</Text>
+              <Text style={{color:'white'}}>Edit Profile</Text>
             </TouchableOpacity>
           </View>
         </View>
