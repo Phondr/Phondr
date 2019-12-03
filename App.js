@@ -55,6 +55,12 @@ const ActiveScreenStack = createStackNavigator({
     navigationOptions: {
       header: null
     }
+  },
+  MeetingModal: {
+    screen: MeetingModal,
+    navigationOptions: {
+      header: null
+    }
   }
 })
 

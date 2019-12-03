@@ -17,7 +17,9 @@ const CustomHeader = ({title = '', navigation, currentChat = {}}) => {
         <Title>{title}</Title>
       </Body>
       <Right>
-        {currentChat.id && <ProgressBar currentChat={currentChat} />}
+        {currentChat.id && (
+          <ProgressBar currentChat={currentChat} header={true} />
+        )}
       </Right>
     </Header>
   )

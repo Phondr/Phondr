@@ -24,7 +24,6 @@ const CustomDatePicker = ({invitation, updatePendingDate}) => {
         textStyle={{color: 'black'}}
         placeHolderTextStyle={{color: '#d3d3d3'}}
         onDateChange={date => {
-          console.log('date', date)
           updatePendingDate(date)
         }}
         disabled={false}
