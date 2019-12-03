@@ -9,9 +9,11 @@ import myAxios from './axios-config'
 //action type
 const GETUSER = 'GETUSER'
 const ADDUSER = 'ADDUSER'
+const EDITUSER = 'EDITUSER'
 
 //action creator
 export const setUser = user => ({type: GETUSER, user})
+export const editUser = user => ({type: EDITUSER, user})
 export const addUser = user => ({type: ADDUSER, user})
 
 //state
@@ -32,7 +34,6 @@ export const getData = async key => {
     const value = await AsyncStorage.getItem(key)
     if (value) {
       // value previously stored
-      console.log('MADE KEY')
       return value
     }
   } catch (e) {
@@ -74,6 +75,9 @@ export const fetchUserLogin = values => async dispatch => {
               homeLocation
               incentivePoints
               profilePicture
+              iAm
+              iPrefer
+              distPref
             }
         }
         `
@@ -129,11 +133,83 @@ export const userSignUp = (values, preferences) => async dispatch => {
   }
 }
 
+export const fetchUserFromAsync = () => async dispatch => {
+  try {
+    const user = JSON.parse(await getData('userKey'))
+
+    let {data} = await client.query({
+      query: gql`query{
+        user(id: ${user.id}) {
+          id
+          email
+          fullName
+          homeLocation
+          incentivePoints
+          profilePicture
+          age
+          iAm
+          iPrefer
+        }
+              }`
+    })
+
+    if (data.user) {
+      dispatch(setUser(data.user))
+    }
+  } catch (error) {
+    alert('COULD NOT GET PROFILE DATA')
+    console.log(error)
+  }
+}
+
+export const EditUser = (user, userId) => async dispatch => {
+  try {
+    //OVERWRITE KEY
+    if (getData('userKey')) {
+      console.log('REMOVED KEY')
+      removeData('userKey')
+    }
+
+    let {data} = await client.mutate({
+      mutation: gql`mutation{
+        editUser(id: ${userId}, email: "${user.email}", fullName: "${user.fullName}", iAm: "${user.iAm}"
+      ) {
+          id
+          email
+          fullName
+          homeLocation
+          incentivePoints
+          profilePicture
+          age
+          iAm
+          iPrefer
+        }
+              }`
+    })
+
+    //update User key async storage
+
+    if (data.editUser) {
+      storeData('userKey', JSON.stringify(data.editUser))
+      //dispatch(editUser(data.user))
+    }
+
+    if (data.editUser) {
+      dispatch(setUser(data.editUser))
+    }
+  } catch (error) {
+    alert('COULD NOT GET PROFILE DATA')
+    console.log(error)
+  }
+}
+
 export default (state = initialState, action) => {
   switch (action.type) {
     case GETUSER:
       return action.user
     case ADDUSER:
+      return action.user
+    case EDITUSER:
       return action.user
     default:
       return state

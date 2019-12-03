@@ -34,6 +34,8 @@ import ActiveComponent from './components/ActiveComp'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 import Profile from './screens/Profile'
+import PendingMeetings from './screens/PendingMeetings'
+import UserProfileEdit from './screens/UserProfileEdit'
 import Spinner from './components/Spinner'
 import MapV from './components/MapView'
 
@@ -88,12 +90,19 @@ var drawer = createDrawerNavigator(
     'Pending Chats': {
       screen: PendingScreen
     },
+    'Pending Meetings': {
+      screen: PendingMeetings
+    },
     'Active Chats': {
       screen: ActiveScreenStack
     },
     'Sign Out': {
       screen: SignOut
+    },
+    UserProfileEdit: {
+      screen: UserProfileEdit
     }
+    // MeetingModal: {}
   },
   {
     initialRouteName: 'Entry',
