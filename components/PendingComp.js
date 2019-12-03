@@ -11,7 +11,7 @@ const PendingChats = ({myChats, user, deleteChat}) => {
   console.log('pending', pending, 'user', user)
   return (
     <Card>
-      <CardItem header>
+      <CardItem header style={{backgroundColor:'#E0115F'}}>
         <Text>Pending Chats</Text>
       </CardItem>
       <Modal
@@ -62,6 +62,7 @@ const PendingChats = ({myChats, user, deleteChat}) => {
               setSelectedChat(cur)
             }}
             key={cur.id}
+            style={{backgroundColor:'#FF91AF'}}
           >
             <Left>
               <Icon name="ellipsis1" type="AntDesign" />

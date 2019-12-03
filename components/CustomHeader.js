@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   header: {
     marginTop: Platform.OS !== 'ios' ? StatusBar.currentHeight : 0,
     justifyContent: 'flex-end',
-    backgroundColor: '#727472'
+    backgroundColor: '#E0115F'
   }
 })
 

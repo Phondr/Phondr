@@ -5,7 +5,7 @@ import {DrawerItems} from 'react-navigation'
 
 const CustomDrawer = props => {
   return (
-    <Container style={{backgroundColor: '#A8C3BC'}}>
+    <Container style={{backgroundColor: '#F9429E'}}>
       <Content>
         <Image
           style={styles.drawerImage}
