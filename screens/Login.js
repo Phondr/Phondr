@@ -117,7 +117,7 @@ export const styles = StyleSheet.create({
     height: 40
   },
   submitButtonText: {
-    color: 'black'
+    color: 'white'
   },
   formcontainer: {
     marginTop: 30,

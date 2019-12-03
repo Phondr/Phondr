@@ -33,7 +33,7 @@ class ActiveScreen extends React.Component {
             ) : (
               <Card>
                 <CardItem>
-                  <Text>No Active Chats</Text>
+                  <Text style={{color:'white'}}>No Active Chats</Text>
                 </CardItem>
               </Card>
             )}

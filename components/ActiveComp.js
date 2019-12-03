@@ -23,7 +23,7 @@ const ActiveChats = ({myChats, user, setChat, fetchMyChats, navigation}) => {
         }}
       />
       <CardItem header style={{backgroundColor:'#E0115F'}}>
-        <Text>Active Chats</Text>
+        <Text style={{color:'white'}}>Active Chats</Text>
       </CardItem>
 
       {active.map(cur => {

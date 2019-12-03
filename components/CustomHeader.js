@@ -14,7 +14,7 @@ const CustomHeader = ({title = '', navigation, currentChat = {}}) => {
         </Button>
       </Left>
       <Body>
-        <Title>{title}</Title>
+        <Title style={{color:'white'}}>{title}</Title>
       </Body>
       <Right>
         {currentChat.id && <ProgressBar currentChat={currentChat} />}

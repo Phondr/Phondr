@@ -78,7 +78,7 @@ export class Entry extends Component {
             }}
             style={styles.buttonNav}
           >
-            <Text>Login</Text>
+            <Text style={{color:'white'}}>Login</Text>
           </Button>
           <Button
             onPress={() => {
@@ -86,7 +86,7 @@ export class Entry extends Component {
             }}
             style={styles.buttonNav}
           >
-            <Text>Sign Up</Text>
+            <Text style={{color:'white'}}>Sign Up</Text>
           </Button>
         </View>
       </View>
@@ -110,7 +110,7 @@ export const styles = StyleSheet.create({
   },
   logintext: {
     margin: 2,
-    fontSize: 30
+    fontSize: 30,
   },
   formcontainer: {
     justifyContent: 'center',

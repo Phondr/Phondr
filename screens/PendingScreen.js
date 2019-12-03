@@ -45,7 +45,7 @@ class PendingScreen extends React.Component {
             ) : (
               <Card>
                 <CardItem>
-                  <Text>No Pending Chats</Text>
+                  <Text style={{color:'white'}}>No Pending Chats</Text>
                 </CardItem>
               </Card>
             )}
