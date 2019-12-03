@@ -29,7 +29,7 @@ export class PendingMeetings extends Component {
     const {myChats, navigation} = this.props
 
     return (
-      <Container>
+      <Container style={{backgroundColor: '#343434'}}>
         <ScrollView>
           <CustomHeader title="Pending Meetings" />
           <Content>

@@ -52,7 +52,7 @@ export class Profile extends Component {
     const user = this.props.user
     console.log('USER', user)
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={{backgroundColor:'#FC89AC'}}>
         <StatusBar barStyle="light-content" />
         <CustomHeader title="Profile" />
         <View style={styles.header}></View>
@@ -76,7 +76,7 @@ export class Profile extends Component {
                 this.props.navigation.navigate('UserProfileEdit', {user})
               }}
             >
-              <Text>Edit Profile</Text>
+              <Text >Edit Profile</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -87,7 +87,7 @@ export class Profile extends Component {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#00BFFF',
+    backgroundColor: '#DE6FA1',
     height: 200
   },
   avatar: {
@@ -107,7 +107,8 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   body: {
-    marginTop: 40
+    marginTop: 40,
+    backgroundColor:'#FC89AC'
   },
   bodyContent: {
     flex: 1,
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 15,
-    color: '#00BFFF',
+    color: '#696969',
     marginTop: 10
   },
   description: {
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: 250,
     borderRadius: 30,
-    backgroundColor: '#00BFFF'
+    backgroundColor: '#FF2400'
   }
 })
 
