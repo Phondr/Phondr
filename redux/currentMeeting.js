@@ -19,6 +19,9 @@ export const createMeeting = (chatId, userId, invitation) => {
                location
                name
                rating
+               address
+               link
+               imageRef
                date
                senderId
                chatId

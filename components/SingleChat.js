@@ -1,14 +1,17 @@
 import React, {Component} from 'react'
 import {Icon, Fab} from 'native-base'
-import {View, StatusBar, KeyboardAvoidingView, Platform} from 'react-native'
+import {ScrollView, View, StatusBar, KeyboardAvoidingView, Platform} from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
+import {fetchCurrentChat} from '../redux/currentChat'
 import {connect} from 'react-redux'
 import socket from '../redux/socketClient'
 import {showMessage} from 'react-native-flash-message'
 import CustomHeader from '../components/CustomHeader'
 import RecordAudio from './recordAudio'
 import RenderAudio from './renderAudio'
+import {placesAPI} from '../secrets'
+import axios from 'axios'
 
 class SingleChats extends Component {
   constructor(props) {
@@ -16,6 +19,7 @@ class SingleChats extends Component {
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
     this.renderBubble = this.renderBubble.bind(this)
+    this.imageRequest = this.imageRequest.bind(this)
   }
   // componentWillMount() {
   //   this.setState({
@@ -52,21 +56,67 @@ class SingleChats extends Component {
     this.props.fetchMessages(this.props.currentChat.id)
   }
 
+  async imageRequest(ref) {
+    const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
+    const image = await axios.post(url)
+    console.log('TCL: image', image)
+
+    return image
+  }
+
+  UNSAFE_componentWillUpdate(nextProps) {
+    if (nextProps.currentMeeting !== this.props.currentMeeting) {
+      const {
+        name,
+        address,
+        link,
+        location,
+        date,
+        imageRef
+      } = nextProps.currentMeeting
+      const formattedMessage = {
+        content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+          +date
+        ).toString()}`,
+        imageRef: imageRef,
+        userId: nextProps.user.id,
+        length: 10,
+        chatId: nextProps.currentChat.id
+      }
+      this.onSend(formattedMessage, true)
+    }
+  }
+
   componentWillUnmount() {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
     socket.off('loginLogoutMessage')
     socket.off('receiveMessage')
   }
 
-  async onSend(message) {
-    //Format message for input into thunk
-    const formattedMessage = {
-      content: message[0].text,
-      userId: message[0].user._id,
-      length: message[0].text.length,
-      chatId: this.props.currentChat.id,
-      audio: message[0].audio || null
+  componentDidUpdate(prevProps) {
+    if (prevProps.currentChat !== this.props.currentChat) {
+      console.log('got here')
     }
+    if (this.props.messages.length !== this.props.currentChat.messages.length) {
+      this.props.fetchCurrentChat(this.props.currentChat.id)
+    }
+  }
+
+  async onSend(message, noFormat) {
+    //Format message for input into thunk
+    let formattedMessage
+    if (noFormat) {
+      formattedMessage = message
+    } else {
+      formattedMessage = {
+        content: message[0].text,
+        userId: message[0].user._id,
+        length: message[0].text.length,
+        chatId: this.props.currentChat.id,
+        audio: message[0].audio || null
+      }
+    }
+
     //Create the message ONCE after click send but don't set to redux yet
     const newMessage = await this.props.newMessage(formattedMessage)
     //Send created message to sockets with event sendMessage
@@ -149,7 +199,8 @@ const MapDispatchToProps = dispatch => {
   return {
     fetchMessages: chatId => dispatch(fetchMessages(chatId)),
     newMessage: message => dispatch(newMessage(message)),
-    setNewMessage: message => dispatch(setNewMessage(message))
+    setNewMessage: message => dispatch(setNewMessage(message)),
+    fetchCurrentChat: chatId => dispatch(fetchCurrentChat(chatId))
   }
 }
 

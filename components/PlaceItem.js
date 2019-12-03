@@ -14,11 +14,13 @@ const PlaceItem = ({
 }) => {
   const handlePress = async () => {
     const res = await fetchDetails(place_id)
-    console.log('res', res)
-    const {geometry, name, rating} = res
+    //console.log('res in placeitem', res)
+    const {geometry, name, rating, url, photos} = res
 
+    console.log('TCL: link', url)
     const coords = [geometry.location.lat, geometry.location.lng]
-    updatePendingLocation(coords, name, description, rating)
+    const imageRef = photos[0].photo_reference
+    updatePendingLocation(coords, name, description, rating, url, imageRef)
     setTerm({term: ''})
   }
   return (

@@ -61,6 +61,7 @@ class Home extends Component {
     } 
     //console.log('HOME PROPS', this.props)
   }
+
   componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id) {
       console.log('in comp did update fmc')
@@ -73,7 +74,7 @@ class Home extends Component {
     return (
       <Container>
         <ScrollView>
-          {this.state.user.isNoob === true? (
+          {this.state.user.isNoob === true ? (
             <Dialog
               onDismiss={() => {
                 this.setState({defaultAnimationDialog: false})
@@ -98,7 +99,10 @@ class Home extends Component {
                     text="Turn off intro"
                     bordered
                     onPress={() => {
-                      this.setState({defaultAnimationDialog: false, isNoob: false})
+                      this.setState({
+                        defaultAnimationDialog: false,
+                        isNoob: false
+                      })
                     }}
                     key="button-1"
                   />
