@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-import {Text, View, StyleSheet, Image, Button} from 'react-native'
+import {Text, View, StyleSheet, Image} from 'react-native'
+import {Button} from 'native-base'
 import Spinner from '../components/Spinner'
 import {navigation} from 'react-navigation'
 import Login from './Login'
@@ -63,22 +64,21 @@ export class Entry extends Component {
             }}
           />
         </View>
-        <View style={{backgroundColor: 'black', width:'50%', margin: 30}}>
           <Button
             title="Login"
             onPress={() => {
               this.gotToLogin()
             }}
-          />
-        </View>
-        <View style={{backgroundColor: 'black', width:'50%'}}>
+            style={{backgroundColor: '#E0115F', width:'50%', margin: 30, alignSelf='center', alignItems='center'}}
+          ><Text>Login</Text> </Button>
+
           <Button
             title="Sign Up"
             onPress={() => {
               this.goToSignUp()
             }}
-          />
-        </View>
+            style={{backgroundColor: 'black', width:'50%'}}
+          ><Text>Sign Up</Text></Button>
       </View>
     )
   }
@@ -108,6 +108,9 @@ export const styles = StyleSheet.create({
     padding: 20,
     margin: 10,
     backgroundColor: '#ffffff'
+  },
+  loginStyle:{
+
   }
 })
 
