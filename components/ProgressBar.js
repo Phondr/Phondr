@@ -31,7 +31,6 @@ const ProgressBar = ({
       setCurrentProgress(progress)
     }
   }, [currentChat.messages])
- 
   return (
     <>
       <Content>

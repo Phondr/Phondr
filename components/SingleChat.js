@@ -1,6 +1,12 @@
 import React, {Component} from 'react'
 import {Icon, Fab} from 'native-base'
-import {ScrollView, View, StatusBar, KeyboardAvoidingView, Platform} from 'react-native'
+import {
+  ScrollView,
+  View,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {fetchCurrentChat} from '../redux/currentChat'
@@ -16,6 +22,8 @@ import ChatBubbleWithReply from '../components/ChatBubbleWithReply'
 import ReplyToFooter from '../components/ReplyToFooter'
 import {fetchMeeting} from '../redux/currentMeeting'
 import MeetingResponse from '../components/MeetingResponse'
+import {NavigationEvents} from 'react-navigation'
+import ChatEvent from '../components/ChatEvent'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
@@ -27,6 +35,9 @@ class SingleChats extends Component {
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
     this.renderBubble = this.renderBubble.bind(this)
     this.closeDialog = this.closeDialog.bind(this)
+    this.sendMeeting = this.sendMeeting.bind(this)
+    //this.renderChatFooter = this.renderChatFooter.bind(this)
+    //this.renderBubble = this.renderBubble.bind(this)
   }
   // componentWillMount() {
   //   this.setState({
@@ -130,6 +141,56 @@ class SingleChats extends Component {
   //   }
   // }
 
+  sendMeeting() {
+    console.log(
+      'outside send meeting',
+      this.props.navigation.getParam('created')
+    )
+    if (this.props.navigation.getParam('created')) {
+      const {
+        name,
+        address,
+        link,
+        location,
+        date,
+        imageRef,
+        id
+      } = this.props.currentMeeting
+      const formattedMessage = {
+        content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+          +date
+        ).toString()}++++Long press this message to respond.`,
+        imageRef: imageRef,
+        meetingId: id,
+        userId: this.props.user.id,
+        length: 10,
+        chatId: this.props.currentChat.id
+      }
+      console.log('formatted message inside sendmeeting', formattedMessage)
+      this.onSend(formattedMessage, true)
+      this.props.navigation.setParams({created: false})
+    }
+  }
+
+  // async renderBubble(props) {
+  //   // if (this.props.currentMeeting) {
+  //   //   console.log('props current meeting', this.props.currentMeeting)
+  //   // }
+  //   // if (
+  //   //   props.currentMessage.text.includes('New Invitation To Meet!') &&
+  //   //   this.props.currentMeeting.name
+  //   // ) {
+  //   //   console.log('inside conditional preview link')
+  //   //   return <PreviewLink currentMeeting={this.props.currentMeeting} />
+  //   // }
+  //   // console.log('rendering bubble')
+  //   let image = ''
+  //   if (this.props.currentMeeting && this.props.currentMeeting.name) {
+  //     image = this.imageRequest(this.props.currentMeeting.imageRef)
+  //     props.currentMessage.image = image
+  //   }
+  // }
+
   componentWillUnmount() {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
     socket.off('loginLogoutMessage')
@@ -184,15 +245,17 @@ class SingleChats extends Component {
   }
 
   renderBubble(props) {
-    if (props.currentMessage.audio) {//Render the play audio icon if the message has audio along with the timestamp
+    if (props.currentMessage.audio) {
+      //Render the play audio icon if the message has audio along with the timestamp
       return (
-        <View> 
+        <View>
           <RenderAudio message={props.currentMessage} user={this.props.user} />
           <Bubble {...props} />
         </View>
       )
     }
-    return (//Render normal text bubble with timestamp
+    return (
+      //Render normal text bubble with timestamp
       <View>
         <Bubble {...props} />
       </View>
@@ -200,9 +263,10 @@ class SingleChats extends Component {
   }
 
   render() {
-    console.log('this.state.reply', this.state.reply, 'this.state.curMessage')
     return (
       <React.Fragment>
+        <NavigationEvents onDidFocus={this.sendMeeting} />
+
         {this.state.curMessage.user && (
           <MeetingResponse
             reply={this.state.reply}

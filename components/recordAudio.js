@@ -104,9 +104,7 @@ export default class RecordAudio extends React.Component {
   }
   render() {
     return (
-      <View
-        style={Platform.OS === 'ios' ? styles.ios : styles.android}
-      >
+      <View style={Platform.OS === 'ios' ? styles.ios : styles.android}>
         {this.state.isRecording === false ? (
           <Icon
             name="ios-mic"
@@ -130,14 +128,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
-    marginTop: Dimensions.get('window').height * 0.91,
+    marginTop: Dimensions.get('window').height * 0.82,
     marginLeft: Dimensions.get('window').width * 0.9
   },
   android: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
-    marginTop: Dimensions.get('window').height * 0.94,
+    marginTop: Dimensions.get('window').height * 0.87,
     marginLeft: Dimensions.get('window').width * 0.9
-  },
+  }
 })

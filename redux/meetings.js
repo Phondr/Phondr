@@ -29,18 +29,9 @@ export const fetchAllMeetings = userId => {
           fullName
         }
         chat{
-          progress
-            status
-            sinceCreation
+         
              id
-              messages{
-                id
-                 userId
-             }
-               users{
-                id
-                fullName
-                 }
+             
         }
        }
       }`

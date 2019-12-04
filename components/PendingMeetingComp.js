@@ -6,7 +6,7 @@ import {setChat, fetchCurrentChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
 import {fetchAllMeetings} from '../redux/meetings'
 
-const ActiveMeetingComp = ({
+const PendingMeetingComp = ({
   user,
   meetings,
   fetchAllMeetings,
@@ -14,7 +14,7 @@ const ActiveMeetingComp = ({
   setChat,
   fetchCurrentChat
 }) => {
-  const active = meetings.filter(meeting => meeting.status === 'active')
+  const pending = meetings.filter(meeting => meeting.status === 'pending')
 
   // useEffect(() => {
   //   navigation.addListener('didFocus', () => {
@@ -34,10 +34,10 @@ const ActiveMeetingComp = ({
         }}
       />
       <CardItem header>
-        <Text>Active Meetings</Text>
+        <Text>Pending Meetings</Text>
       </CardItem>
 
-      {active.map(cur => {
+      {pending.map(cur => {
         return (
           <CardItem
             button
@@ -79,5 +79,5 @@ export default withNavigation(
     fetchAllMeetings,
     setChat,
     fetchCurrentChat
-  })(ActiveMeetingComp)
+  })(PendingMeetingComp)
 )

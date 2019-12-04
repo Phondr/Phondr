@@ -68,7 +68,9 @@ const PendingChats = ({myChats, user, deleteChat}) => {
             <Left>
               <Icon name="ellipsis1" type="AntDesign" />
             </Left>
-            <Text>Pending Chat Created:   {cur.sinceCreation%60 || 0} min. ago</Text>
+            <Text>
+              Pending Chat Created: {cur.sinceCreation % 60 || 0} min. ago
+            </Text>
           </CardItem>
         )
       })}
