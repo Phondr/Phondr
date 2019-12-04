@@ -97,19 +97,15 @@ export class Signup extends Component {
     drawerLabel: () => null
   }
 
-  componentDidUpdate() {
-    const user = this.props.user
-    if (this.props.user.id) {
-      this.props.navigation.navigate('Home', {user})
-    }
-  }
-
   async signup() {
     const values = this._form.getValue()
     const preferences = this.state.preferences
+    const user = {values, preferences}
     //console.log(values)
     try {
-      await this.props.addUser(values, preferences)
+      //send to camera with
+      //await this.props.addUser(values, preferences)
+      this.props.navigation.navigate('LoginCamera', {user})
     } catch (error) {
       alert('COULD NOT SIGNUP')
       console.log(error)
@@ -204,7 +200,7 @@ export class Signup extends Component {
 
           {/* <CameraComponent /> */}
           <TouchableOpacity style={styles.submitButton} onPress={this.signup}>
-            <Text style={styles.submitButtonText}>Sign Up</Text>
+            <Text style={styles.submitButtonText}>Proceed to Photo</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

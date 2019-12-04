@@ -38,6 +38,7 @@ import PendingMeetings from './screens/PendingMeetings'
 import UserProfileEdit from './screens/UserProfileEdit'
 import Spinner from './components/Spinner'
 import MapV from './components/MapView'
+import LoginCamera from './screens/LoginCamera'
 
 const {url} = require('./secrets')
 import PlaceSearch from './components/PlaceSearch'
@@ -74,6 +75,9 @@ var drawer = createDrawerNavigator(
     },
     Signup: {
       screen: Signup
+    },
+    LoginCamera: {
+      screen: LoginCamera
     },
     Entry: {
       screen: Entry

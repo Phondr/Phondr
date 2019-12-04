@@ -200,7 +200,8 @@ const rootMutation = new GraphQLObjectType({
         iAm: {type: GraphQLString},
         age: {type: GraphQLInt},
         distPref: {type: GraphQLInt},
-        iPrefer: {type: new GraphQLList(GraphQLString)}
+        iPrefer: {type: new GraphQLList(GraphQLString)},
+        profilePicture: {type: GraphQLString}
       },
       async resolve(parent, args) {
         console.log('ARGS', args)
@@ -212,7 +213,8 @@ const rootMutation = new GraphQLObjectType({
           iAm: args.iAm,
           age: args.age,
           iPrefer: args.iPrefer,
-          distPref: args.distPref
+          distPref: args.distPref,
+          profilePicture: args.profilePicture
         })
 
         console.log('CREATED USER', data)
