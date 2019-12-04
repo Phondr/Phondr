@@ -1,5 +1,5 @@
 import React, {Component, useState, useEffect} from 'react'
-import {Text, StyleSheet, View, ScrollView} from 'react-native'
+import {Text, StyleSheet,  ScrollView} from 'react-native'
 import {
   Container,
   Content,
@@ -7,6 +7,7 @@ import {
   Icon,
   Card,
   CardItem,
+  View,
   Body,
   Form
 } from 'native-base'
@@ -15,7 +16,7 @@ import Modal from 'react-native-modal'
 import MapView, {Marker, Callout, PROVIDER_GOOGLE} from 'react-native-maps'
 import {connect} from 'react-redux'
 import CustomDatePicker from '../components/CustomDatePicker'
-import colors from '../util'
+import {colors} from '../util'
 import {placesAPI} from '../secrets'
 import {updatePendingLocation} from '../redux/invitation'
 import {createMeeting} from '../redux/currentMeeting'
@@ -170,15 +171,17 @@ const MeetingModal = ({
     //   onBackdropPress={() => {}}
     // >
 
-    <Container style={{backgroundColor: "#2a3439"}}>
+    <Container style={{backgroundColor: '#2a3439'}}>
       <CustomHeader title="Meeting" />
       <Content contentContainerStyle={{marginTop: 20}}>
         <PlaceSearch />
-        <View>
+        <View style={{marginBottom: 30}}>
           {invitation.name && (
             <Card>
-              <CardItem>
-                <Text>Selected: {invitation.address}</Text>
+              <CardItem style={{backgroundColor: '#D3212D'}}>
+                <Text style={{color: 'white'}}>
+                  Selected: {invitation.address}
+                </Text>
               </CardItem>
             </Card>
           )}
@@ -235,29 +238,35 @@ const MeetingModal = ({
             </MapView>
           )}
         </View>
-
         <CustomDatePicker />
-
         {!!invitation.date && (
           <Card>
-            <CardItem>
-              <Text>
+            <CardItem style={{backgroundColor: '#D3212D'}}>
+              <Text style={{color: 'white'}}>
                 Chosen Date: {invitation.date.toString().substr(4, 12)}
               </Text>
             </CardItem>
           </Card>
         )}
-        {!!invitation.date && !!invitation.name ? (
-          <Button
-            onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
-          >
-            <Text style={{color:'red'}} >Send</Text>
-          </Button>
-        ) : (
-          <Button disabled bordered>
-            <Text style={{color:'red'}}>Send</Text>
-          </Button>
-        )}
+        <View style={{alignItems:'center'}}>
+          {!!invitation.date && !!invitation.name ? (
+            <Button
+              onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
+              style={{
+                marginTop: 10,
+                backgroundColor: '#D3212D',
+              }}
+            >
+              <Text style={{color: 'white', backgroundColor: '#D3212D', width:'100%', textAlign:'center'}}>
+                Send
+              </Text>
+            </Button>
+          ) : (
+            <Button disabled bordered style={{marginTop: 10}}>
+              <Text style={{color: 'white', width:'100%', textAlign:'center'}}>Send</Text>
+            </Button>
+          )}
+        </View>
       </Content>
     </Container>
     // </Modal>

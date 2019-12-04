@@ -167,8 +167,6 @@ class SingleChats extends Component {
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
           currentChat={this.props.currentChat}
         />
-
-
         <RecordAudio
           onSend={this.onSend}
           user={this.props.user}
@@ -191,9 +189,9 @@ class SingleChats extends Component {
           rounded
           style={{
             backgroundColor: '#E0115F',
-            position:'absolute',
+            position: 'absolute',
             marginTop: 595,
-            marginLeft:260
+            marginLeft: 260
           }}
           onPress={() => this.props.navigation.navigate('MeetingModal')}
         >
