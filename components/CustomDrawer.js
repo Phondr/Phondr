@@ -1,6 +1,6 @@
-import {Platform, StatusBar, StyleSheet, View, Text, Image} from 'react-native'
+import {Platform, StatusBar, StyleSheet, Image} from 'react-native'
 import React, {useState} from 'react'
-import {Container, Content, Header, Body, Drawer} from 'native-base'
+import {Container, Content} from 'native-base'
 import {DrawerItems} from 'react-navigation'
 
 const CustomDrawer = props => {
