@@ -102,33 +102,33 @@ class SingleChats extends Component {
   //     this.onSend(formattedMessage, true)
   //   }
   // }
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.currentMeeting !== this.props.currentMeeting &&
-      this.props.navigation.getParam('created', 'none') === true
-    ) {
-      const {
-        name,
-        address,
-        link,
-        location,
-        date,
-        imageRef,
-        id
-      } = this.props.currentMeeting
-      const formattedMessage = {
-        content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
-          +date
-        ).toString()}++++Long press this message to respond.`,
-        imageRef: imageRef,
-        meetingId: id,
-        userId: this.props.user.id,
-        length: 10,
-        chatId: this.props.currentChat.id
-      }
-      this.onSend(formattedMessage, true)
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (
+  //     prevProps.currentMeeting !== this.props.currentMeeting &&
+  //     this.props.navigation.getParam('created', 'none') === true
+  //   ) {
+  //     const {
+  //       name,
+  //       address,
+  //       link,
+  //       location,
+  //       date,
+  //       imageRef,
+  //       id
+  //     } = this.props.currentMeeting
+  //     const formattedMessage = {
+  //       content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+  //         +date
+  //       ).toString()}++++Long press this message to respond.`,
+  //       imageRef: imageRef,
+  //       meetingId: id,
+  //       userId: this.props.user.id,
+  //       length: 10,
+  //       chatId: this.props.currentChat.id
+  //     }
+  //     this.onSend(formattedMessage, true)
+  //   }
+  // }
 
   componentWillUnmount() {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
