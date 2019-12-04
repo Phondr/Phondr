@@ -20,16 +20,6 @@ export class Entry extends Component {
     // if (user) {
     //   await this.props.setUser(user)
     //   this.props.navigation.navigate('Home', {user})
-    // if (user !== null) {
-    //   if (this.state.user === '') {
-    //     this.setState({user}) //Sets user if user was previously logged in through asyncStorage
-    //   }
-    //   if (this.state.user !== '') {
-    //     this.props.setUser(user)
-    //     this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
-    //   }
-
-    console.log('USER', user)
     if (user !== null) {
       if (this.state.user === '') {
         this.setState({user}) //Sets user if user was previously logged in through asyncStorage
@@ -64,10 +54,7 @@ export class Entry extends Component {
         <View style={styles.title}>
           <Image
             style={styles.phonderimage}
-            source={{
-              uri:
-                'https://github.com/Phondr/Phondr/blob/login/assets/images/PhondrLogos/PhondrLarge.png?raw=true'
-            }}
+            source={require('../assets/images/PhondrLogos/PhondrLarge-removebg-preview.png')}
           />
         </View>
         <Button

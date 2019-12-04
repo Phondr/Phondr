@@ -29,8 +29,10 @@ export const fetchMessages = chatId => {
               _id: id,
               text: content,
               length,
+              audio,
               image:imageRef,
               createdAt,
+              meetingId,
               userId,
               chatId,
               user {
@@ -70,14 +72,18 @@ export const newMessage = message => {
   return async dispatch => {
     try {
       const imageRef = message.imageRef || ''
+      const meetingId = message.meetingId || 0
+      console.log('meeting id', meetingId)
       const {data} = await axios.post(url + '/graphql', {
         query: `
           mutation{
-            newMessage(content: "${message.content}",imageRef:"${imageRef}" length: ${message.length}, userId: ${message.userId}, chatId: ${message.chatId}) {
+            newMessage(content: "${message.content}", length: ${message.length}, userId: ${message.userId}, chatId: ${message.chatId}, ${message.audio ? `audio: "${message.audio}"`: ''}, imageRef:"${imageRef}", meetingId:${meetingId}) {
               _id: id,
               text: content,
               createdAt,
               length,
+              audio,
+              meetingId,
               image: imageRef,
               userId,
               chatId,
@@ -95,6 +101,7 @@ export const newMessage = message => {
       //   data.data.newMessage.image = googleImage
       // }
       //Format into readable date by gifted chat
+      console.log('data.data.newMessage', data.data.newMessage)
       if (data.data.newMessage.text.includes('++New Invitation To Meet!')) {
         data.data.newMessage.text = data.data.newMessage.text
           .split('++')
