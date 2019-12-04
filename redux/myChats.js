@@ -86,7 +86,6 @@ export const fetchMyChats = uid => {
              `
       })
 
-      console.log('TCL: data.data.myChats', data.data.myChats)
       dispatch(getMyChats(data.data.myChats))
     } catch (e) {
       console.error('messed up in fetchMyChats, error: ', e)

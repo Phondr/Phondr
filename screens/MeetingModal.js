@@ -128,7 +128,7 @@ const MeetingModal = ({
 
   const submitMeeting = (chatId, userId, inv) => {
     createMeeting(chatId, userId, inv)
-    navigation.navigate('SingleChat')
+    navigation.navigate('SingleChat', {created: true})
   }
   useEffect(() => {
     setLocation()
