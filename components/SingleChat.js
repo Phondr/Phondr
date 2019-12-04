@@ -24,7 +24,7 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native'
-import {GiftedChat, Bubble} from 'react-native-gifted-chat'
+import {GiftedChat, Bubble, Message} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {fetchCurrentChat} from '../redux/currentChat'
 import {connect} from 'react-redux'
@@ -34,12 +34,21 @@ import CustomHeader from '../components/CustomHeader'
 import PreviewLink from '../components/PreviewLink'
 import {placesAPI} from '../secrets'
 import axios from 'axios'
+import ChatBubbleWithReply from '../components/ChatBubbleWithReply'
+import ReplyToFooter from '../components/ReplyToFooter'
+import {fetchMeeting} from '../redux/currentMeeting'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      reply: false,
+      accepted: false
+    }
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
     this.imageRequest = this.imageRequest.bind(this)
+    this.closeFooter = this.closeFooter.bind(this)
+    this.renderChatFooter = this.renderChatFooter.bind(this)
     //this.renderBubble = this.renderBubble.bind(this)
   }
   // componentWillMount() {
@@ -86,20 +95,27 @@ class SingleChats extends Component {
   }
 
   UNSAFE_componentWillUpdate(nextProps) {
-    if (nextProps.currentMeeting !== this.props.currentMeeting) {
+    if (!this.props.currentMeeting.id) {
+      this.props.fetchMeeting(this.props.currentChat.id)
+    } else if (
+      nextProps.currentMeeting !== this.props.currentMeeting &&
+      this.props.navigation.getParam('created', 'none') === true
+    ) {
       const {
         name,
         address,
         link,
         location,
         date,
-        imageRef
+        imageRef,
+        id
       } = nextProps.currentMeeting
       const formattedMessage = {
         content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
           +date
         ).toString()}`,
         imageRef: imageRef,
+        meetingId: id,
         userId: nextProps.user.id,
         length: 10,
         chatId: nextProps.currentChat.id
@@ -140,8 +156,43 @@ class SingleChats extends Component {
       console.log('got here')
     }
     if (this.props.messages.length !== this.props.currentChat.messages.length) {
+      console.log('how many times is this running')
       this.props.fetchCurrentChat(this.props.currentChat.id)
     }
+
+    if (this.props.messages && this.props.messages.length) {
+      console.log('this.props.messages', this.props.messages[0])
+    }
+    console.log('props messages[0]', this.props.messages[0])
+    if (
+      this.props.currentMeeting.status === 'pending' &&
+      !this.state.reply &&
+      this.props.messages &&
+      this.props.messages.length &&
+      this.props.messages[0].text.includes('New Invitation To Meet!') &&
+      this.props.user.id === this.props.messages[0].user._id
+    ) {
+      console.log('props messages[0]', this.props.messages[0])
+      this.setState({reply: true})
+    }
+  }
+
+  renderChatFooter(message) {
+    if (this.state.reply) {
+      console.log('message inside of renderChatFooter', this.props.messages[0])
+      return (
+        <ReplyToFooter
+          reply_to={this.props.messages[0].user.name}
+          closeFooter={this.closeFooter}
+          meetingId={this.props.messages[0].meetingId}
+        />
+      )
+    }
+    return null
+  }
+
+  closeFooter() {
+    this.setState({reply: false})
   }
 
   async onSend(message, noFormat) {
@@ -172,6 +223,7 @@ class SingleChats extends Component {
   }
 
   render() {
+    console.log('this.state.reply', this.state.reply)
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
@@ -192,6 +244,7 @@ class SingleChats extends Component {
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
+          renderChatFooter={this.renderChatFooter}
           user={{
             _id: this.props.user.id,
             name: this.props.user.fullName
@@ -219,7 +272,8 @@ const MapDispatchToProps = dispatch => {
     fetchMessages: chatId => dispatch(fetchMessages(chatId)),
     newMessage: message => dispatch(newMessage(message)),
     setNewMessage: message => dispatch(setNewMessage(message)),
-    fetchCurrentChat: chatId => dispatch(fetchCurrentChat(chatId))
+    fetchCurrentChat: chatId => dispatch(fetchCurrentChat(chatId)),
+    fetchMeeting: chatId => dispatch(fetchMeeting(chatId))
   }
 }
 

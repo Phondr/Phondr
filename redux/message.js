@@ -31,6 +31,7 @@ export const fetchMessages = chatId => {
               length,
               image:imageRef,
               createdAt,
+              meetingId,
               userId,
               chatId,
               user {
@@ -70,14 +71,17 @@ export const newMessage = message => {
   return async dispatch => {
     try {
       const imageRef = message.imageRef || ''
+      const meetingId = message.meetingId || 0
+      console.log('meeting id', meetingId)
       const {data} = await axios.post(url + '/graphql', {
         query: `
           mutation{
-            newMessage(content: "${message.content}",imageRef:"${imageRef}" length: ${message.length}, userId: ${message.userId}, chatId: ${message.chatId}) {
+            newMessage(meetingId:${meetingId},content: "${message.content}",imageRef:"${imageRef}" length: ${message.length}, userId: ${message.userId}, chatId: ${message.chatId}) {
               _id: id,
               text: content,
               createdAt,
               length,
+              meetingId,
               image: imageRef,
               userId,
               chatId,
