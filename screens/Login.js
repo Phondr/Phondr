@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {
   Text,
-  View,
   StyleSheet,
   Button,
   TouchableOpacity,
@@ -11,6 +10,7 @@ import {
   Dimensions,
   ScrollView
 } from 'react-native'
+import {View} from 'native-base'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
 import {fetchUserLogin} from '../redux/user'
@@ -103,10 +103,15 @@ export class Login extends Component {
                 }
               }}
             />
-            <Form ref={c => (this._form = c)} type={User} options={options} />
-            <TouchableOpacity onPress={this.login} style={styles.submitButton}>
-              <Text style={styles.submitButtonText}>Login</Text>
-            </TouchableOpacity>
+            <View style={{color:'white'}}>
+              <Form ref={c => (this._form = c)} type={User} options={options} />
+              <TouchableOpacity
+                onPress={this.login}
+                style={styles.submitButton}
+              >
+                <Text style={styles.submitButtonText}>Login</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </TouchableWithoutFeedback>
         <View style={{alignItems: 'center', backgroundColor: '#343434'}}>
