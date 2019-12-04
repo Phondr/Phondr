@@ -125,7 +125,6 @@ class Home extends Component {
               </DialogContent>
             </Dialog>
           ) : null}
-
           <StatusBar barStyle="light-content" />
           <CustomHeader title="Home" />
           <Content

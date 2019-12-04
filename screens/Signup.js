@@ -221,14 +221,10 @@ export const styles = StyleSheet.create({
     backgroundColor: '#343434'
   },
   checkboxcontainer: {
-    alignSelf: 'flex-end',
+    // alignSelf: 'flex-end',
     backgroundColor: '#F5FCFF',
     flex: 1,
     margin: 10
-  },
-  logintext: {
-    margin: 2,
-    fontSize: 30
   },
   formcontainer: {
     justifyContent: 'center',
@@ -239,7 +235,6 @@ export const styles = StyleSheet.create({
     backgroundColor: 'black',
     padding: 10,
     margin: 15,
-    // alignItems: 'center',
     height: 40
   },
   submitButtonText: {
