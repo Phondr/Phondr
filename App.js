@@ -82,19 +82,19 @@ var drawer = createDrawerNavigator(
       screen: SignOut
     },
 
-    MeetingModal: {
-      screen: MeetingModal
-    },
-    UserProfileEdit: {
+    // MeetingModal: {
+    //   screen: MeetingModal
+    // },
+    'UserProfileEdit': {
       screen: UserProfileEdit
     },
-    Login: {
+    'Login': {
       screen: Login
     },
-    Signup: {
+    'Signup': {
       screen: Signup
     },
-    Entry: {
+    'Entry': {
       screen: Entry
     },
   },
