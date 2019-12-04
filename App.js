@@ -46,6 +46,7 @@ import TabBarIcon from './components/TabBarIcon'
 const {url} = require('./secrets')
 import PlaceSearch from './components/PlaceSearch'
 import MeetingModal from './screens/MeetingModal'
+import ActiveMeetingScreen from './screens/ActiveMeetingScreen'
 
 const ActiveScreenStack = createStackNavigator(
   {
@@ -75,8 +76,30 @@ const ActiveScreenStack = createStackNavigator(
     }
   }
 )
+const ActiveMeetingStack = createStackNavigator(
+  {
+    ActiveMeetingScreen: {
+      screen: ActiveMeetingScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    SingleChat: {
+      screen: SingleChat,
+      navigationOptions: {
+        header: null
+      }
+    }
+  },
+  {
+    navigationOptions: {
+      tabBarLabel: 'Active',
+      tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />
+    }
+  }
+)
 
-const ChatTopTab = createBottomTabNavigator(
+const ChatBottomTab = createBottomTabNavigator(
   {
     Active: {screen: ActiveScreenStack},
     Pending: {screen: PendingScreen}
@@ -92,6 +115,29 @@ const ChatTopTab = createBottomTabNavigator(
           <Icon
             name="chat"
             type={'Entypo'}
+            style={{fontSize: 24, color: tintColor}}
+          ></Icon>
+        )
+      }
+    }
+  }
+)
+const MeetingBottomTab = createBottomTabNavigator(
+  {
+    Active: {screen: ActiveMeetingStack},
+    Pending: {screen: PendingScreen}
+  },
+  {
+    tabBarOptions: {
+      style: {paddingBottom: 5},
+      labelStyle: {fontSize: 12}
+    },
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => {
+        return (
+          <Icon
+            name="place"
+            type={'MaterialIcons'}
             style={{fontSize: 24, color: tintColor}}
           ></Icon>
         )
@@ -133,7 +179,10 @@ var drawer = createDrawerNavigator(
       screen: ActiveScreenStack
     },
     Chats: {
-      screen: ChatTopTab
+      screen: ChatBottomTab
+    },
+    Meetings: {
+      screen: MeetingBottomTab
     },
     'Sign Out': {
       screen: SignOut

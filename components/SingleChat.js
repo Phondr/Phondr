@@ -75,6 +75,10 @@ class SingleChats extends Component {
   }
 
   componentDidMount() {
+    //this is necessary for users being sent from meetings
+    // if (!this.props.currentChat.users) {
+    //   this.props.fetchCurrentChat(this.props.currentChat.id)
+    // }
     socket.emit('subscribe-to-chat', {chatId: this.props.currentChat.id})
     socket.on('loginLogoutMessage', ({message}) => {
       showMessage({message, type: 'info', duration: 2500, icon: 'info'})

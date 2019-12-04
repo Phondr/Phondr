@@ -94,7 +94,9 @@ const MeetingType = new GraphQLObjectType({
     chatId: {type: GraphQLInt},
     senderId: {type: GraphQLInt},
     id: {type: GraphQLInt},
-    status: {type: GraphQLString}
+    status: {type: GraphQLString},
+    chat: {type: ChatType},
+    users: {type: new GraphQLList(UserType)}
   })
 })
 
@@ -227,6 +229,48 @@ const rootQuery = new GraphQLObjectType({
             }
           })
           return meeting
+        } catch (error) {
+          console.error('in newMeeting route: ', error)
+        }
+      }
+    },
+    getAllMeetings: {
+      type: new GraphQLList(MeetingType),
+      args: {
+        userId: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        try {
+          let user = await db.models.user.findByPk(args.userId, {
+            include: [db.models.meeting]
+          })
+          console.log('user prototype', db.models.user.prototype)
+          const meetings = await user.getMeetings({
+            include: [
+              {model: db.models.user},
+              {
+                model: db.models.chat,
+                include: [{model: db.models.user}, {model: db.models.message}]
+              }
+            ]
+          })
+          console.log('meetings in getAllMeetings', meetings)
+          return meetings
+          // console.log('TCL: user', user)
+          // const chats = await user.getChats({
+          //   include: [
+          //     {model: db.models.user},
+          //     {model: db.models.message},
+          //     {model: db.models.meeting, include: [db.models.chat]}
+          //   ]
+          // })
+          // const meetingsArray = chats.reduce((accum, cur) => {
+          //   if (cur.meetings) {
+          //     accum = [...accum, cur.meetings]
+          //   }
+          //   return accum
+          // }, [])
+          // return meetingsArray
         } catch (error) {
           console.error('in newMeeting route: ', error)
         }
@@ -448,39 +492,6 @@ const rootMutation = new GraphQLObjectType({
           const meeting = await db.models.meeting.findByPk(args.meetingId)
           const updated = await meeting.update({status: args.status})
           return updated
-        } catch (error) {
-          console.error('in newMeeting route: ', error)
-        }
-      }
-    },
-    getAllMeetings: {
-      type: MeetingType,
-      args: {
-        userId: {type: GraphQLInt}
-      },
-      async resolve(parent, args) {
-        try {
-          let user = await db.models.user.findByPk(args.userId, {
-            include: [db.models.meeting]
-          })
-          console.log('user prototype', db.models.user.prototype)
-          const meetings = await user.getMeetings()
-          return meetings
-          // console.log('TCL: user', user)
-          // const chats = await user.getChats({
-          //   include: [
-          //     {model: db.models.user},
-          //     {model: db.models.message},
-          //     {model: db.models.meeting, include: [db.models.chat]}
-          //   ]
-          // })
-          // const meetingsArray = chats.reduce((accum, cur) => {
-          //   if (cur.meetings) {
-          //     accum = [...accum, cur.meetings]
-          //   }
-          //   return accum
-          // }, [])
-          // return meetingsArray
         } catch (error) {
           console.error('in newMeeting route: ', error)
         }

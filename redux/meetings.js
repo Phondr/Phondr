@@ -7,6 +7,7 @@ const setAllMeetings = meetings => {
 }
 
 export const fetchAllMeetings = userId => {
+  console.log('in fetchAllMeetings', userId)
   return async dispatch => {
     try {
       const {data} = await axios.post(`${url}/graphql`, {
@@ -23,9 +24,28 @@ export const fetchAllMeetings = userId => {
         senderId
         id
         status
+        users{
+          id
+          fullName
+        }
+        chat{
+          progress
+            status
+            sinceCreation
+             id
+              messages{
+                id
+                 userId
+             }
+               users{
+                id
+                fullName
+                 }
+        }
        }
       }`
       })
+      console.log('meeting data', data.data.getAllMeetings)
       dispatch(setAllMeetings(data.data.getAllMeetings))
     } catch (error) {
       console.error('messed up in fetchAllMeetings: ', error)

@@ -3,16 +3,17 @@ import {connect} from 'react-redux'
 import {Icon, Left, Card, CardItem, Text, Container, Content} from 'native-base'
 import {ScrollView, Platform} from 'react-native'
 import CustomHeader from '../components/CustomHeader'
-import {withNavigation} from 'react-navigation'
-import ActiveComp from '../components/ActiveComp'
+
+import ActiveMeetingComp from '../components/ActiveMeetingComp'
 import TabBarIcon from '../components/TabBarIcon'
+import {withNavigation, NavigationEvents} from 'react-navigation'
 import {fetchAllMeetings} from '../redux/meetings'
 class ActiveScreen extends React.Component {
   constructor() {
     super()
   }
   componentDidMount() {
-    this.props.fetchMeetings(this.props.user.id)
+    this.props.fetchAllMeetings(this.props.user.id)
   }
   static navigationOptions = {
     drawerIcon: ({tintColor}) => {
@@ -20,15 +21,20 @@ class ActiveScreen extends React.Component {
     }
   }
   render() {
-    const {meetings} = this.props
-    const {myChats, navigation} = this.props
+    const {meetings, navigation} = this.props
+
     return (
       <Container>
+        {/* <NavigationEvents
+        onWillFocus={payload => {
+          fetchAllMeetings(user.id)
+        }}
+      /> */}
         <ScrollView>
-          <CustomHeader title="Active Chats" />
+          <CustomHeader title="Active Meetings" />
           <Content>
             {meetings.length ? (
-              <ActiveComp preview={true} />
+              <ActiveMeetingComp />
             ) : (
               <Card>
                 <CardItem>
