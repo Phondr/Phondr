@@ -29,6 +29,7 @@ export const fetchMessages = chatId => {
               _id: id,
               text: content,
               length,
+              audio,
               image:imageRef,
               createdAt,
               userId,
@@ -73,11 +74,12 @@ export const newMessage = message => {
       const {data} = await axios.post(url + '/graphql', {
         query: `
           mutation{
-            newMessage(content: "${message.content}",imageRef:"${imageRef}" length: ${message.length}, userId: ${message.userId}, chatId: ${message.chatId}) {
+            newMessage(content: "${message.content}", length: ${message.length}, userId: ${message.userId}, chatId: ${message.chatId}, ${message.audio ? `audio: "${message.audio}"`: ''}, imageRef:"${imageRef}") {
               _id: id,
               text: content,
               createdAt,
               length,
+              audio,
               image: imageRef,
               userId,
               chatId,

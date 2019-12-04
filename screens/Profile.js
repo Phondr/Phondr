@@ -38,7 +38,7 @@ export class Profile extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if (prevProps.user !== this.props.user) {
+    if (prevProps.user !== this.props.user && this.props.user.id) {
       try {
         await this.props.getUser()
       } catch (error) {

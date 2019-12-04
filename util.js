@@ -2,6 +2,7 @@ export const calcProgress = chat => {
   const messages = chat.messages
   let sum = 0
   let userIds = []
+  if(!messages) {return 0} //For newly created active chats, make it 0 progress because there are no initial messages
   messages.forEach(cur => {
     if (!userIds.length) {
       userIds.push(cur.userId)

@@ -60,6 +60,7 @@ const MessageType = new GraphQLObjectType({
     id: {type: GraphQLInt},
     content: {type: GraphQLString},
     length: {type: GraphQLInt},
+    audio: {type: GraphQLString},
     imageRef: {type: GraphQLString},
     userId: {type: GraphQLInt},
     chatId: {type: GraphQLInt},
@@ -360,6 +361,7 @@ const rootMutation = new GraphQLObjectType({
       args: {
         content: {type: GraphQLString},
         length: {type: GraphQLInt},
+        audio: {type: GraphQLString},
         imageRef: {type: GraphQLString},
         userId: {type: GraphQLInt},
         chatId: {type: GraphQLInt}

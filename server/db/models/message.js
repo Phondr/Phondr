@@ -23,7 +23,11 @@ const Message = db.define('message', {
   length: {
     type: Sequelize.INTEGER
     // allowNull: false,
-  }
+  },
+  audio: {
+    type: Sequelize.STRING,
+    defaultValue: null,
+  },
 })
 
 const imageRequest = async ref => {

@@ -20,16 +20,6 @@ export class Entry extends Component {
     // if (user) {
     //   await this.props.setUser(user)
     //   this.props.navigation.navigate('Home', {user})
-    // if (user !== null) {
-    //   if (this.state.user === '') {
-    //     this.setState({user}) //Sets user if user was previously logged in through asyncStorage
-    //   }
-    //   if (this.state.user !== '') {
-    //     this.props.setUser(user)
-    //     this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
-    //   }
-
-    console.log('USER', user)
     if (user !== null) {
       if (this.state.user === '') {
         this.setState({user}) //Sets user if user was previously logged in through asyncStorage
