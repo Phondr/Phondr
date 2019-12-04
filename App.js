@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 /* eslint-disable no-undef */
 import {AppLoading} from 'expo'
 import {Asset} from 'expo-asset'
@@ -5,15 +6,20 @@ import * as Font from 'expo-font'
 import React, {Component, useState, useEffect} from 'react'
 import {Platform, StatusBar, StyleSheet, View, Text, Image} from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
-import {createDrawerNavigator, createAppContainer} from 'react-navigation'
+import {
+  createDrawerNavigator,
+  createBottomTabNavigator,
+  createAppContainer,
+  createStackNavigator,
+  createMaterialTopTabNavigator
+} from 'react-navigation'
+
 import Home from './screens/Home'
-import {Container, Content, Header, Body, Drawer} from 'native-base'
+import {Container, Content, Header, Body, Drawer, Icon} from 'native-base'
 import drawerStyles from './styles/drawerStyle'
 import CustomDrawer from './components/CustomDrawer'
-import AnatomyExample from './components/hellowworld'
 import New from './components/route'
 import ApolloClient from 'apollo-boost'
-import {ApolloProvider} from '@apollo/react-hooks'
 import {connect, Provider} from 'react-redux'
 import store from './redux/store'
 import AppNavigator from './navigation/AppNavigator'
@@ -22,15 +28,132 @@ import Login from './screens/Login'
 import FlashMessage from 'react-native-flash-message'
 import Signup from './screens/Signup'
 import Entry from './screens/Entry'
+import SignOut from './screens/SignOut'
 import PendingScreen from './screens/PendingScreen'
 import ActiveScreen from './screens/ActiveScreen'
+import SingleChat from './components/SingleChat'
+import ActiveComponent from './components/ActiveComp'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
-
+import Profile from './screens/Profile'
+import PendingMeetings from './components/PendingMeetingComp'
+import UserProfileEdit from './screens/UserProfileEdit'
+import Spinner from './components/Spinner'
+import MapV from './components/MapView'
+import TabBarIcon from './components/TabBarIcon'
 const {url} = require('./secrets')
+import PlaceSearch from './components/PlaceSearch'
+import MeetingModal from './screens/MeetingModal'
+import ActiveMeetingScreen from './screens/ActiveMeetingScreen'
+import PendingMeetingScreen from './screens/PendingMeetingScreen'
+
+const ActiveScreenStack = createStackNavigator(
+  {
+    ActiveScreen: {
+      screen: ActiveScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    SingleChat: {
+      screen: SingleChat,
+      navigationOptions: {
+        header: null
+      }
+    },
+    MeetingModal: {
+      screen: MeetingModal,
+      navigationOptions: {
+        header: null
+      }
+    }
+  },
+  {
+    initialRouteName: 'ActiveScreen',
+    navigationOptions: {
+      tabBarLabel: 'Active',
+      tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />
+    }
+  }
+)
+const ActiveMeetingStack = createStackNavigator(
+  {
+    ActiveMeetingScreen: {
+      screen: ActiveMeetingScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    SingleChat: {
+      screen: SingleChat,
+      navigationOptions: {
+        header: null
+      }
+    }
+  },
+  {
+    initialRouteName: 'ActiveMeetingScreen',
+    navigationOptions: {
+      tabBarLabel: 'Active',
+      tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />
+    }
+  }
+)
+
+const ChatBottomTab = createBottomTabNavigator(
+  {
+    Active: {screen: ActiveScreenStack},
+    Pending: {screen: PendingScreen}
+  },
+  {
+    tabBarOptions: {
+      style: {paddingBottom: 5},
+      labelStyle: {fontSize: 12},
+      activeTintColor: 'orange'
+    },
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => {
+        return (
+          <Icon
+            name="chat"
+            type={'Entypo'}
+            style={{fontSize: 24, color: tintColor}}
+          ></Icon>
+        )
+      }
+    }
+  }
+)
+const MeetingBottomTab = createBottomTabNavigator(
+  {
+    Active: {screen: ActiveMeetingStack},
+    Pending: {screen: PendingMeetingScreen}
+  },
+  {
+    tabBarOptions: {
+      style: {paddingBottom: 5},
+      labelStyle: {fontSize: 12},
+      activeTintColor: 'orange'
+    },
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => {
+        return (
+          <Icon
+            name="place"
+            type={'MaterialIcons'}
+            style={{fontSize: 24, color: tintColor}}
+          ></Icon>
+        )
+      }
+    }
+  }
+)
 
 var drawer = createDrawerNavigator(
   {
+    Profile: {
+      screen: Profile
+    },
     Home: {
       screen: Home
     },
@@ -46,15 +169,34 @@ var drawer = createDrawerNavigator(
     Entry: {
       screen: Entry
     },
+    MapV: {
+      screen: MapV
+    },
     'Pending Chats': {
       screen: PendingScreen
     },
+    'Pending Meetings': {
+      screen: PendingMeetings
+    },
     'Active Chats': {
-      screen: ActiveScreen
+      screen: ActiveScreenStack
+    },
+    Chats: {
+      screen: ChatBottomTab
+    },
+    Meetings: {
+      screen: MeetingBottomTab
+    },
+    'Sign Out': {
+      screen: SignOut
+    },
+    UserProfileEdit: {
+      screen: UserProfileEdit
     }
+    // MeetingModal: {}
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Entry',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'
@@ -91,17 +233,15 @@ function App(props) {
   } else {
     return (
       <Provider store={store}>
-        <ApolloProvider client={apClient}>
-          <View style={styles.container}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            {/* <AppNavigator /> */}
-            {/* <AnatomyExample /> */}
-            {/* <AuthPages /> */}
-            <DrawerContainer />
-            <FlashMessage position='top'/>
-            {/* <New /> */}
-          </View>
-        </ApolloProvider>
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          {/* <AppNavigator /> */}
+          {/* <AnatomyExample /> */}
+          {/* <AuthPages /> */}
+          <DrawerContainer />
+          <FlashMessage position="top" />
+          {/* <New /> */}
+        </View>
       </Provider>
     )
   }

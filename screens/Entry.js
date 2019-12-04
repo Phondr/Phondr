@@ -1,17 +1,37 @@
 import React, {Component} from 'react'
 import {Text, View, StyleSheet, Image, Button} from 'react-native'
+import Spinner from '../components/Spinner'
 import {navigation} from 'react-navigation'
 import Login from './Login'
 import Signup from './Signup'
 import {AsyncStorage} from 'react-native'
+import {fetchUserLogin, setUser} from '../redux/user'
+import {connect} from 'react-redux'
 
 export class Entry extends Component {
+  constructor() {
+    super()
+    this.state = {user: '', loading: true}
+  }
   async componentDidMount() {
-    //const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+    const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+
+    //Current Settings
     // if (user) {
+    //   await this.props.setUser(user)
     //   this.props.navigation.navigate('Home', {user})
-    // }
-    // console.log('LOGIN VALUE', user)
+    if (user !== null) {
+      if (this.state.user === '') {
+        this.setState({user}) //Sets user if user was previously logged in through asyncStorage
+      }
+      if (this.state.user !== '') {
+        this.props.setUser(user)
+        this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
+      }
+    }
+    if (this.state.loading) {
+      this.setState({loading: false})
+    }
   }
 
   gotToLogin() {
@@ -19,7 +39,6 @@ export class Entry extends Component {
   }
 
   goToSignUp() {
-    console.log('navigate to signup')
     this.props.navigation.navigate('Signup')
   }
   static navigationOptions = {
@@ -27,15 +46,15 @@ export class Entry extends Component {
   }
 
   render() {
+    // if (this.state.loading) {
+    //   return <Spinner />
+    // }
     return (
       <View style={styles.container}>
         <View style={styles.title}>
           <Image
             style={styles.phonderimage}
-            source={{
-              uri:
-                'https://github.com/Phondr/Phondr/blob/login/assets/images/PhondrLogos/PhondrLarge.png?raw=true'
-            }}
+            source={require('../assets/images/PhondrLogos/PhondrLarge-removebg-preview.png')}
           />
         </View>
         <Button
@@ -69,18 +88,6 @@ export const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center'
   },
-  textInput: {
-    //borderBottomColor: "#CCCCCC",
-    // borderTopWidth: 1,
-    //borderBottomWidth: 1,
-    // height: 50,
-    // width: 400,
-    // fontSize: 25,
-    // paddingLeft: 10,
-    // paddingRight: 10,
-    // textAlign: "center",
-    // margin: 5
-  },
   logintext: {
     margin: 2,
     fontSize: 30
@@ -94,4 +101,4 @@ export const styles = StyleSheet.create({
   }
 })
 
-export default Entry
+export default connect(({user}) => ({user}), {fetchUserLogin, setUser})(Entry)

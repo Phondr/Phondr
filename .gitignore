@@ -10,6 +10,8 @@ npm-debug.*
 web-build/
 web-report/
 secrets.js
+**/*/secrets.js
 .vscode
 .vscode/**/*
 **/.vscode
+backend-secrets.js

@@ -1,5 +1,6 @@
 const {
   GraphQLObjectType,
+  GraphQLInputObjectType,
   GraphQLInt,
   GraphQLString,
   GraphQLBoolean,
@@ -22,53 +23,84 @@ const {User, Chat, Message, Meeting} = require('../db/models')
 const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    id: { type: GraphQLInt },
-    email: { type: GraphQLString },
-    fullName: { type: GraphQLString },
-    googleId: { type: GraphQLString },
-    gender: { type: GraphQLString },
-    age: { type: GraphQLString },
-    homeLocation: { type: new GraphQLList(GraphQLFloat) },
-    incentivePoints: { type: GraphQLInt },
-    profilePicture: { type: GraphQLString },
-    chats: { type: new GraphQLList(ChatType) },
-    messages: { type: new GraphQLList(MessageType) },
+    id: {type: GraphQLInt},
+    email: {type: GraphQLString},
+    fullName: {type: GraphQLString},
+    googleId: {type: GraphQLString},
+    gender: {type: GraphQLString},
+    age: {type: GraphQLString},
+    password: {type: GraphQLString},
+    homeLocation: {type: new GraphQLList(GraphQLFloat)},
+    incentivePoints: {type: GraphQLInt},
+    profilePicture: {type: GraphQLString},
+    chats: {type: new GraphQLList(ChatType)},
+    messages: {type: new GraphQLList(MessageType)},
     iAm: {type: GraphQLString},
     iPrefer: {type: new GraphQLList(GraphQLString)},
-    distPref: {type: GraphQLInt},
-  }),
-});
-const ChatType = new GraphQLObjectType({
-  name: 'Chat',
+    distPref: {type: GraphQLInt}
+  })
+})
+
+const InvitationType = new GraphQLInputObjectType({
+  name: 'Invitation',
   fields: () => ({
-    id: { type: GraphQLInt },
-    expirationDate: { type: GraphQLString },
-    progress: { type: GraphQLFloat },
-    status: { type: GraphQLString },
-    meeting: { type: MeetingType },
-    users: { type: new GraphQLList(UserType) },
-    sinceCreation: {type: GraphQLFloat},
-  }),
-});
+    coords: {type: new GraphQLList(GraphQLFloat)},
+    link: {type: GraphQLString},
+    imageRef: {type: GraphQLString},
+    name: {type: GraphQLString},
+    address: {type: GraphQLString},
+    rating: {type: GraphQLFloat},
+    date: {type: GraphQLString}
+  })
+})
+
 const MessageType = new GraphQLObjectType({
   name: 'Message',
   fields: () => ({
-    id: { type: GraphQLInt },
-    content: { type: GraphQLString },
-    length: { type: GraphQLInt },
-    userId: { type: GraphQLInt },
-    chatId: { type: GraphQLInt },
+    id: {type: GraphQLInt},
+    content: {type: GraphQLString},
+    length: {type: GraphQLInt},
+    audio: {type: GraphQLString},
+    imageRef: {type: GraphQLString},
+    userId: {type: GraphQLInt},
+    chatId: {type: GraphQLInt},
+    meetingId: {type: GraphQLInt},
     createdAt: {type: GraphQLString},
-    user: {type: UserType},
-  }),
-});
+    user: {type: UserType}
+  })
+})
+const ChatType = new GraphQLObjectType({
+  name: 'Chat',
+  fields: () => ({
+    id: {type: GraphQLInt},
+    expirationDate: {type: GraphQLString},
+    progress: {type: GraphQLFloat},
+    status: {type: GraphQLString},
+    meeting: {type: MeetingType},
+    users: {type: new GraphQLList(UserType)},
+    sinceCreation: {type: GraphQLFloat},
+    messages: {type: new GraphQLList(MessageType)}
+  })
+})
 const MeetingType = new GraphQLObjectType({
   name: 'Meeting',
   fields: () => ({
-    location: { type: GraphQLString },
-    date: { type: GraphQLString },
-  }),
-});
+    location: {type: new GraphQLList(GraphQLFloat)},
+    name: {type: GraphQLString},
+    link: {type: GraphQLString},
+    imageRef: {type: GraphQLString},
+    rating: {type: GraphQLFloat},
+    address: {type: GraphQLString},
+    date: {type: GraphQLString},
+    chatId: {type: GraphQLInt},
+    senderId: {type: GraphQLInt},
+    id: {type: GraphQLInt},
+    status: {type: GraphQLString},
+    chat: {type: ChatType},
+    users: {type: new GraphQLList(UserType)}
+  })
+})
+
 //Query Requests(grab information from the database)
 const rootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -78,10 +110,10 @@ const rootQuery = new GraphQLObjectType({
       type: new GraphQLList(UserType),
       async resolve(parent, args) {
         const data = await db.models.user.findAll({
-          include: [{ model: db.models.chat }, { model: db.models.message }],
-        });
-        return data;
-      },
+          include: [{model: db.models.chat}, {model: db.models.message}]
+        })
+        return data
+      }
     },
     user: {
       type: UserType,
@@ -90,9 +122,9 @@ const rootQuery = new GraphQLObjectType({
       },
       async resolve(parent, args) {
         return await db.models.user.findByPk(args.id, {
-          include: [{ model: db.models.chat }],
-        });
-      },
+          include: [{model: db.models.chat}]
+        })
+      }
     },
     userLogin: {
       type: UserType,
@@ -105,6 +137,7 @@ const rootQuery = new GraphQLObjectType({
           where: {email: args.email}
           // where: { email: args.email, password: args.password },
         })
+
         console.log('PASSWORD', args.password)
         console.log(usermodel.correctPassword(args.password))
 
@@ -123,7 +156,7 @@ const rootQuery = new GraphQLObjectType({
               password: usermodel.cryptPassword(args.password)
             }
           })
-          console.log('USER', use)
+          //console.log('USER', use)
           return use
         }
       }
@@ -137,36 +170,115 @@ const rootQuery = new GraphQLObjectType({
         try {
           let user = await db.models.user.findByPk(args.userId)
           console.log('TCL: user', user)
-          const chats = await user.getChats({include: [db.models.user]})
+          const chats = await user.getChats({
+            include: [{model: db.models.user}, {model: db.models.message}]
+          })
           console.log('TCL: chats.users', chats[0].users)
           return chats
         } catch (e) {
-          console.error(e);
+          console.error(e)
         }
-      },
+      }
     },
+    getCurrentChat: {
+      type: ChatType,
+      args: {
+        chatId: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        try {
+          console.log(args.chatId)
+          let chat = await db.models.chat.findByPk(args.chatId, {
+            include: [{model: db.models.user}, {model: db.models.message}]
+          })
+          console.log('chat', chat)
+          return chat
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    },
+
     messages: {
       type: new GraphQLList(MessageType),
       args: {
-        chatId: { type: GraphQLInt },
+        chatId: {type: GraphQLInt}
       },
       async resolve(parent, args) {
         try {
           const messages = await db.models.message.findAll({
-            where: { chatId: args.chatId },
+            where: {chatId: args.chatId},
             include: [db.models.user],
-            order: [
-              ['createdAt', 'DESC']
-            ]
-          });
-          return messages;
+            order: [['createdAt', 'DESC']]
+          })
+          return messages
         } catch (err) {
-          console.error(err);
+          console.error(err)
         }
-      },
+      }
     },
-  },
-});
+    fetchMeeting: {
+      type: MeetingType,
+      args: {
+        chatId: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        try {
+          const meeting = await db.models.meeting.findOne({
+            where: {
+              chatId: args.chatId
+            }
+          })
+          return meeting
+        } catch (error) {
+          console.error('in newMeeting route: ', error)
+        }
+      }
+    },
+    getAllMeetings: {
+      type: new GraphQLList(MeetingType),
+      args: {
+        userId: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        try {
+          let user = await db.models.user.findByPk(args.userId, {
+            include: [db.models.meeting]
+          })
+          console.log('user prototype', db.models.user.prototype)
+          const meetings = await user.getMeetings({
+            include: [
+              {model: db.models.user},
+              {
+                model: db.models.chat,
+                include: [{model: db.models.user}, {model: db.models.message}]
+              }
+            ]
+          })
+          console.log('meetings in getAllMeetings', meetings)
+          return meetings
+          // console.log('TCL: user', user)
+          // const chats = await user.getChats({
+          //   include: [
+          //     {model: db.models.user},
+          //     {model: db.models.message},
+          //     {model: db.models.meeting, include: [db.models.chat]}
+          //   ]
+          // })
+          // const meetingsArray = chats.reduce((accum, cur) => {
+          //   if (cur.meetings) {
+          //     accum = [...accum, cur.meetings]
+          //   }
+          //   return accum
+          // }, [])
+          // return meetingsArray
+        } catch (error) {
+          console.error('in newMeeting route: ', error)
+        }
+      }
+    }
+  }
+})
 
 const rootMutation = new GraphQLObjectType({
   name: 'RootMutationType',
@@ -175,18 +287,48 @@ const rootMutation = new GraphQLObjectType({
     userSignup: {
       type: UserType,
       args: {
-        email: {type: GraphQLString},
         fullName: {type: GraphQLString},
-        gender: {type: GraphQLString},
-        age: {type: GraphQLString},
-        homeLocation: {type: new GraphQLList(GraphQLFloat)},
-        profilePicture: {type: GraphQLString}
+        email: {type: GraphQLString},
+        password: {type: GraphQLString}
       },
       async resolve(parent, args) {
         console.log('ARGS', args)
-        const data = await db.models.user.create(args)
+
+        const data = await db.models.user.create({
+          fullName: args.fullName,
+          email: args.email,
+          password: args.password
+        })
+
+        console.log('CREATED USER', data)
         if (data) {
           return data
+        }
+      }
+    },
+    editUser: {
+      type: UserType,
+      args: {
+        fullName: {type: GraphQLString},
+        id: {type: GraphQLInt},
+        email: {type: GraphQLString},
+        iAm: {type: GraphQLString},
+        distPref: {type: GraphQLInt},
+        age: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        let User = await db.models.user.findByPk(args.id)
+
+        let updateduser = await User.update({
+          fullName: args.fullName,
+          email: args.email,
+          iAm: args.iAm,
+          distPref: args.distPref,
+          age: args.age
+        })
+
+        if (updateduser) {
+          return updateduser
         }
       }
     },
@@ -239,8 +381,8 @@ const rootMutation = new GraphQLObjectType({
         if (chats.length) {
           filtered = chats.filter(cur => {
             if (cur.users[0]) {
-              const to = point(user.homeLocation);
-              const from = point(cur.users[0].homeLocation);
+              const to = point(user.homeLocation)
+              const from = point(cur.users[0].homeLocation)
 
               const options = {units: 'miles'}
               // const location2 = {
@@ -251,13 +393,13 @@ const rootMutation = new GraphQLObjectType({
               //   location1,
               //   location2
               // ).human_readable()
-              const distance = turf.distance(from, to, options);
-              console.log('distance human readable', distance);
+              const distance = turf.distance(from, to, options)
+              console.log('distance human readable', distance)
               if (distance < 10100134 && !cur.users.includes(user)) {
-                return cur;
+                return cur
               }
             }
-          });
+          })
         }
         if (filtered.length) {
           chosen = filtered[Math.floor(Math.random() * filtered.length)]
@@ -272,33 +414,97 @@ const rootMutation = new GraphQLObjectType({
         }
         console.log('TCL: chosen', chosen)
 
-        await user.addChat(chosen);
+        await user.addChat(chosen)
         const updated = await db.models.chat.findByPk(chosen.id, {
-          include: [db.models.user],
-        });
-        return updated;
-      },
+          include: [db.models.user]
+        })
+        return updated
+      }
     },
     newMessage: {
       type: MessageType,
       args: {
-        content: { type: GraphQLString },
-        length: { type: GraphQLInt },
-        userId: { type: GraphQLInt },
-        chatId: { type: GraphQLInt },
+        content: {type: GraphQLString},
+        length: {type: GraphQLInt},
+        audio: {type: GraphQLString},
+        imageRef: {type: GraphQLString},
+        userId: {type: GraphQLInt},
+        chatId: {type: GraphQLInt},
+        meetingId: {type: GraphQLInt}
       },
       async resolve(parent, args) {
-        const message = await db.models.message.create({ ...args});
-        const createdMessage = await db.models.message.findByPk(message.id, {include: [db.models.user]})
-        return createdMessage;
-      },
+        const message = await db.models.message.create({
+          content: args.content,
+          length: args.length,
+          imageRef: args.imageRef,
+          userId: args.userId,
+          chatId: args.chatId
+        })
+        if (+args.meetingId !== 0) {
+          const meeting = await db.models.meeting.findByPk(args.meetingId)
+          await message.setMeeting(meeting)
+        }
+        const createdMessage = await db.models.message.findByPk(message.id, {
+          include: [{model: db.models.user}, {model: db.models.meeting}]
+        })
+        return createdMessage
+      }
     },
-  },
-});
+    newMeeting: {
+      type: MeetingType,
+      args: {
+        chatId: {type: GraphQLInt},
+        userId: {type: GraphQLInt},
+        invitation: {type: InvitationType}
+      },
+      async resolve(parent, args) {
+        try {
+          const meeting = await db.models.meeting.create({
+            location: args.invitation.coords,
+            link: args.invitation.link,
+            imageRef: args.invitation.imageRef,
+            name: args.invitation.name,
+            rating: args.invitation.rating,
+            address: args.invitation.address,
+            date: new Date(args.invitation.date),
+            senderId: args.userId,
+            status: 'pending'
+          })
+          const chat = await db.models.chat.findByPk(args.chatId, {
+            include: [db.models.user]
+          })
+          console.log('meeting prototype', db.models.meeting.prototype)
+          await meeting.addUsers(chat.users)
+          const updated = await meeting.setChat(chat)
+          await chat.addMeeting(updated)
+          return updated
+        } catch (error) {
+          console.error('in newMeeting route: ', error)
+        }
+      }
+    },
+    updateMeeting: {
+      type: MeetingType,
+      args: {
+        meetingId: {type: GraphQLInt},
+        status: {type: GraphQLString}
+      },
+      async resolve(parent, args) {
+        try {
+          const meeting = await db.models.meeting.findByPk(args.meetingId)
+          const updated = await meeting.update({status: args.status})
+          return updated
+        } catch (error) {
+          console.error('in newMeeting route: ', error)
+        }
+      }
+    }
+  }
+})
 
 //Mutation Requests(change information in the database)
 
 module.exports = new GraphQLSchema({
   query: rootQuery,
-  mutation: rootMutation,
-});
+  mutation: rootMutation
+})
