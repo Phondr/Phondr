@@ -418,7 +418,11 @@ const rootMutation = new GraphQLObjectType({
             senderId: args.userId,
             status: 'pending'
           })
-          const chat = await db.models.chat.findByPk(args.chatId)
+          const chat = await db.models.chat.findByPk(args.chatId, {
+            include: [db.models.user]
+          })
+          console.log('meeting prototype', db.models.meeting.prototype)
+          await meeting.addUsers(chat.users)
           const updated = await meeting.setChat(chat)
           await chat.addMeeting(updated)
           return updated
@@ -450,22 +454,27 @@ const rootMutation = new GraphQLObjectType({
       },
       async resolve(parent, args) {
         try {
-          let user = await db.models.user.findByPk(args.userId)
-          console.log('TCL: user', user)
-          const chats = await user.getChats({
-            include: [
-              {model: db.models.user},
-              {model: db.models.message},
-              {model: db.models.meeting, include: [db.models.chat]}
-            ]
+          let user = await db.models.user.findByPk(args.userId, {
+            include: [db.models.meeting]
           })
-          const meetingsArray = chats.reduce((accum, cur) => {
-            if (cur.meetings) {
-              accum = [...accum, cur.meetings]
-            }
-            return accum
-          }, [])
-          return meetingsArray
+          console.log('user prototype', db.models.user.prototype)
+          const meetings = await user.getMeetings()
+          return meetings
+          // console.log('TCL: user', user)
+          // const chats = await user.getChats({
+          //   include: [
+          //     {model: db.models.user},
+          //     {model: db.models.message},
+          //     {model: db.models.meeting, include: [db.models.chat]}
+          //   ]
+          // })
+          // const meetingsArray = chats.reduce((accum, cur) => {
+          //   if (cur.meetings) {
+          //     accum = [...accum, cur.meetings]
+          //   }
+          //   return accum
+          // }, [])
+          // return meetingsArray
         } catch (error) {
           console.error('in newMeeting route: ', error)
         }

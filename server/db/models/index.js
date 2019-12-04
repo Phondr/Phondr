@@ -19,6 +19,8 @@ Message.belongsTo(Chat)
 Message.belongsTo(Meeting)
 Chat.hasMany(Message)
 Meeting.belongsTo(Chat)
+Meeting.belongsToMany(User, {through: 'UserMeetings'})
+User.belongsToMany(Meeting, {through: 'UserMeetings'})
 Chat.hasMany(Meeting)
 const userChats = db.model('userChats')
 /**
