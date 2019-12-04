@@ -1,41 +1,25 @@
 import React, {Component} from 'react'
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Footer,
-  FooterTab,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  Text,
-  Form,
-  Item,
-  Input,
-  Fab
-} from 'native-base'
-import {
-  ScrollView,
-  View,
-  StatusBar,
-  KeyboardAvoidingView,
-  Platform
-} from 'react-native'
-import {GiftedChat} from 'react-native-gifted-chat'
+import {Icon, Fab} from 'native-base'
+import {ScrollView, View, StatusBar, KeyboardAvoidingView, Platform} from 'react-native'
+import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
+import {fetchCurrentChat} from '../redux/currentChat'
 import {connect} from 'react-redux'
 import socket from '../redux/socketClient'
 import {showMessage} from 'react-native-flash-message'
 import CustomHeader from '../components/CustomHeader'
+import RecordAudio from './recordAudio'
+import RenderAudio from './renderAudio'
+import {placesAPI} from '../secrets'
+import axios from 'axios'
 
 class SingleChats extends Component {
   constructor(props) {
     super(props)
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
+    this.renderBubble = this.renderBubble.bind(this)
+    this.imageRequest = this.imageRequest.bind(this)
   }
   // componentWillMount() {
   //   this.setState({
@@ -56,7 +40,7 @@ class SingleChats extends Component {
 
   static navigationOptions = {
     //This is here so it doesn't show up on the drawer pull out
-    drawerLabel: () => null,
+    drawerLabel: () => null
   }
 
   componentDidMount() {
@@ -72,6 +56,37 @@ class SingleChats extends Component {
     this.props.fetchMessages(this.props.currentChat.id)
   }
 
+  async imageRequest(ref) {
+    const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
+    const image = await axios.post(url)
+    console.log('TCL: image', image)
+
+    return image
+  }
+
+  UNSAFE_componentWillUpdate(nextProps) {
+    if (nextProps.currentMeeting !== this.props.currentMeeting) {
+      const {
+        name,
+        address,
+        link,
+        location,
+        date,
+        imageRef
+      } = nextProps.currentMeeting
+      const formattedMessage = {
+        content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+          +date
+        ).toString()}`,
+        imageRef: imageRef,
+        userId: nextProps.user.id,
+        length: 10,
+        chatId: nextProps.currentChat.id
+      }
+      this.onSend(formattedMessage, true)
+    }
+  }
+
   componentWillUnmount() {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
     socket.off('loginLogoutMessage')
@@ -82,16 +97,26 @@ class SingleChats extends Component {
     if (prevProps.currentChat !== this.props.currentChat) {
       console.log('got here')
     }
+    if (this.props.messages.length !== this.props.currentChat.messages.length) {
+      this.props.fetchCurrentChat(this.props.currentChat.id)
+    }
   }
 
-  async onSend(message) {
+  async onSend(message, noFormat) {
     //Format message for input into thunk
-    const formattedMessage = {
-      content: message[0].text,
-      userId: message[0].user._id,
-      length: message[0].text.length,
-      chatId: this.props.currentChat.id
+    let formattedMessage
+    if (noFormat) {
+      formattedMessage = message
+    } else {
+      formattedMessage = {
+        content: message[0].text,
+        userId: message[0].user._id,
+        length: message[0].text.length,
+        chatId: this.props.currentChat.id,
+        audio: message[0].audio || null
+      }
     }
+
     //Create the message ONCE after click send but don't set to redux yet
     const newMessage = await this.props.newMessage(formattedMessage)
     //Send created message to sockets with event sendMessage
@@ -101,15 +126,34 @@ class SingleChats extends Component {
     })
   }
 
-  getOtherUserInChat(chat){
-    return chat.users.find(user=> user.fullName!==this.props.user.fullName)
+  getOtherUserInChat(chat) {
+    return chat.users.find(user => user.fullName !== this.props.user.fullName)
+  }
+
+  renderBubble(props) {
+    if (props.currentMessage.audio) {//Render the play audio icon if the message has audio along with the timestamp
+      return (
+        <View> 
+          <RenderAudio message={props.currentMessage} user={this.props.user} />
+          <Bubble {...props} />
+        </View>
+      )
+    }
+    return (//Render normal text bubble with timestamp
+      <View>
+        <Bubble {...props} />
+      </View>
+    )
   }
 
   render() {
     return (
       <React.Fragment>
         <StatusBar barStyle="light-content" />
-        <CustomHeader title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`} currentChat={this.props.currentChat} />
+        <CustomHeader
+          title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
+          currentChat={this.props.currentChat}
+        />
         <Fab
           active={true}
           direction="up"
@@ -120,6 +164,12 @@ class SingleChats extends Component {
         >
           <Icon name="meetup" type={'FontAwesome'} />
         </Fab>
+        <RecordAudio
+          onSend={this.onSend}
+          user={this.props.user}
+          chat={this.props.currentChat}
+          messageLength={this.props.messages.length}
+        />
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
@@ -127,6 +177,7 @@ class SingleChats extends Component {
             _id: this.props.user.id,
             name: this.props.user.fullName
           }}
+          renderBubble={this.renderBubble}
         />
         {Platform.OS === 'android' && (
           <KeyboardAvoidingView behavior="padding" />
@@ -148,7 +199,8 @@ const MapDispatchToProps = dispatch => {
   return {
     fetchMessages: chatId => dispatch(fetchMessages(chatId)),
     newMessage: message => dispatch(newMessage(message)),
-    setNewMessage: message => dispatch(setNewMessage(message))
+    setNewMessage: message => dispatch(setNewMessage(message)),
+    fetchCurrentChat: chatId => dispatch(fetchCurrentChat(chatId))
   }
 }
 

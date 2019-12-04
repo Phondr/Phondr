@@ -16,20 +16,10 @@ export class Entry extends Component {
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
 
-    // //Current Settings
-    // // if (user) {
-    // //   await this.props.setUser(user)
-    // //   this.props.navigation.navigate('Home', {user})
-    // // if (user !== null) {
-    // //   if (this.state.user === '') {
-    // //     this.setState({user}) //Sets user if user was previously logged in through asyncStorage
-    // //   }
-    // //   if (this.state.user !== '') {
-    // //     this.props.setUser(user)
-    // //     this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
-    // //   }
-
-    // console.log('USER', user)
+    //Current Settings
+    // if (user) {
+    //   await this.props.setUser(user)
+    //   this.props.navigation.navigate('Home', {user})
     if (user !== null) {
       if (this.state.user === '') {
         this.setState({user}) //Sets user if user was previously logged in through asyncStorage
@@ -56,9 +46,9 @@ export class Entry extends Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return <Spinner />
-    }
+    // if (this.state.loading) {
+    //   return <Spinner />
+    // }
     return (
       <View style={styles.container}>
         <View style={styles.title}>

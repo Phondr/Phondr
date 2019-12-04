@@ -40,12 +40,28 @@ const UserType = new GraphQLObjectType({
     distPref: {type: GraphQLInt}
   })
 })
+
+const InvitationType = new GraphQLInputObjectType({
+  name: 'Invitation',
+  fields: () => ({
+    coords: {type: new GraphQLList(GraphQLFloat)},
+    link: {type: GraphQLString},
+    imageRef: {type: GraphQLString},
+    name: {type: GraphQLString},
+    address: {type: GraphQLString},
+    rating: {type: GraphQLFloat},
+    date: {type: GraphQLString}
+  })
+})
+
 const MessageType = new GraphQLObjectType({
   name: 'Message',
   fields: () => ({
     id: {type: GraphQLInt},
     content: {type: GraphQLString},
     length: {type: GraphQLInt},
+    audio: {type: GraphQLString},
+    imageRef: {type: GraphQLString},
     userId: {type: GraphQLInt},
     chatId: {type: GraphQLInt},
     createdAt: {type: GraphQLString},
@@ -70,6 +86,8 @@ const MeetingType = new GraphQLObjectType({
   fields: () => ({
     location: {type: new GraphQLList(GraphQLFloat)},
     name: {type: GraphQLString},
+    link: {type: GraphQLString},
+    imageRef: {type: GraphQLString},
     rating: {type: GraphQLFloat},
     address: {type: GraphQLString},
     date: {type: GraphQLString},
@@ -77,16 +95,7 @@ const MeetingType = new GraphQLObjectType({
     senderId: {type: GraphQLInt}
   })
 })
-const InvitationType = new GraphQLInputObjectType({
-  name: 'Invitation',
-  fields: () => ({
-    coords: {type: new GraphQLList(GraphQLFloat)},
-    name: {type: GraphQLString},
-    address: {type: GraphQLString},
-    rating: {type: GraphQLFloat},
-    date: {type: GraphQLString}
-  })
-})
+
 //Query Requests(grab information from the database)
 const rootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -166,6 +175,25 @@ const rootQuery = new GraphQLObjectType({
         }
       }
     },
+    getCurrentChat: {
+      type: ChatType,
+      args: {
+        chatId: {type: GraphQLInt}
+      },
+      async resolve(parent, args) {
+        try {
+          console.log(args.chatId)
+          let chat = await db.models.chat.findByPk(args.chatId, {
+            include: [{model: db.models.user}, {model: db.models.message}]
+          })
+          console.log('chat', chat)
+          return chat
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    },
+
     messages: {
       type: new GraphQLList(MessageType),
       args: {
@@ -343,6 +371,8 @@ const rootMutation = new GraphQLObjectType({
       args: {
         content: {type: GraphQLString},
         length: {type: GraphQLInt},
+        audio: {type: GraphQLString},
+        imageRef: {type: GraphQLString},
         userId: {type: GraphQLInt},
         chatId: {type: GraphQLInt}
       },
@@ -365,6 +395,8 @@ const rootMutation = new GraphQLObjectType({
         try {
           const meeting = await db.models.meeting.create({
             location: args.invitation.coords,
+            link: args.invitation.link,
+            imageRef: args.invitation.imageRef,
             name: args.invitation.name,
             rating: args.invitation.rating,
             address: args.invitation.address,
