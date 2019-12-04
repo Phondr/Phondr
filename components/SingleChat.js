@@ -224,7 +224,7 @@ class SingleChats extends Component {
   }
 
   render() {
-    console.log('this.state.reply', this.state.reply)
+    console.log('this.state.reply', this.state.reply, 'this.state.curMessage')
     return (
       <React.Fragment>
         {this.state.curMessage.user && (
@@ -257,7 +257,7 @@ class SingleChats extends Component {
           onLongPress={(context, message) => {
             console.log('TCL: message inside onLongPress', message)
             if (message.text.includes('New Invitation')) {
-              this.setState({reply: true})
+              this.setState({reply: true, curMessage: message})
             } else {
               alert('You can only respond to invitations!')
             }
