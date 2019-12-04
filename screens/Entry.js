@@ -26,6 +26,8 @@ export class Entry extends Component {
       }
       if (this.state.user !== '') {
         this.props.setUser(user)
+        
+        console.log('USER', user)
         this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
       }
     }

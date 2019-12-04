@@ -21,11 +21,13 @@ require('../secrets')
 const GETUSER = 'GETUSER'
 const ADDUSER = 'ADDUSER'
 const EDITUSER = 'EDITUSER'
+const UPDATENOOB = 'UPDATENOOB'
 
 //action creator
 export const setUser = user => ({type: GETUSER, user})
 export const editUser = user => ({type: EDITUSER, user})
 export const addUser = user => ({type: ADDUSER, user})
+export const updateN = user => ({type: UPDATENOOD, user})
 
 //state
 const initialState = {}
@@ -122,14 +124,13 @@ export const userSignUp = (
     const age = values.age
     const password = values.password
     const email = values.email
-    // const address = values.address
     const distPref = values.radius
     const iPrefer = preferences
     const iAm = values.gender
     const profilePicture = photo
     const homeLocation = address
 
-    console.log('SIGNUP STUFF', values, iPrefer, homeLocation, profilePicture)
+    //console.log('SIGNUP STUFF', values, iPrefer, homeLocation, photo)
 
     RNS3.put(
       {
@@ -142,7 +143,7 @@ export const userSignUp = (
       if (response.status !== 201) {
         throw new Error('Failed to upload image to S3')
       }
-      console.log('RESPONSE BODY', response.body)
+      //console.log('RESPONSE BODY', response.body)
       /**
        * {
        *   postResponse: {
@@ -237,6 +238,7 @@ export const EditUser = (user, userId) => async dispatch => {
           age
           iAm
           iPrefer
+          isNoob
         }
               }`
     })
@@ -257,6 +259,47 @@ export const EditUser = (user, userId) => async dispatch => {
   }
 }
 
+export const ConvertUser = () => async dispatch => {
+  try {
+    //OVERWRITE KEY
+
+    const user = JSON.parse(await getData('userKey'))
+    const falseguy = false
+
+    let {data} = await client.mutate({
+      mutation: gql`mutation{
+        updateNoob(id: ${user.id}, isNoob: ${falseguy}) {
+        id
+        email
+        fullName
+        homeLocation
+        incentivePoints
+        profilePicture
+        age
+        iAm
+        iPrefer
+        isNoob
+        }
+              }`
+    })
+
+    //update User key async storage
+
+    if (data.updateNoob) {
+      removeData('userKey')
+      storeData('userKey', JSON.stringify(data.updateNoob))
+      //dispatch(editUser(data.user))
+    }
+
+    if (data.updateNoob) {
+      dispatch(updateN(data.updateNoob))
+    }
+  } catch (error) {
+    alert('COULD NOT GET PROFILE DATA')
+    console.log(error)
+  }
+}
+
 export default (state = initialState, action) => {
   switch (action.type) {
     case GETUSER:
@@ -264,6 +307,8 @@ export default (state = initialState, action) => {
     case ADDUSER:
       return action.user
     case EDITUSER:
+      return action.user
+    case UPDATENOOB:
       return action.user
     default:
       return state

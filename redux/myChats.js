@@ -20,7 +20,7 @@ const getMyChats = myChats => {
 export const deleteChat = (chatId, userId) => {
   return async dispatch => {
     try {
-      console.log('chatId in thunk', chatId)
+      //console.log('chatId in thunk', chatId)
       const {data} = await myAxios.post('', {
         query: `mutation{
           deleteChat(chatId:${chatId}){
@@ -29,7 +29,7 @@ export const deleteChat = (chatId, userId) => {
         }`
       })
 
-      console.log('TCL: data.data.deleteChat.id', data.data.deleteChat.id)
+      //console.log('TCL: data.data.deleteChat.id', data.data.deleteChat.id)
       dispatch(removeChat(data.data.deleteChat.id))
     } catch (error) {
       console.error('messed up in deleteChat thunk', error)
@@ -86,7 +86,7 @@ export const fetchMyChats = uid => {
              `
       })
 
-      console.log('TCL: data.data.myChats', data.data.myChats)
+      //console.log('TCL: data.data.myChats', data.data.myChats)
       dispatch(getMyChats(data.data.myChats))
     } catch (e) {
       console.error('messed up in fetchMyChats, error: ', e)

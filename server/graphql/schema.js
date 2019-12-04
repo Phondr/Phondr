@@ -37,7 +37,8 @@ const UserType = new GraphQLObjectType({
     messages: {type: new GraphQLList(MessageType)},
     iAm: {type: GraphQLString},
     iPrefer: {type: new GraphQLList(GraphQLString)},
-    distPref: {type: GraphQLInt}
+    distPref: {type: GraphQLInt},
+    isNoob: {type: GraphQLBoolean}
   })
 })
 
@@ -272,6 +273,24 @@ const rootMutation = new GraphQLObjectType({
           iAm: args.iAm,
           distPref: args.distPref,
           age: args.age
+        })
+
+        if (updateduser) {
+          return updateduser
+        }
+      }
+    },
+    updateNoob: {
+      type: UserType,
+      args: {
+        id: {type: GraphQLInt},
+        isNoob: {type: GraphQLBoolean}
+      },
+      async resolve(parent, args) {
+        let User = await db.models.user.findByPk(args.id)
+
+        let updateduser = await User.update({
+          isNoob: args.isNoob
         })
 
         if (updateduser) {

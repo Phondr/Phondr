@@ -70,6 +70,7 @@ export class LoginCamera extends React.Component {
 
   async signup(photo) {
     try {
+      console.log('PHOTO', photo)
       //send to camera with
       await this.props.addUser(
         this.props.navigation.state.params.user.values,
@@ -109,6 +110,8 @@ export class LoginCamera extends React.Component {
     const data = await this.camera.takePictureAsync()
     //const data = await this.camera.takePictureAsync({base64: true})
 
+    console.log('IMAGE', data)
+
     this.setState({capturing: false, captures: [data, ...this.state.captures]})
 
     // const app = new Clarifai.App({apiKey: '317c443b65d542de9d5d0005dd9ef1a3'})
@@ -125,7 +128,7 @@ export class LoginCamera extends React.Component {
           text: 'Yes',
           onPress: () => {
             //diejwej40
-            this.signup(data.uri)
+            this.signup(data['uri'])
           }
         },
         {
@@ -190,8 +193,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addUser: (values, preferences, photo) =>
-    dispatch(userSignUp(values, preferences, photo))
+  addUser: (values, preferences, address, photo) =>
+    dispatch(userSignUp(values, preferences, address, photo))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginCamera)
