@@ -54,10 +54,7 @@ export class Entry extends Component {
         <View style={styles.title}>
           <Image
             style={styles.phonderimage}
-            source={{
-              uri:
-                'https://github.com/Phondr/Phondr/blob/login/assets/images/PhondrLogos/PhondrLarge.png?raw=true'
-            }}
+            source={require('../assets/images/PhondrLogos/PhondrLarge-removebg-preview.png')}
           />
         </View>
         <Button

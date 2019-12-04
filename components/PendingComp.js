@@ -4,6 +4,7 @@ import {Icon, Left, Card, CardItem, Text, Button} from 'native-base'
 import Modal from 'react-native-modal'
 import {View, StyleSheet} from 'react-native'
 import {deleteChat} from '../redux/myChats'
+import roundDown from 'lodash.floor'
 const PendingChats = ({myChats, user, deleteChat}) => {
   const [modal, setModal] = useState(false)
   const [selectedChat, setSelectedChat] = useState({})
@@ -54,6 +55,7 @@ const PendingChats = ({myChats, user, deleteChat}) => {
       </Modal>
 
       {pending.map((cur, ind) => {
+        console.log('sinceCreationCur', cur.sinceCreation)
         return (
           <CardItem
             button
@@ -66,7 +68,7 @@ const PendingChats = ({myChats, user, deleteChat}) => {
             <Left>
               <Icon name="ellipsis1" type="AntDesign" />
             </Left>
-            <Text>Pending Chat Created: {cur.sinceCreation || 0} min. ago</Text>
+            <Text>Pending Chat Created:   {cur.sinceCreation%60 || 0} min. ago</Text>
           </CardItem>
         )
       })}

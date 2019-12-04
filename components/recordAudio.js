@@ -21,8 +21,9 @@ export default class RecordAudio extends React.Component {
     if (audio.status === 'granted') {
       this.setState({hasAudioPermission: true})
     } else {
+      alert('Cannot record audio because permision has been denied')
       console.log(
-        'Cannot play/record audio because permisions have been denied.'
+        'Cannot play/record audio because permision have been denied.'
       )
     }
     try {
@@ -66,6 +67,7 @@ export default class RecordAudio extends React.Component {
       this.setState({isRecording: true})
       await this.recording.startAsync()
     } catch (err) {
+      alert('An error has occured. Cannot record audio')
       console.error(err)
     }
   }
@@ -84,6 +86,7 @@ export default class RecordAudio extends React.Component {
         amazonConfig
       ).then(response => {
         if (response.status !== 201) {
+          alert('Error has occured. Audio was not recorded properly.')
           throw new Error('Failed to upload image to S3')
         }
         const formattedMessage = [
