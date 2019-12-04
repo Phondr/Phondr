@@ -16,6 +16,9 @@ export class Entry extends Component {
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
 
+    // await this.props.fetchUserFromUserId(userd.id)
+    // const user = this.props.user
+
     //Current Settings
     // if (user) {
     //   await this.props.setUser(user)
@@ -25,10 +28,14 @@ export class Entry extends Component {
         this.setState({user}) //Sets user if user was previously logged in through asyncStorage
       }
       if (this.state.user !== '') {
-        this.props.setUser(user)
-        
+        await this.props.setUser(user)
+
         console.log('USER', user)
-        this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
+        setTimeout(() => {
+          this.props.navigation.navigate('Home', {user})
+        }, 100)
+
+        //this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
       }
     }
     if (this.state.loading) {
@@ -106,4 +113,7 @@ export const styles = StyleSheet.create({
   }
 })
 
-export default connect(({user}) => ({user}), {fetchUserLogin, setUser})(Entry)
+export default connect(({user}) => ({user}), {
+  fetchUserLogin,
+  setUser
+})(Entry)

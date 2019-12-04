@@ -62,10 +62,11 @@ const User = db.define('user', {
   // }
   isNoob: {
     type: Sequelize.BOOLEAN
+  },
+  maxPhondnessAchieved: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
   }
-  // maxPhondnessAchieved: {
-  //   type: Sequelize.INTEGER
-  // }
 })
 
 module.exports = User

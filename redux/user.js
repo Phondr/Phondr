@@ -91,6 +91,7 @@ export const fetchUserLogin = values => async dispatch => {
               iAm
               iPrefer
               distPref
+              
             }
         }
         `
@@ -172,6 +173,7 @@ export const userSignUp = (
             age
             iAm
             iPrefer
+            
             }
                 }`
       })
@@ -204,6 +206,39 @@ export const fetchUserFromAsync = () => async dispatch => {
           age
           iAm
           iPrefer
+          isNoob
+          
+        }
+              }`
+    })
+
+    if (data.user) {
+      dispatch(setUser(data.user))
+    }
+  } catch (error) {
+    alert('COULD NOT GET PROFILE DATA')
+    console.log(error)
+  }
+}
+
+export const fetchUserFromUserId = userid => async dispatch => {
+  try {
+    //const user = JSON.parse(await getData('userKey'))
+
+    let {data} = await client.query({
+      query: gql`query{
+        user(id: ${userid}) {
+          id
+          email
+          fullName
+          homeLocation
+          incentivePoints
+          profilePicture
+          age
+          iAm
+          iPrefer
+          isNoob
+          
         }
               }`
     })
@@ -239,6 +274,7 @@ export const EditUser = (user, userId) => async dispatch => {
           iAm
           iPrefer
           isNoob
+          
         }
               }`
     })
@@ -279,6 +315,7 @@ export const ConvertUser = () => async dispatch => {
         iAm
         iPrefer
         isNoob
+        
         }
               }`
     })
