@@ -90,10 +90,10 @@ export class Login extends Component {
     //   return <Spinner />
     // }
     return (
-      <View style={{backgroundColor: '#343434'}}>
+      <View style={{backgroundColor: '#343434', height:'100%'}}>
         <View style={{alignItems: 'center', backgroundColor: '#343434'}}>
           <Image
-            style={{width: '80%', height: 150, marginTop: 30}}
+            style={{width: '90%', height: 150, marginTop: 40}}
             source={require('../assets/images/fog.jpg')}
             resizeMode="cover"
           />
@@ -108,7 +108,7 @@ export class Login extends Component {
                 }
               }}
             />
-            <View style={{color:'white'}}>
+            <View style={{marginTop:20}}>
               <Form ref={c => (this._form = c)} type={User} options={options} />
               <TouchableOpacity
                 onPress={this.login}
@@ -121,7 +121,7 @@ export class Login extends Component {
         </TouchableWithoutFeedback>
         <View style={{alignItems: 'center', backgroundColor: '#343434'}}>
           <Image
-            style={{width: '80%', height: 200, marginTop: 30}}
+            style={{width: '90%', height: 160, marginTop: 10}}
             source={require('../assets/images/fog.jpg')}
             resizeMode="cover"
           />
