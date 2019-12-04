@@ -45,7 +45,13 @@ const ProgressBar = ({
               animated={false}
             />
           ) : (
-            <Bar progress={progress / 100} width={100} animated={false} />
+            <Bar
+              borderColor="#FF43A4"
+              color="#FF43A4"
+              progress={progress / 100}
+              width={100}
+              animated={false}
+            />
           )}
         </Left>
         <Body>

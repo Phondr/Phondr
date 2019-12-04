@@ -11,8 +11,7 @@ const CustomDrawer = props => {
           style={styles.drawerImage}
           // source={require('../assets/images/robot-dev.png')}
         />
-
-        <DrawerItems style={{marginBottom:10}} {...props} />
+        <DrawerItems {...props} />
       </Content>
     </Container>
   )

@@ -60,24 +60,15 @@ const ActiveScreenStack = createStackNavigator({
 
 var drawer = createDrawerNavigator(
   {
-    Profile: {
-      screen: Profile
-    },
     Home: {
       screen: Home
     },
-    Login: {
-      screen: Login
+    Profile: {
+      screen: Profile
     },
-    Signup: {
-      screen: Signup
-    },
-    Entry: {
-      screen: Entry
-    },
-    MapV: {
-      screen: MapV
-    },
+    // MapV: {
+    //   screen: MapV
+    // },
     'Pending Chats': {
       screen: PendingScreen
     },
@@ -90,21 +81,31 @@ var drawer = createDrawerNavigator(
     'Sign Out': {
       screen: SignOut
     },
+
+    MeetingModal: {
+      screen: MeetingModal
+    },
     UserProfileEdit: {
       screen: UserProfileEdit
     },
-    MeetingModal: {
-      screen: MeetingModal
-    }
+    Login: {
+      screen: Login
+    },
+    Signup: {
+      screen: Signup
+    },
+    Entry: {
+      screen: Entry
+    },
   },
   {
     initialRouteName: 'Entry',
     contentComponent: CustomDrawer,
-
     contentOptions: {
       activeTintColor: 'black',
       inactiveTintColor: 'white',
-      activeBackgroundColor:'#FF91AF',
+      activeBackgroundColor: '#FF91AF',
+      itemStyle: {borderColor: 'black', borderWidth: 1}
     },
     drawerOpenRoute: 'DrawerOpen',
     drawerCloseRoute: 'DrawerClose',
