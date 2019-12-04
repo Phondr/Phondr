@@ -9,7 +9,7 @@ import {
   Button,
   Icon,
 } from 'native-base'
-import AllChats from './Allchat'
+import { StyleSheet, StatusBar } from 'react-native'
 import Profile from './Profile'
 import Mapv from './MapView'
 import SingleChats from './SingleChat'
@@ -49,9 +49,6 @@ const Temp = createStackNavigator(
   {
     stack: {
       screen: Stack
-    },
-    allchat: {
-      screen: AllChats
     },
     profile: {
       screen: Profile

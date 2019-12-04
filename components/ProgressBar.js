@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {connect} from 'react-redux'
 import {
   Icon,
@@ -15,17 +15,41 @@ import {
 import {calcProgress} from '../util'
 import {Bar} from 'react-native-progress'
 import round from 'lodash.round'
-const ProgressBar = ({currentChat = {}, navigation}) => {
-  const progress = round(calcProgress(currentChat), 2)
+import {setCurrentProgress} from '../redux/currentProgress'
+const ProgressBar = ({
+  currentChat,
+  currentProgress,
+  header = false,
+  navigation,
+
+  setCurrentProgress
+}) => {
+  let progress = round(calcProgress(currentChat), 2)
+
+  useEffect(() => {
+    if (header) {
+      setCurrentProgress(progress)
+    }
+  }, [currentChat.messages.length])
 
   return (
     <>
-      <Content >
+      <Content>
         <Left>
-          <Bar borderColor='#FF43A4' color='#FF43A4' progress={progress / 100} width={100} animated={false} />
+          {header == true ? (
+            <Bar
+              borderColor="#FF43A4"
+              color="#FF43A4"
+              progress={currentProgress / 100}
+              width={100}
+              animated={false}
+            />
+          ) : (
+            <Bar progress={progress / 100} width={100} animated={false} />
+          )}
         </Left>
         <Body>
-          <Text style={{color:'#FF43A4'}}>{progress}%</Text>
+          <Text style={{color: '#FF43A4'}}>{progress}%</Text>
         </Body>
         <Right />
       </Content>
@@ -33,4 +57,6 @@ const ProgressBar = ({currentChat = {}, navigation}) => {
   )
 }
 
-export default ProgressBar
+export default connect(({currentProgress}) => ({currentProgress}), {
+  setCurrentProgress
+})(ProgressBar)

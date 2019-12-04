@@ -12,8 +12,8 @@ import {
 } from 'react-navigation'
 import Home from './screens/Home'
 import CustomDrawer from './components/CustomDrawer'
+import New from './components/route'
 import ApolloClient from 'apollo-boost'
-import {ApolloProvider} from '@apollo/react-hooks'
 import {connect, Provider} from 'react-redux'
 import store from './redux/store'
 import Login from './screens/Login'
@@ -46,6 +46,12 @@ const ActiveScreenStack = createStackNavigator({
   },
   SingleChat: {
     screen: SingleChat,
+    navigationOptions: {
+      header: null
+    }
+  },
+  MeetingModal: {
+    screen: MeetingModal,
     navigationOptions: {
       header: null
     }

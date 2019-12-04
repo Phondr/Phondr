@@ -63,14 +63,13 @@ class Home extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.user.id !== this.props.user.id) {
+    if (prevProps.user.id !== this.props.user.id && this.props.user.id) {
       console.log('in comp did update fmc')
       this.props.fetchMyChats(this.props.user.id)
     }
   }
 
   render() {
-    console.log(this.props.user)
     return (
       <Container style={{backgroundColor: '#343434'}}>
         <ScrollView>

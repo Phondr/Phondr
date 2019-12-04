@@ -121,10 +121,12 @@ const createApp = () => {
 
 io.on('connection', socket => {
   console.log('New user has connected')
+  let rooms = []
 
   socket.on('subscribe-to-chat', ({chatId}) => {
     console.log(`You have joined chat room ${chatId}!`)
     socket.join(chatId)
+    rooms.push(chatId)
     socket
       .to(chatId)
       .emit('loginLogoutMessage', {message: 'Another user has joined the room'})
@@ -133,6 +135,7 @@ io.on('connection', socket => {
   socket.on('unsubscribe-to-chat', ({chatId}) => {
     console.log(`You have left chat room ${chatId}.`)
     socket.leave(chatId)
+    rooms = rooms.filter((room)=>room!==chatId)
     socket
       .to(chatId)
       .emit('loginLogoutMessage', {message: 'A user has left the room'})
@@ -145,6 +148,7 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     console.log('User has left')
+    rooms.map((room)=>{io.to(room).emit('loginLogoutMessage', {message: 'A user has left the room'})})
   })
 })
 

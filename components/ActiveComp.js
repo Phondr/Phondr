@@ -8,13 +8,6 @@ import {fetchMyChats} from '../redux/myChats'
 const ActiveChats = ({myChats, user, setChat, fetchMyChats, navigation}) => {
   const active = myChats.filter(chat => chat.status === 'active')
 
-  // useEffect(() => {
-  //   navigation.addListener('didFocus', () => {
-  //     if (user && user.id) {
-  //       fetchMyChats(user.id)
-  //     }
-  //   })
-  // }, [])
   return (
     <Card >
       <NavigationEvents
