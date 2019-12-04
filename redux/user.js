@@ -107,7 +107,12 @@ export const fetchUserLogin = values => async dispatch => {
   }
 }
 
-export const userSignUp = (values, preferences, photo) => async dispatch => {
+export const userSignUp = (
+  values,
+  preferences,
+  address,
+  photo
+) => async dispatch => {
   try {
     if (getData('userKey')) {
       removeData('userKey')
@@ -122,8 +127,9 @@ export const userSignUp = (values, preferences, photo) => async dispatch => {
     const iPrefer = preferences
     const iAm = values.gender
     const profilePicture = photo
+    const homeLocation = address
 
-    console.log('SIGNUP STUFF', values, iPrefer, profilePicture)
+    console.log('SIGNUP STUFF', values, iPrefer, homeLocation, profilePicture)
 
     RNS3.put(
       {
@@ -149,7 +155,9 @@ export const userSignUp = (values, preferences, photo) => async dispatch => {
        */
       let {data} = await client.mutate({
         mutation: gql`mutation{
-          userSignup(fullName: "${fullName}", email: "${email}", iAm: "${iAm}", age: ${age}, distPref: ${distPref}, iPrefer: [${iPrefer.map(
+          userSignup(fullName: "${fullName}", email: "${email}", iAm: "${iAm}", age: ${age}, distPref: ${distPref}, homeLocation: [${homeLocation.map(
+          i => `${i}`
+        )}], iPrefer: [${iPrefer.map(
           i => `"${i}"`
         )}], password: "${password}", profilePicture: "${
           response.headers.Location

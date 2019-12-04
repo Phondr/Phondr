@@ -1,5 +1,11 @@
 import React, {Component} from 'react'
-import {View, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Platform
+} from 'react-native'
 import {
   Container,
   Content,
@@ -18,6 +24,10 @@ import {
 import {connect} from 'react-redux'
 import {userSignUp} from '../redux/user'
 import CameraComponent from './CameraComponent'
+import Geocoder from 'react-native-geocoding'
+import Constants from 'expo-constants'
+import * as Location from 'expo-location'
+import * as Permissions from 'expo-permissions'
 
 import t, {MultiSelectExample} from 'tcomb-form-native'
 
@@ -84,7 +94,10 @@ export class Signup extends Component {
       checked1: false,
       checked2: false,
       checked3: false,
-      preferences: []
+      preferences: [],
+      location: null,
+      errorMessage: null,
+      address: []
     }
 
     this.doitchecked1 = this.doitchecked1.bind(this)
@@ -97,10 +110,50 @@ export class Signup extends Component {
     drawerLabel: () => null
   }
 
+  componentDidMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage:
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
+      })
+    } else {
+      this._getLocationAsync()
+    }
+  }
+
+  _getLocationAsync = async () => {
+    let {status} = await Permissions.askAsync(Permissions.LOCATION)
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied'
+      })
+    }
+
+    let location = await Location.getCurrentPositionAsync({})
+    this.setState({location})
+
+    let text = 'Waiting..'
+    let lat = ''
+    let lon = ''
+    const address = []
+    if (this.state.errorMessage) {
+      text = this.state.errorMessage
+    } else if (this.state.location) {
+      text = this.state.location
+      address.push(this.state.location.coords.latitude)
+      address.push(this.state.location.coords.longitude)
+
+      this.setState({address})
+
+      console.log('ADDRESS', this.state.address)
+    }
+  }
+
   async signup() {
     const values = this._form.getValue()
     const preferences = this.state.preferences
-    const user = {values, preferences}
+    const address = this.state.address
+    const user = {values, preferences, address}
     //console.log(values)
     try {
       //send to camera with
@@ -145,6 +198,9 @@ export class Signup extends Component {
     return (
       <ScrollView>
         <View style={styles.container}>
+          {/* <View style={styles.locationcontainer}>
+            <Text style={styles.paragraph}>{text}</Text>
+          </View> */}
           <View styles={styles.checkboxcontainer}>
             <Header>
               <Left>
@@ -243,6 +299,18 @@ export const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: 'white'
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  locationcontainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: Constants.statusBarHeight,
+    backgroundColor: '#ecf0f1'
   }
 })
 

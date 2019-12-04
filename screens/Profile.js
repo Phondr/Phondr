@@ -11,12 +11,16 @@ import {
 import {connect} from 'react-redux'
 import {fetchUserFromAsync} from '../redux/user'
 import CustomHeader from '../components/CustomHeader'
+import Geocoder from 'react-native-geocoding'
+const {placesAPI} = require('../secrets')
+import axios from 'axios'
 
 export class Profile extends Component {
   constructor() {
     super()
     this.state = {
-      user: ''
+      user: '',
+      address: ''
     }
   }
 
@@ -35,6 +39,14 @@ export class Profile extends Component {
       alert('COULD NOT LOGIN')
       console.log(error)
     }
+
+    const {data} = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${this.props.user.homeLocation[0]},${this.props.user.homeLocation[1]}&key=${placesAPI}`
+    )
+
+    //console.log('LOCATION', data.results[0].formatted_address)
+    const address = data.results[0].formatted_address
+    this.setState({address})
   }
 
   async componentDidUpdate(prevProps) {
@@ -51,6 +63,7 @@ export class Profile extends Component {
   render() {
     const user = this.props.user
     //console.log('USER', user)
+
     return (
       <ScrollView style={styles.container}>
         <StatusBar barStyle="light-content" />
@@ -66,7 +79,7 @@ export class Profile extends Component {
             <View style={styles.bodyDescription}>
               <Text style={styles.description}>Email: {user.email}</Text>
               <Text style={styles.description}>
-                Location: {user.homeLocation}
+                Location: {this.state.address}
               </Text>
             </View>
 

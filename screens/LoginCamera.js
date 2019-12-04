@@ -74,6 +74,7 @@ export class LoginCamera extends React.Component {
       await this.props.addUser(
         this.props.navigation.state.params.user.values,
         this.props.navigation.state.params.user.preferences,
+        this.props.navigation.state.params.user.address,
         photo
       )
     } catch (error) {
