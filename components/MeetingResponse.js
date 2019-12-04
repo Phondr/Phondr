@@ -16,6 +16,7 @@ const MeetingResponse = ({
   meetingId,
   reply
 }) => {
+  console.log('props in meetingresponse', reply_to, meetingId, reply)
   return (
     <View>
       <Dialog
@@ -40,6 +41,7 @@ const MeetingResponse = ({
           <DialogFooter>
             <DialogButton
               text="Yes"
+              textStyle={{color: 'green'}}
               bordered
               onPress={() => {
                 updateMeeting(meetingId, 'active')
@@ -49,6 +51,7 @@ const MeetingResponse = ({
             />
             <DialogButton
               text="No"
+              textStyle={{color: 'red'}}
               bordered
               onPress={() => {
                 updateMeeting(meetingId, 'declined')
