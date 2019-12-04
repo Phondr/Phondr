@@ -16,9 +16,7 @@ const ReplyToFooter = ({reply_to, closeFooter, updateMeeting, meetingId}) => {
         </Text>
       </View>
       <View style={styles.close_button_container}>
-        <Button
-          bordered
-          warning
+        <TouchableOpacity
           onPress={() => {
             closeFooter()
             updateMeeting(meetingId, 'declined')
@@ -26,11 +24,9 @@ const ReplyToFooter = ({reply_to, closeFooter, updateMeeting, meetingId}) => {
         >
           <Icon style={{color: 'red'}} name="close" type={'FontAwesome'} />
           <Text>No</Text>
-        </Button>
+        </TouchableOpacity>
 
-        <Button
-          bordered
-          success
+        <TouchableOpacity
           onPress={() => {
             closeFooter()
             updateMeeting(meetingId, 'active')
@@ -42,7 +38,7 @@ const ReplyToFooter = ({reply_to, closeFooter, updateMeeting, meetingId}) => {
             type={'AntDesign'}
           />
           <Text>Yes</Text>
-        </Button>
+        </TouchableOpacity>
       </View>
     </View>
   )

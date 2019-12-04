@@ -37,12 +37,13 @@ import axios from 'axios'
 import ChatBubbleWithReply from '../components/ChatBubbleWithReply'
 import ReplyToFooter from '../components/ReplyToFooter'
 import {fetchMeeting} from '../redux/currentMeeting'
+import MeetingResponse from '../components/MeetingResponse'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
     this.state = {
       reply: false,
-      accepted: false
+      curMessage: {}
     }
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
@@ -95,9 +96,7 @@ class SingleChats extends Component {
   }
 
   UNSAFE_componentWillUpdate(nextProps) {
-    if (!this.props.currentMeeting.id) {
-      this.props.fetchMeeting(this.props.currentChat.id)
-    } else if (
+    if (
       nextProps.currentMeeting !== this.props.currentMeeting &&
       this.props.navigation.getParam('created', 'none') === true
     ) {
@@ -113,7 +112,7 @@ class SingleChats extends Component {
       const formattedMessage = {
         content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
           +date
-        ).toString()}`,
+        ).toString()}++++Long press this message to respond.`,
         imageRef: imageRef,
         meetingId: id,
         userId: nextProps.user.id,
@@ -151,33 +150,7 @@ class SingleChats extends Component {
     socket.off('receiveMessage')
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.currentChat !== this.props.currentChat) {
-      console.log('got here')
-    }
-    if (this.props.messages.length !== this.props.currentChat.messages.length) {
-      console.log('how many times is this running')
-      this.props.fetchCurrentChat(this.props.currentChat.id)
-    }
-
-    if (this.props.messages && this.props.messages.length) {
-      console.log('this.props.messages', this.props.messages[0])
-    }
-    console.log('props messages[0]', this.props.messages[0])
-    if (
-      this.props.currentMeeting.status === 'pending' &&
-      !this.state.reply &&
-      this.props.messages &&
-      this.props.messages.length &&
-      this.props.messages[0].text.includes('New Invitation To Meet!') &&
-      this.props.user.id === this.props.messages[0].user._id
-    ) {
-      console.log('props messages[0]', this.props.messages[0])
-      this.setState({reply: true})
-    }
-  }
-
-  renderChatFooter(message) {
+  renderChatFooter() {
     if (this.state.reply) {
       console.log('message inside of renderChatFooter', this.props.messages[0])
       return (
@@ -211,6 +184,7 @@ class SingleChats extends Component {
 
     //Create the message ONCE after click send but don't set to redux yet
     const newMessage = await this.props.newMessage(formattedMessage)
+    await this.props.fetchCurrentChat(this.props.currentChat.id)
     //Send created message to sockets with event sendMessage
     socket.emit('sendMessage', {
       message: newMessage,
@@ -226,6 +200,12 @@ class SingleChats extends Component {
     console.log('this.state.reply', this.state.reply)
     return (
       <React.Fragment>
+        <MeetingResponse
+          reply={this.state.reply}
+          reply_to={this.state.curMessage.user.name}
+          closeFooter={this.closeFooter}
+          meetingId={this.state.curMessage.meetingId}
+        />
         <StatusBar barStyle="light-content" />
         <CustomHeader
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
@@ -244,7 +224,14 @@ class SingleChats extends Component {
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
-          renderChatFooter={this.renderChatFooter}
+          //renderChatFooter={this.renderChatFooter}
+          onLongPress={(context, message) => {
+            if (message.text.includes('New Invitation')) {
+              this.setState({reply: true})
+            } else {
+              alert('You can only respond to invitations!')
+            }
+          }}
           user={{
             _id: this.props.user.id,
             name: this.props.user.fullName
