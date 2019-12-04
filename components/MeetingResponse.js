@@ -11,7 +11,7 @@ import {updateMeeting} from '../redux/currentMeeting'
 
 const MeetingResponse = ({
   reply_to,
-  closeFooter,
+  closeDialog,
   updateMeeting,
   meetingId,
   reply
@@ -21,7 +21,7 @@ const MeetingResponse = ({
     <View>
       <Dialog
         onDismiss={() => {
-          closeFooter()
+          closeDialog()
         }}
         width={0.9}
         visible={reply}
@@ -45,7 +45,7 @@ const MeetingResponse = ({
               bordered
               onPress={() => {
                 updateMeeting(meetingId, 'active')
-                closeFooter()
+                closeDialog()
               }}
               key="button-1"
             />
@@ -55,7 +55,7 @@ const MeetingResponse = ({
               bordered
               onPress={() => {
                 updateMeeting(meetingId, 'declined')
-                closeFooter()
+                closeDialog()
               }}
               key="button-2"
             />

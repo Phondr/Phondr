@@ -47,9 +47,9 @@ class SingleChats extends Component {
     }
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
-    this.imageRequest = this.imageRequest.bind(this)
-    this.closeFooter = this.closeFooter.bind(this)
-    this.renderChatFooter = this.renderChatFooter.bind(this)
+    // this.imageRequest = this.imageRequest.bind(this)
+    this.closeDialog = this.closeDialog.bind(this)
+    //this.renderChatFooter = this.renderChatFooter.bind(this)
     //this.renderBubble = this.renderBubble.bind(this)
   }
   // componentWillMount() {
@@ -87,17 +87,44 @@ class SingleChats extends Component {
     this.props.fetchMessages(this.props.currentChat.id)
   }
 
-  async imageRequest(ref) {
-    const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
-    const image = await axios.post(url)
-    console.log('TCL: image', image)
+  // async imageRequest(ref) {
+  //   const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
+  //   const image = await axios.post(url)
+  //   console.log('TCL: image', image)
 
-    return image
-  }
+  //   return image
+  // }
 
-  UNSAFE_componentWillUpdate(nextProps) {
+  // UNSAFE_componentWillUpdate(nextProps) {
+  //   if (
+  //     nextProps.currentMeeting !== this.props.currentMeeting &&
+  //     this.props.navigation.getParam('created', 'none') === true
+  //   ) {
+  //     const {
+  //       name,
+  //       address,
+  //       link,
+  //       location,
+  //       date,
+  //       imageRef,
+  //       id
+  //     } = nextProps.currentMeeting
+  //     const formattedMessage = {
+  //       content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+  //         +date
+  //       ).toString()}++++Long press this message to respond.`,
+  //       imageRef: imageRef,
+  //       meetingId: id,
+  //       userId: nextProps.user.id,
+  //       length: 10,
+  //       chatId: nextProps.currentChat.id
+  //     }
+  //     this.onSend(formattedMessage, true)
+  //   }
+  // }
+  componentDidUpdate(prevProps) {
     if (
-      nextProps.currentMeeting !== this.props.currentMeeting &&
+      prevProps.currentMeeting !== this.props.currentMeeting &&
       this.props.navigation.getParam('created', 'none') === true
     ) {
       const {
@@ -108,16 +135,16 @@ class SingleChats extends Component {
         date,
         imageRef,
         id
-      } = nextProps.currentMeeting
+      } = this.props.currentMeeting
       const formattedMessage = {
         content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
           +date
         ).toString()}++++Long press this message to respond.`,
         imageRef: imageRef,
         meetingId: id,
-        userId: nextProps.user.id,
+        userId: this.props.user.id,
         length: 10,
-        chatId: nextProps.currentChat.id
+        chatId: this.props.currentChat.id
       }
       this.onSend(formattedMessage, true)
     }
@@ -150,21 +177,21 @@ class SingleChats extends Component {
     socket.off('receiveMessage')
   }
 
-  renderChatFooter() {
-    if (this.state.reply) {
-      console.log('message inside of renderChatFooter', this.props.messages[0])
-      return (
-        <ReplyToFooter
-          reply_to={this.props.messages[0].user.name}
-          closeFooter={this.closeFooter}
-          meetingId={this.props.messages[0].meetingId}
-        />
-      )
-    }
-    return null
-  }
+  // renderChatFooter() {
+  //   if (this.state.reply) {
+  //     console.log('message inside of renderChatFooter', this.props.messages[0])
+  //     return (
+  //       <ReplyToFooter
+  //         reply_to={this.props.messages[0].user.name}
+  //         closeDialog={this.closeDialog}
+  //         meetingId={this.props.messages[0].meetingId}
+  //       />
+  //     )
+  //   }
+  //   return null
+  // }
 
-  closeFooter() {
+  closeDialog() {
     this.setState({reply: false})
   }
 
@@ -200,12 +227,14 @@ class SingleChats extends Component {
     console.log('this.state.reply', this.state.reply)
     return (
       <React.Fragment>
-        <MeetingResponse
-          reply={this.state.reply}
-          reply_to={this.state.curMessage.user.name}
-          closeFooter={this.closeFooter}
-          meetingId={this.state.curMessage.meetingId}
-        />
+        {this.state.curMessage.user && (
+          <MeetingResponse
+            reply={this.state.reply}
+            reply_to={this.state.curMessage.user.name}
+            closeDialog={this.closeDialog}
+            meetingId={this.state.curMessage.meetingId}
+          />
+        )}
         <StatusBar barStyle="light-content" />
         <CustomHeader
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
@@ -226,6 +255,7 @@ class SingleChats extends Component {
           onSend={messages => this.onSend(messages)}
           //renderChatFooter={this.renderChatFooter}
           onLongPress={(context, message) => {
+            console.log('TCL: message inside onLongPress', message)
             if (message.text.includes('New Invitation')) {
               this.setState({reply: true})
             } else {

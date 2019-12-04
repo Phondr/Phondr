@@ -99,6 +99,7 @@ export const newMessage = message => {
       //   data.data.newMessage.image = googleImage
       // }
       //Format into readable date by gifted chat
+      console.log('data.data.newMessage', data.data.newMessage)
       if (data.data.newMessage.text.includes('++New Invitation To Meet!')) {
         data.data.newMessage.text = data.data.newMessage.text
           .split('++')

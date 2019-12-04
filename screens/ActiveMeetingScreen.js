@@ -6,6 +6,7 @@ import CustomHeader from '../components/CustomHeader'
 import {withNavigation} from 'react-navigation'
 import ActiveComp from '../components/ActiveComp'
 import TabBarIcon from '../components/TabBarIcon'
+import {fetchAllMeetings} from '../redux/meetings'
 class ActiveScreen extends React.Component {
   constructor() {
     super()
@@ -42,5 +43,5 @@ class ActiveScreen extends React.Component {
   }
 }
 export default connect(({meetings, user}) => ({meetings, user}), {
-  fetchMeetings
+  fetchAllMeetings
 })(ActiveScreen)

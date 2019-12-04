@@ -387,8 +387,14 @@ const rootMutation = new GraphQLObjectType({
         meetingId: {type: GraphQLInt}
       },
       async resolve(parent, args) {
-        const message = await db.models.message.create({...args})
-        if (+args.meetingId) {
+        const message = await db.models.message.create({
+          content: args.content,
+          length: args.length,
+          imageRef: args.imageRef,
+          userId: args.userId,
+          chatId: args.chatId
+        })
+        if (+args.meetingId !== 0) {
           const meeting = await db.models.meeting.findByPk(args.meetingId)
           await message.setMeeting(meeting)
         }

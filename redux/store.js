@@ -7,9 +7,8 @@ import thunkMiddleware from 'redux-thunk'
 
 let middleware = [thunkMiddleware.withExtraArgument({axios})]
 // createLogger({collapsed: true})
-// if (process.browser) {
-//   middleware = [...middleware, createLogger({ collapsed: true })]
-// }
+
+middleware = [...middleware, createLogger({collapsed: false})]
 
 const RESET_STORE = 'RESET_STORE'
 export const resetStore = () => ({type: RESET_STORE})
