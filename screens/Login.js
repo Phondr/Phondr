@@ -67,7 +67,7 @@ export class Login extends Component {
 
     try {
       await this.props.getUser(values)
-      this.props.navigation.navigate('Home')
+      this.props.navigation.navigate('loggedIn')
     } catch (error) {
       this.setState({loading: false})
       alert('COULD NOT LOGIN')
@@ -76,7 +76,7 @@ export class Login extends Component {
   }
 
   navigateHome() {
-    return this.props.navigation.navigate('Home')
+    return this.props.navigation.navigate('loggedIn')
   }
 
   render() {

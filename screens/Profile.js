@@ -50,7 +50,7 @@ export class Profile extends Component {
 
   render() {
     const user = this.props.user
-    console.log('USER', user)
+    //console.log('USER', user)
     return (
       <ScrollView style={styles.container}>
         <StatusBar barStyle="light-content" />

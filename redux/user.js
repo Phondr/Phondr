@@ -5,6 +5,17 @@ import {AsyncStorage} from 'react-native'
 import AsyncUtils from '../server/AsyncUtils'
 import client from './apolloClient'
 import myAxios from './axios-config'
+import {RNS3} from 'react-native-s3-upload'
+const {amazonImageConfig} = require('../secrets')
+
+require('../secrets')
+
+// const cloudurl = CLOUDINARY_URL
+// cloudinary.config({
+//   cloud_name: cloudinaryName,
+//   api_key: cloudinaryAPIkey,
+//   api_secret: cloudinarySecret
+// })
 
 //action type
 const GETUSER = 'GETUSER'
@@ -96,37 +107,72 @@ export const fetchUserLogin = values => async dispatch => {
   }
 }
 
-export const userSignUp = (values, preferences) => async dispatch => {
+export const userSignUp = (values, preferences, photo) => async dispatch => {
   try {
-    
-
     if (getData('userKey')) {
       removeData('userKey')
     }
 
-    const fullName = values.fullName
+    const fullName = values.name
     const age = values.age
     const password = values.password
     const email = values.email
-    const address = values.address
-    const radius = values.radius
+    // const address = values.address
+    const distPref = values.radius
+    const iPrefer = preferences
+    const iAm = values.gender
+    const profilePicture = photo
 
-    let {data} = await client.mutate({
-      mutation: gql`mutation{
-        userSignup(fullName: "${fullName}", email: "${email}", password: "${password}") {
-          id
-          email
-          fullName
-          password
-          }
-              }`
+    console.log('SIGNUP STUFF', values, iPrefer, profilePicture)
+
+    RNS3.put(
+      {
+        uri: profilePicture,
+        name: email + 'profile_image.jpg',
+        type: 'image/jpg'
+      },
+      amazonImageConfig
+    ).then(async response => {
+      if (response.status !== 201) {
+        throw new Error('Failed to upload image to S3')
+      }
+      console.log('RESPONSE BODY', response.body)
+      /**
+       * {
+       *   postResponse: {
+       *     bucket: "your-bucket",
+       *     etag : "9f620878e06d28774406017480a59fd4",
+       *     key: "uploads/image.png",
+       *     location: "https://your-bucket.s3.amazonaws.com/uploads%2Fimage.png"
+       *   }
+       * }
+       */
+      let {data} = await client.mutate({
+        mutation: gql`mutation{
+          userSignup(fullName: "${fullName}", email: "${email}", iAm: "${iAm}", age: ${age}, distPref: ${distPref}, iPrefer: [${iPrefer.map(
+          i => `"${i}"`
+        )}], password: "${password}", profilePicture: "${
+          response.headers.Location
+        }" ) {
+            id
+            email
+            fullName
+            homeLocation
+            incentivePoints
+            profilePicture
+            age
+            iAm
+            iPrefer
+            }
+                }`
+      })
+
+      if (data.userSignup) {
+        storeData('userKey', JSON.stringify(data.userSignup))
+      }
+
+      dispatch(setUser(data.userSignup))
     })
-
-    if (data.userSignup) {
-      storeData('userKey', JSON.stringify(data.userSignup))
-    }
-
-    dispatch(setUser(data.userSignup))
   } catch (error) {
     alert('COULD NOT SIGN-UP')
     console.log(error)
