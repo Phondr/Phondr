@@ -13,7 +13,6 @@ import {
   createStackNavigator,
   createMaterialTopTabNavigator
 } from 'react-navigation'
-import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs'
 import Home from './screens/Home'
 import {Container, Content, Header, Body, Drawer, Icon} from 'native-base'
 import drawerStyles from './styles/drawerStyle'
