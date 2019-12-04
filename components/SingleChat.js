@@ -185,7 +185,7 @@ class SingleChats extends Component {
       }
       console.log('formatted message inside sendmeeting', formattedMessage)
       this.onSend(formattedMessage, true)
-      this.props.navigation.setParam({created: false})
+      this.props.navigation.setParams({created: false})
     }
   }
 

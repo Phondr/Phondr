@@ -30,7 +30,7 @@ const ProgressBar = ({
     if (header) {
       setCurrentProgress(progress)
     }
-  }, [currentChat.messages.length])
+  }, [currentChat.messages])
 
   return (
     <>

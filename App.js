@@ -38,7 +38,7 @@ import ActiveComponent from './components/ActiveComp'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 import Profile from './screens/Profile'
-import PendingMeetings from './screens/PendingMeetings'
+import PendingMeetings from './components/PendingMeetingComp'
 import UserProfileEdit from './screens/UserProfileEdit'
 import Spinner from './components/Spinner'
 import MapV from './components/MapView'
@@ -47,6 +47,7 @@ const {url} = require('./secrets')
 import PlaceSearch from './components/PlaceSearch'
 import MeetingModal from './screens/MeetingModal'
 import ActiveMeetingScreen from './screens/ActiveMeetingScreen'
+import PendingMeetingScreen from './screens/PendingMeetingScreen'
 
 const ActiveScreenStack = createStackNavigator(
   {
@@ -70,6 +71,7 @@ const ActiveScreenStack = createStackNavigator(
     }
   },
   {
+    initialRouteName: 'ActiveScreen',
     navigationOptions: {
       tabBarLabel: 'Active',
       tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />
@@ -92,6 +94,7 @@ const ActiveMeetingStack = createStackNavigator(
     }
   },
   {
+    initialRouteName: 'ActiveMeetingScreen',
     navigationOptions: {
       tabBarLabel: 'Active',
       tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />
@@ -107,7 +110,8 @@ const ChatBottomTab = createBottomTabNavigator(
   {
     tabBarOptions: {
       style: {paddingBottom: 5},
-      labelStyle: {fontSize: 12}
+      labelStyle: {fontSize: 12},
+      activeTintColor: 'orange'
     },
     navigationOptions: {
       drawerIcon: ({tintColor}) => {
@@ -125,12 +129,13 @@ const ChatBottomTab = createBottomTabNavigator(
 const MeetingBottomTab = createBottomTabNavigator(
   {
     Active: {screen: ActiveMeetingStack},
-    Pending: {screen: PendingScreen}
+    Pending: {screen: PendingMeetingScreen}
   },
   {
     tabBarOptions: {
       style: {paddingBottom: 5},
-      labelStyle: {fontSize: 12}
+      labelStyle: {fontSize: 12},
+      activeTintColor: 'orange'
     },
     navigationOptions: {
       drawerIcon: ({tintColor}) => {

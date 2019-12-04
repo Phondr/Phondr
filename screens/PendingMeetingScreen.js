@@ -4,11 +4,12 @@ import {Icon, Left, Card, CardItem, Text, Container, Content} from 'native-base'
 import {ScrollView, Platform} from 'react-native'
 import CustomHeader from '../components/CustomHeader'
 import TabBarIcon from '../components/TabBarIcon'
-import ActiveMeetingComp from '../components/ActiveMeetingComp'
+
+import PendingMeetingComp from '../components/PendingMeetingComp'
 
 import {withNavigation, NavigationEvents} from 'react-navigation'
 import {fetchAllMeetings} from '../redux/meetings'
-class ActiveScreen extends React.Component {
+class PendingScreen extends React.Component {
   constructor() {
     super()
   }
@@ -18,7 +19,11 @@ class ActiveScreen extends React.Component {
   static navigationOptions = {
     drawerIcon: ({tintColor}) => {
       return null
-    }
+    },
+    tabBarLabel: 'Pending',
+    tabBarIcon: ({focused}) => (
+      <TabBarIcon focused={focused} name={'ellipsis1'} />
+    )
   }
   render() {
     const {meetings, navigation} = this.props
@@ -31,14 +36,14 @@ class ActiveScreen extends React.Component {
         }}
       /> */}
         <ScrollView>
-          <CustomHeader title="Active Meetings" />
+          <CustomHeader title="Pending Meetings" />
           <Content>
             {meetings.length ? (
-              <ActiveMeetingComp />
+              <PendingMeetingComp />
             ) : (
               <Card>
                 <CardItem>
-                  <Text>No Active Meetings</Text>
+                  <Text>No Pending Meetings</Text>
                 </CardItem>
               </Card>
             )}
@@ -50,4 +55,4 @@ class ActiveScreen extends React.Component {
 }
 export default connect(({meetings, user}) => ({meetings, user}), {
   fetchAllMeetings
-})(ActiveScreen)
+})(PendingScreen)
