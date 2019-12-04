@@ -1,22 +1,5 @@
 import React, {Component} from 'react'
-import {
-  Container,
-  Header,
-  Title,
-  Content,
-  Footer,
-  FooterTab,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  Text,
-  Form,
-  Item,
-  Input,
-  Fab
-} from 'native-base'
+import {Icon, Fab} from 'native-base'
 import {
   ScrollView,
   View,
@@ -24,21 +7,22 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native'
-import {GiftedChat, Bubble, Message} from 'react-native-gifted-chat'
-import {withNavigation, NavigationEvents} from 'react-navigation'
+import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {fetchCurrentChat} from '../redux/currentChat'
 import {connect} from 'react-redux'
 import socket from '../redux/socketClient'
 import {showMessage} from 'react-native-flash-message'
 import CustomHeader from '../components/CustomHeader'
-import PreviewLink from '../components/PreviewLink'
+import RecordAudio from './recordAudio'
+import RenderAudio from './renderAudio'
 import {placesAPI} from '../secrets'
 import axios from 'axios'
 import ChatBubbleWithReply from '../components/ChatBubbleWithReply'
 import ReplyToFooter from '../components/ReplyToFooter'
 import {fetchMeeting} from '../redux/currentMeeting'
 import MeetingResponse from '../components/MeetingResponse'
+import {NavigationEvents} from 'react-navigation'
 import ChatEvent from '../components/ChatEvent'
 class SingleChats extends Component {
   constructor(props) {
@@ -49,7 +33,7 @@ class SingleChats extends Component {
     }
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
-    // this.imageRequest = this.imageRequest.bind(this)
+    this.renderBubble = this.renderBubble.bind(this)
     this.closeDialog = this.closeDialog.bind(this)
     this.sendMeeting = this.sendMeeting.bind(this)
     //this.renderChatFooter = this.renderChatFooter.bind(this)
@@ -129,7 +113,6 @@ class SingleChats extends Component {
   //     this.onSend(formattedMessage, true)
   //   }
   // }
-
   // componentDidUpdate(prevProps) {
   //   if (
   //     prevProps.currentMeeting !== this.props.currentMeeting &&
@@ -206,9 +189,7 @@ class SingleChats extends Component {
   //     image = this.imageRequest(this.props.currentMeeting.imageRef)
   //     props.currentMessage.image = image
   //   }
-  //   //console.log(props)
-  //   return <Bubble {...props} />
-  //}
+  // }
 
   componentWillUnmount() {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
@@ -244,7 +225,8 @@ class SingleChats extends Component {
         content: message[0].text,
         userId: message[0].user._id,
         length: message[0].text.length,
-        chatId: this.props.currentChat.id
+        chatId: this.props.currentChat.id,
+        audio: message[0].audio || null
       }
     }
 
@@ -260,6 +242,24 @@ class SingleChats extends Component {
 
   getOtherUserInChat(chat) {
     return chat.users.find(user => user.fullName !== this.props.user.fullName)
+  }
+
+  renderBubble(props) {
+    if (props.currentMessage.audio) {
+      //Render the play audio icon if the message has audio along with the timestamp
+      return (
+        <View>
+          <RenderAudio message={props.currentMessage} user={this.props.user} />
+          <Bubble {...props} />
+        </View>
+      )
+    }
+    return (
+      //Render normal text bubble with timestamp
+      <View>
+        <Bubble {...props} />
+      </View>
+    )
   }
 
   render() {
@@ -290,6 +290,12 @@ class SingleChats extends Component {
         >
           <Icon name="meetup" type={'FontAwesome'} />
         </Fab>
+        <RecordAudio
+          onSend={this.onSend}
+          user={this.props.user}
+          chat={this.props.currentChat}
+          messageLength={this.props.messages.length}
+        />
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
@@ -306,7 +312,7 @@ class SingleChats extends Component {
             _id: this.props.user.id,
             name: this.props.user.fullName
           }}
-          //renderBubble={this.renderBubble}
+          renderBubble={this.renderBubble}
         />
         {Platform.OS === 'android' && (
           <KeyboardAvoidingView behavior="padding" />

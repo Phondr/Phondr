@@ -13,15 +13,13 @@ import {
   createStackNavigator,
   createMaterialTopTabNavigator
 } from 'react-navigation'
-import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs'
+
 import Home from './screens/Home'
 import {Container, Content, Header, Body, Drawer, Icon} from 'native-base'
 import drawerStyles from './styles/drawerStyle'
 import CustomDrawer from './components/CustomDrawer'
-import AnatomyExample from './components/hellowworld'
 import New from './components/route'
 import ApolloClient from 'apollo-boost'
-import {ApolloProvider} from '@apollo/react-hooks'
 import {connect, Provider} from 'react-redux'
 import store from './redux/store'
 import AppNavigator from './navigation/AppNavigator'
