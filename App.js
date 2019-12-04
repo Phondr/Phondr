@@ -8,7 +8,8 @@ import {Ionicons} from '@expo/vector-icons'
 import {
   createDrawerNavigator,
   createAppContainer,
-  createStackNavigator
+  createStackNavigator,
+  createSwitchNavigator
 } from 'react-navigation'
 import Home from './screens/Home'
 import {Container, Content, Header, Body, Drawer} from 'native-base'
@@ -63,6 +64,23 @@ const ActiveScreenStack = createStackNavigator({
   }
 })
 
+const EntryStack = createStackNavigator(
+  {
+    Entry: Entry,
+    Login: Login,
+    Signup: Signup,
+    LoginCamera: LoginCamera
+  },
+  {
+    initialRouteName: 'Entry'
+  },
+  {
+    navigationOptions: {
+      gesturesEnabled: true
+    }
+  }
+)
+
 var drawer = createDrawerNavigator(
   {
     Profile: {
@@ -74,18 +92,18 @@ var drawer = createDrawerNavigator(
     New: {
       screen: New
     },
-    Login: {
-      screen: Login
-    },
-    Signup: {
-      screen: Signup
-    },
-    LoginCamera: {
-      screen: LoginCamera
-    },
-    Entry: {
-      screen: Entry
-    },
+    // Login: {
+    //   screen: Login
+    // },
+    // Signup: {
+    //   screen: Signup
+    // },
+    // Entry: {
+    //   screen: Entry
+    // },
+    // LoginCamera: {
+    //   screen: LoginCamera
+    // },
     MapV: {
       screen: MapV
     },
@@ -107,7 +125,7 @@ var drawer = createDrawerNavigator(
     // MeetingModal: {}
   },
   {
-    initialRouteName: 'Entry',
+    initialRouteName: 'Home',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'
@@ -118,7 +136,16 @@ var drawer = createDrawerNavigator(
   }
 )
 
-const DrawerContainer = createAppContainer(drawer)
+const OuterSwitch = createSwitchNavigator({
+  notLoggedIn: {
+    screen: EntryStack
+  },
+  loggedIn: {
+    screen: drawer
+  }
+})
+
+const OuterNav = createAppContainer(OuterSwitch)
 
 function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
@@ -149,7 +176,7 @@ function App(props) {
           {/* <AppNavigator /> */}
           {/* <AnatomyExample /> */}
           {/* <AuthPages /> */}
-          <DrawerContainer />
+          <OuterNav />
           <FlashMessage position="top" />
           {/* <New /> */}
         </View>
