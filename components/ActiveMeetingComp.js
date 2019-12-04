@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {Icon, Left, Body, Right, Card, CardItem, Text} from 'native-base'
 import {withNavigation, NavigationEvents} from 'react-navigation'
-import {setChat} from '../redux/currentChat'
+import {setChat, fetchCurrentChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
 import {fetchAllMeetings} from '../redux/meetings'
 
@@ -11,7 +11,8 @@ const ActiveMeetingComp = ({
   meetings,
   fetchAllMeetings,
   navigation,
-  setChat
+  setChat,
+  fetchCurrentChat
 }) => {
   const active = meetings.filter(meeting => meeting.status === 'active')
 
@@ -40,8 +41,8 @@ const ActiveMeetingComp = ({
         return (
           <CardItem
             button
-            onPress={() => {
-              setChat(cur.chat)
+            onPress={async () => {
+              await fetchCurrentChat(cur.chat.id)
               navigation.navigate('SingleChat')
             }}
             key={cur.id}
@@ -76,6 +77,7 @@ const ActiveMeetingComp = ({
 export default withNavigation(
   connect(({meetings, user}) => ({meetings, user}), {
     fetchAllMeetings,
-    setChat
+    setChat,
+    fetchCurrentChat
   })(ActiveMeetingComp)
 )

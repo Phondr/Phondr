@@ -25,6 +25,7 @@ import {
   Platform
 } from 'react-native'
 import {GiftedChat, Bubble, Message} from 'react-native-gifted-chat'
+import {withNavigation, NavigationEvents} from 'react-navigation'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {fetchCurrentChat} from '../redux/currentChat'
 import {connect} from 'react-redux'
@@ -38,6 +39,7 @@ import ChatBubbleWithReply from '../components/ChatBubbleWithReply'
 import ReplyToFooter from '../components/ReplyToFooter'
 import {fetchMeeting} from '../redux/currentMeeting'
 import MeetingResponse from '../components/MeetingResponse'
+import ChatEvent from '../components/ChatEvent'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
@@ -49,6 +51,7 @@ class SingleChats extends Component {
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
     // this.imageRequest = this.imageRequest.bind(this)
     this.closeDialog = this.closeDialog.bind(this)
+    this.sendMeeting = this.sendMeeting.bind(this)
     //this.renderChatFooter = this.renderChatFooter.bind(this)
     //this.renderBubble = this.renderBubble.bind(this)
   }
@@ -126,11 +129,41 @@ class SingleChats extends Component {
   //     this.onSend(formattedMessage, true)
   //   }
   // }
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.currentMeeting !== this.props.currentMeeting &&
-      this.props.navigation.getParam('created', 'none') === true
-    ) {
+
+  // componentDidUpdate(prevProps) {
+  //   if (
+  //     prevProps.currentMeeting !== this.props.currentMeeting &&
+  //     this.props.navigation.getParam('created', 'none') === true
+  //   ) {
+  //     const {
+  //       name,
+  //       address,
+  //       link,
+  //       location,
+  //       date,
+  //       imageRef,
+  //       id
+  //     } = this.props.currentMeeting
+  //     const formattedMessage = {
+  //       content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+  //         +date
+  //       ).toString()}++++Long press this message to respond.`,
+  //       imageRef: imageRef,
+  //       meetingId: id,
+  //       userId: this.props.user.id,
+  //       length: 10,
+  //       chatId: this.props.currentChat.id
+  //     }
+  //     this.onSend(formattedMessage, true)
+  //   }
+  // }
+
+  sendMeeting() {
+    console.log(
+      'outside send meeting',
+      this.props.navigation.getParam('created')
+    )
+    if (this.props.navigation.getParam('created')) {
       const {
         name,
         address,
@@ -150,7 +183,9 @@ class SingleChats extends Component {
         length: 10,
         chatId: this.props.currentChat.id
       }
+      console.log('formatted message inside sendmeeting', formattedMessage)
       this.onSend(formattedMessage, true)
+      this.props.navigation.setParam({created: false})
     }
   }
 
@@ -228,9 +263,10 @@ class SingleChats extends Component {
   }
 
   render() {
-    console.log('this.state.reply', this.state.reply, 'this.state.curMessage')
     return (
       <React.Fragment>
+        <NavigationEvents onDidFocus={this.sendMeeting} />
+
         {this.state.curMessage.user && (
           <MeetingResponse
             reply={this.state.reply}
