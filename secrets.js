@@ -10,8 +10,18 @@ const amazonImageConfig = {
   successActionStatus: 201
 }
 
+const amazonConfig = {
+  keyPrefix: 'uploads/',
+  bucket: 'phondr',
+  region: 'us-east-2',
+  accessKey: 'AKIAIXU2UF6F4HTS4J6A',
+  secretKey: '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',
+  successActionStatus: 201
+}
+
 module.exports = {
   url,
   googlePlaceApiKey,
-  amazonImageConfig
+  amazonImageConfig,
+  amazonConfig
 }
