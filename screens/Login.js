@@ -19,7 +19,11 @@ import gql from 'graphql-tag'
 import {throwServerError} from 'apollo-link-http-common'
 import {navigate, NavigationEvents} from 'react-navigation'
 import Spinner from '../components/Spinner'
+import _ from 'lodash'
 
+const Form = t.form.Form
+Form.stylesheet.textbox.normal.color = 'white';
+Form.stylesheet.controlLabel.normal.color= 'white'
 const User = t.struct({
   email: t.String,
   password: t.String
@@ -28,17 +32,18 @@ const User = t.struct({
 const options = {
   fields: {
     email: {
-      error: 'You need a valid email to login to your account'
+      error: 'You need a valid email to login to your account',
+
     },
     password: {
       password: true,
       secureTextEntry: true,
-      error: 'You need a valid password to login to your account'
+      error: 'You need a valid password to login to your account',
     }
   }
 }
 
-const Form = t.form.Form
+// const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
 
 export class Login extends Component {
   constructor() {
