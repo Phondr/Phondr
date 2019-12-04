@@ -9,8 +9,7 @@ import {
   Button,
   Icon,
 } from 'native-base'
-import { StyleSheet, StatusBar } from 'react-native'
-import Profile from './Profile'
+
 import Mapv from './MapView'
 import SingleChats from './SingleChat'
 import MeetingModal from '../screens/MeetingModal'
@@ -49,9 +48,6 @@ const Temp = createStackNavigator(
   {
     stack: {
       screen: Stack
-    },
-    profile: {
-      screen: Profile
     },
     mapview: {
       screen: Mapv

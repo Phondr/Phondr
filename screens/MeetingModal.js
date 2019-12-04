@@ -155,7 +155,6 @@ const MeetingModal = ({
     //console.log('TCL: invitation', invitation)
     //console.log('formated invitation', formatRegion(invitation))
   }
-<<<<<<< HEAD
   console.log('nearby', nearby)
   // if (loading || !currentCoord.latitude || !region.latitude) {
   //   return (
@@ -164,16 +163,6 @@ const MeetingModal = ({
   //     </View>
   //   )
   // }
-=======
-
-  if (loading || !currentCoord.latitude || !region.latitude) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Spinner />
-      </View>
-    )
-  }
->>>>>>> a5edb7afd7ce5abf73d55d0f14c1017e2c4845cf
   return (
     // <Modal
     //   coverScreen={false}

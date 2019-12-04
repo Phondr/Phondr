@@ -17,12 +17,7 @@ import {fetchUserLogin} from '../redux/user'
 import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
 import {throwServerError} from 'apollo-link-http-common'
-<<<<<<< HEAD
-import {navigate} from 'react-navigation'
-import {relative} from 'path'
-=======
 import {navigate, NavigationEvents} from 'react-navigation'
->>>>>>> a5edb7afd7ce5abf73d55d0f14c1017e2c4845cf
 import Spinner from '../components/Spinner'
 
 const User = t.struct({
@@ -90,7 +85,6 @@ export class Login extends Component {
     //   return <Spinner />
     // }
     return (
-<<<<<<< HEAD
       <View style={{backgroundColor: '#343434'}}>
         <View style={{alignItems: 'center', backgroundColor: '#343434'}}>
           <Image
@@ -101,6 +95,14 @@ export class Login extends Component {
         </View>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={styles.container}>
+            <NavigationEvents
+              onDidFocus={async payload => {
+                if (this.props.user.id) {
+                  console.log('go home')
+                  this.navigateHome()
+                }
+              }}
+            />
             <Form ref={c => (this._form = c)} type={User} options={options} />
             <TouchableOpacity onPress={this.login} style={styles.submitButton}>
               <Text style={styles.submitButtonText}>Login</Text>
@@ -113,22 +115,6 @@ export class Login extends Component {
             source={require('../assets/images/fog.jpg')}
             resizeMode="cover"
           />
-=======
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.container}>
-          <NavigationEvents
-            onDidFocus={async payload => {
-              if (this.props.user.id) {
-                console.log('go home')
-                this.navigateHome()
-              }
-            }}
-          />
-          <Form ref={c => (this._form = c)} type={User} options={options} />
-          <TouchableOpacity onPress={this.login} style={styles.submitButton}>
-            <Text style={styles.submitButtonText}>Login</Text>
-          </TouchableOpacity>
->>>>>>> a5edb7afd7ce5abf73d55d0f14c1017e2c4845cf
         </View>
       </View>
     )

@@ -98,10 +98,6 @@ export const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center'
   },
-  logintext: {
-    margin: 2,
-    fontSize: 30,
-  },
   formcontainer: {
     justifyContent: 'center',
     marginTop: 50,

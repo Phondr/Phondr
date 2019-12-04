@@ -36,7 +36,7 @@ class Home extends Component {
     this.state = {
       user: {fullName: 'Avaree Warrick', id: 1, isNoob: true},
       defaultAnimationDialog: true,
-      loading:true
+      loading: true
     }
   }
   static navigationOptions = {
@@ -46,14 +46,14 @@ class Home extends Component {
   }
 
   // componentDidMount() {
-    //this is just for testing
-    // this.props.setUser(this.state.user)
+  //this is just for testing
+  // this.props.setUser(this.state.user)
 
-    // if (!this.props.user.id) {
-    //   this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
-    // }
-    // if (this.props.user.id) {
-    //   console.log('in comp did mouth fmc')
+  // if (!this.props.user.id) {
+  //   this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
+  // }
+  // if (this.props.user.id) {
+  //   console.log('in comp did mouth fmc')
   async componentDidMount() {
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
@@ -147,10 +147,14 @@ class Home extends Component {
                 rounded
                 info
                 onPress={() => this.props.findOrCreateChat(this.props.user.id)}
-                style={{backgroundColor:'#E0115F'}}
+                style={{backgroundColor: '#E0115F'}}
               >
-                <Icon style={{color:'#9B111E'}} name="pluscircle" type="AntDesign">
-                  <Text style={{color:'#9B111E'}}> New Chat</Text>
+                <Icon
+                  style={{color: '#9B111E'}}
+                  name="pluscircle"
+                  type="AntDesign"
+                >
+                  <Text style={{color: '#9B111E'}}> New Chat</Text>
                 </Icon>
               </Button>
             </Right>

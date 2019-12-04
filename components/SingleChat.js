@@ -1,6 +1,12 @@
 import React, {Component} from 'react'
-import {Icon, Fab, Button, View} from 'native-base'
-import {ScrollView, View, StatusBar, KeyboardAvoidingView, Platform} from 'react-native'
+import {Icon, Fab, Button} from 'native-base'
+import {
+  ScrollView,
+  View,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {fetchCurrentChat} from '../redux/currentChat'
@@ -136,7 +142,8 @@ class SingleChats extends Component {
   }
 
   renderBubble(props) {
-    if (props.currentMessage.audio) {//Render the play audio icon if the message has audio along with the timestamp
+    if (props.currentMessage.audio) {
+      //Render the play audio icon if the message has audio along with the timestamp
       return (
         <View>
           <RenderAudio message={props.currentMessage} user={this.props.user} />
@@ -144,7 +151,8 @@ class SingleChats extends Component {
         </View>
       )
     }
-    return (//Render normal text bubble with timestamp
+    return (
+      //Render normal text bubble with timestamp
       <View>
         <Bubble {...props} />
       </View>
@@ -156,18 +164,11 @@ class SingleChats extends Component {
       <React.Fragment>
         <StatusBar barStyle="light-content" />
         <CustomHeader
-          title={`Chat Room ${this.props.currentChat.id}`}
-          currentChat={this.props.currentChat}
-        />
-        <Button
-          style={{backgroundColor:'#85754E', width: '16%', alignSelf:"center"}}
-          onPress={() => this.props.navigation.navigate('MeetingModal')}
-        >
-          <Icon style={{alignSelf:"center", backgroundColor:'#85754E' }} name="meetup" type={'FontAwesome'} />
-        </Button>
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
           currentChat={this.props.currentChat}
         />
+
+
         <RecordAudio
           onSend={this.onSend}
           user={this.props.user}
@@ -183,10 +184,25 @@ class SingleChats extends Component {
           }}
           renderBubble={this.renderBubble}
         />
-
         {Platform.OS === 'android' && (
           <KeyboardAvoidingView behavior="padding" />
         )}
+        <Button
+          rounded
+          style={{
+            backgroundColor: '#E0115F',
+            position:'absolute',
+            marginTop: 595,
+            marginLeft:260
+          }}
+          onPress={() => this.props.navigation.navigate('MeetingModal')}
+        >
+          <Icon
+            style={{alignSelf: 'center', backgroundColor: '#E0115F'}}
+            name="meetup"
+            type={'FontAwesome'}
+          />
+        </Button>
       </React.Fragment>
     )
   }
