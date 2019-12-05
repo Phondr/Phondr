@@ -253,6 +253,7 @@ class SingleChats extends Component {
   }
 
   renderBubble(props) {
+    console.log('checkmessage', props.currentMessage)
     if (props.currentMessage.audio) {
       //Render the play audio icon if the message has audio along with the timestamp
       return (

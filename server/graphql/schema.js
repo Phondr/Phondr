@@ -467,6 +467,7 @@ const rootMutation = new GraphQLObjectType({
         const message = await db.models.message.create({
           content: args.content,
           length: args.length,
+          audio: args.audio,
           imageRef: args.imageRef,
           userId: args.userId,
           chatId: args.chatId
