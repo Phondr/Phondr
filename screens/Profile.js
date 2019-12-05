@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 28
   },
-  name: {
+  name2: {
     fontSize: 28,
     color: '#696969',
     fontWeight: '600'

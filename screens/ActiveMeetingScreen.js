@@ -4,7 +4,7 @@ import {Icon, Left, Card, CardItem, Text, Container, Content} from 'native-base'
 import {ScrollView, Platform} from 'react-native'
 import TabBarIcon from '../components/TabBarIcon'
 import ActiveMeetingComp from '../components/ActiveMeetingComp'
-
+import CustomHeader from '../components/CustomHeader'
 import {withNavigation, NavigationEvents} from 'react-navigation'
 import {fetchAllMeetings} from '../redux/meetings'
 import Spinner from '../components/Spinner'
@@ -41,7 +41,7 @@ class ActiveScreen extends React.Component {
       )
     }
     return (
-      <Container style= {{backgroundColor:'#343434'}}>
+      <Container style={{backgroundColor: '#343434'}}>
         <NavigationEvents
           onDidFocus={async payload => {
             this.setState({loading: true})
@@ -50,7 +50,8 @@ class ActiveScreen extends React.Component {
           }}
         />
         <ScrollView>
-          <Content >
+          <CustomHeader title="Active Meetings" />
+          <Content>
             {meetings.length ? (
               <ActiveMeetingComp
                 setParent={this.setState.bind(this)}
@@ -58,8 +59,8 @@ class ActiveScreen extends React.Component {
               />
             ) : (
               <Card>
-                <CardItem style={{backgroundColor:'#FF91AF'}}>
-                  <Text style={{color:'white'}}>No Active Meetings</Text>
+                <CardItem style={{backgroundColor: '#FF91AF'}}>
+                  <Text style={{color: 'white'}}>No Active Meetings</Text>
                 </CardItem>
               </Card>
             )}

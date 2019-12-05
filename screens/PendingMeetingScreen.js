@@ -4,7 +4,6 @@ import {Icon, Left, Card, CardItem, Text, Container, Content} from 'native-base'
 import {ScrollView, Platform} from 'react-native'
 import CustomHeader from '../components/CustomHeader'
 import TabBarIcon from '../components/TabBarIcon'
-
 import PendingMeetingComp from '../components/PendingMeetingComp'
 
 import {withNavigation, NavigationEvents} from 'react-navigation'
@@ -56,6 +55,7 @@ class PendingScreen extends React.Component {
           }}
         />
         <ScrollView>
+          <CustomHeader title="Pending Meetings" />
           <Content>
             {meetings.length ? (
               <PendingMeetingComp

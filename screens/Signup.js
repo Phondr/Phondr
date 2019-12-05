@@ -293,13 +293,9 @@ export const styles = StyleSheet.create({
     backgroundColor: '#00BFFF',
     padding: 10,
     margin: 15,
-<<<<<<< HEAD
     alignItems: 'center',
     height: 40,
     borderRadius: 30
-=======
-    height: 40
->>>>>>> 6fbbcda92bf4df0c46f46249a051ac260433ce6e
   },
   submitButtonText: {
     color: 'white'
