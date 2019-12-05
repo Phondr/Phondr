@@ -180,6 +180,9 @@ var drawer = createDrawerNavigator(
     'profile':{
       screen:Profile
     },
+    'Picture Picker': {
+      screen: PicturePicker
+    },
     Login: {
       screen: Login
     },
@@ -189,9 +192,7 @@ var drawer = createDrawerNavigator(
     Entry: {
       screen: Entry
     },
-    'Picture Picker': {
-      screen: PicturePicker
-    },
+
     // 'Pending Chats': {
     //   screen: PendingScreen
     // },

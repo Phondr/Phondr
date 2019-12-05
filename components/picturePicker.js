@@ -62,7 +62,7 @@ class PicturePicker extends React.Component {
                   <Left>
                     <Thumbnail source={{uri: item.profilePicture}} />
                     <Body>
-                      <Text>{item.fullName}</Text>
+                      <Text style={{color:'white'}}>{item.fullName}</Text>
                       <Text note>NativeBase</Text>
                     </Body>
                   </Left>
@@ -72,7 +72,7 @@ class PicturePicker extends React.Component {
                 </CardItem>
                 <CardItem style={{backgroundColor: "#FF43A4"}}>
                   <Icon name="heart" style={{color: '#ED4A6A'}} />
-                  <Text>{item.fullName}</Text>
+                  <Text style={{color:'white'}}>{item.fullName}</Text>
                 </CardItem>
               </Card>
             )}
