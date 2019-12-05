@@ -22,7 +22,7 @@ export class Profile extends Component {
     this.state = {
       user: '',
       address: '',
-      loading: true,
+      loading: true
     }
   }
 
@@ -67,9 +67,11 @@ export class Profile extends Component {
 
   render() {
     const user = this.props.user
-    if(this.state.loading) {return <Spinner />}
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
-      <ScrollView style={{backgroundColor:'#FC89AC'}}>
+      <ScrollView style={{backgroundColor: '#FC89AC'}}>
         <StatusBar barStyle="light-content" />
         <CustomHeader title="Profile" />
         <View style={styles.header}></View>
@@ -93,7 +95,7 @@ export class Profile extends Component {
                 this.props.navigation.navigate('UserProfileEdit', {user})
               }}
             >
-              <Text style={{color:'white'}}>Edit Profile</Text>
+              <Text style={{color: 'white'}}>Edit Profile</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -108,15 +110,15 @@ const styles = StyleSheet.create({
     height: 200
   },
   avatar: {
-    width: 130,
-    height: 130,
-    borderRadius: 63,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
     borderWidth: 4,
     borderColor: 'white',
     marginBottom: 10,
     alignSelf: 'center',
     position: 'absolute',
-    marginTop: 130
+    marginTop: 75
   },
   name: {
     fontSize: 22,
@@ -125,14 +127,14 @@ const styles = StyleSheet.create({
   },
   body: {
     marginTop: 40,
-    backgroundColor:'#FC89AC'
+    backgroundColor: '#FC89AC'
   },
   bodyContent: {
     flex: 1,
     alignItems: 'center',
     padding: 28
   },
-  name: {
+  name2: {
     fontSize: 28,
     color: '#696969',
     fontWeight: '600'

@@ -22,8 +22,8 @@ import Spinner from '../components/Spinner'
 import _ from 'lodash'
 
 const Form = t.form.Form
-Form.stylesheet.textbox.normal.color = 'white';
-Form.stylesheet.controlLabel.normal.color= 'white'
+Form.stylesheet.textbox.normal.color = 'white'
+Form.stylesheet.controlLabel.normal.color = 'white'
 const User = t.struct({
   email: t.String,
   password: t.String
@@ -32,13 +32,12 @@ const User = t.struct({
 const options = {
   fields: {
     email: {
-      error: 'You need a valid email to login to your account',
-
+      error: 'You need a valid email to login to your account'
     },
     password: {
       password: true,
       secureTextEntry: true,
-      error: 'You need a valid password to login to your account',
+      error: 'You need a valid password to login to your account'
     }
   }
 }
@@ -86,11 +85,15 @@ export class Login extends Component {
   }
 
   render() {
-    // if (this.state.loading) {
-    //   return <Spinner />
-    // }
+    if (this.state.loading) {
+      return (
+        <View style={styles.spinner}>
+          <Spinner />
+        </View>
+      )
+    }
     return (
-      <View style={{backgroundColor: '#343434', height:'100%'}}>
+      <View style={{backgroundColor: '#343434', height: '100%'}}>
         <View style={{alignItems: 'center', backgroundColor: '#343434'}}>
           <Image
             style={{width: '90%', height: 150, marginTop: 40}}
@@ -108,7 +111,7 @@ export class Login extends Component {
                 }
               }}
             />
-            <View style={{marginTop:20}}>
+            <View style={{marginTop: 20}}>
               <Form ref={c => (this._form = c)} type={User} options={options} />
               <TouchableOpacity
                 onPress={this.login}
@@ -125,6 +128,10 @@ export class Login extends Component {
             source={require('../assets/images/fog.jpg')}
             resizeMode="cover"
           />
+          <Form ref={c => (this._form = c)} type={User} options={options} />
+          <TouchableOpacity onPress={this.login} style={styles.submitButton}>
+            <Text style={{color: 'white'}}>Login</Text>
+          </TouchableOpacity>
         </View>
       </View>
     )
@@ -132,12 +139,42 @@ export class Login extends Component {
 }
 
 export const styles = StyleSheet.create({
+  buttonContainer: {
+    marginTop: 10,
+    height: 45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: '#00BFFF'
+  },
+  spinner: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: '#F5FCFF'
+  },
+  input: {
+    margin: 15,
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 1
+  },
   submitButton: {
     backgroundColor: '#E0115F',
     padding: 10,
     margin: 15,
     alignItems: 'center',
-    height: 40
+    height: 40,
+    borderRadius: 30
   },
   submitButtonText: {
     color: 'white'

@@ -76,7 +76,11 @@ export const newMessage = message => {
       const {data} = await axios.post(url + '/graphql', {
         query: `
           mutation{
-            newMessage(content: "${message.content}", length: ${message.length}, userId: ${message.userId}, chatId: ${message.chatId}, ${message.audio ? `audio: "${message.audio}"`: ''}, imageRef:"${imageRef}", meetingId:${meetingId}) {
+            newMessage(content: "${message.content}", length: ${
+          message.length
+        }, userId: ${message.userId}, chatId: ${message.chatId}, ${
+          message.audio ? `audio: "${message.audio}"` : ''
+        }, imageRef:"${imageRef}", meetingId:${meetingId}) {
               _id: id,
               text: content,
               createdAt,

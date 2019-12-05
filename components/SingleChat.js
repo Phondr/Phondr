@@ -150,7 +150,7 @@ class SingleChats extends Component {
   //   }
   // }
 
-  sendMeeting() {
+  async sendMeeting() {
     console.log(
       'outside send meeting',
       this.props.navigation.getParam('created')
@@ -166,19 +166,20 @@ class SingleChats extends Component {
         id
       } = this.props.currentMeeting
       const formattedMessage = {
-        content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+        content: `${link}++++New Invitation To Meet!++Name: ${name}++Address: ${address}++Date: ${new Date(
           +date
         ).toString()}++++Long press this message to respond.`,
-        imageRef: imageRef,
+        imageRef: link,
         meetingId: id,
         userId: this.props.user.id,
         length: 10,
         chatId: this.props.currentChat.id
       }
       console.log('formatted message inside sendmeeting', formattedMessage)
-      this.onSend(formattedMessage, true)
+      await this.onSend(formattedMessage, true)
       this.props.navigation.setParams({created: false})
     }
+    this.setState({loading: false})
   }
 
   // async renderBubble(props) {
@@ -226,6 +227,7 @@ class SingleChats extends Component {
 
   async onSend(message, noFormat) {
     //Format message for input into thunk
+
     let formattedMessage
     if (noFormat) {
       formattedMessage = message
@@ -277,12 +279,24 @@ class SingleChats extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner />
+      return (
+        <React.Fragment>
+          <Spinner />
+          <NavigationEvents
+            onDidFocus={() => {
+              this.sendMeeting()
+            }}
+          />
+        </React.Fragment>
+      )
     }
     return (
       <React.Fragment>
-        <NavigationEvents onDidFocus={this.sendMeeting} />
-
+        <NavigationEvents
+          onDidFocus={() => {
+            this.sendMeeting()
+          }}
+        />
         {this.state.curMessage.user && (
           <MeetingResponse
             reply={this.state.reply}
@@ -296,9 +310,25 @@ class SingleChats extends Component {
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
           currentChat={this.props.currentChat}
         />
+        {calcProgress(this.props.currentChat) >= 0 ? (
+          <TouchableOpacity
+            style={
+              Platform.OS === 'ios'
+                ? Dimensions.get('window').height === 812
+                  ? styles.iosMike
+                  : styles.ios
+                : styles.android
+            }
+            onPress={() => {
+              this.setState({loading: true})
+              this.props.navigation.navigate('MeetingModal')
+            }}
+          >
+            <Icon name="meetup" color="blue" type={'FontAwesome'} />
+          </TouchableOpacity>
+        ) : null}
         {calcProgress(this.props.currentChat) > 25 ? (
           <RecordAudio
-            onSend={this.onSend}
             user={this.props.user}
             chat={this.props.currentChat}
             messageLength={this.props.messages.length}
@@ -388,21 +418,21 @@ const styles = StyleSheet.create({
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.865,
-    marginLeft: Dimensions.get('window').width * 0.80
+    marginLeft: Dimensions.get('window').width * 0.8
   },
   iosPictureMike: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.85,
-    marginLeft: Dimensions.get('window').width * 0.80
+    marginLeft: Dimensions.get('window').width * 0.8
   },
   androidPicture: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.88,
-    marginLeft: Dimensions.get('window').width * 0.80
+    marginLeft: Dimensions.get('window').width * 0.8
   },
   ios: {
     position: 'absolute',
@@ -424,7 +454,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.88,
     marginLeft: Dimensions.get('window').width * 0.7
-  },
+  }
 })
 
 const MapStateToProps = state => {

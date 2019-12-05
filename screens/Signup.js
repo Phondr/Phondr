@@ -290,10 +290,12 @@ export const styles = StyleSheet.create({
     backgroundColor: '#ffffff'
   },
   submitButton: {
-    backgroundColor: 'black',
+    backgroundColor: '#00BFFF',
     padding: 10,
     margin: 15,
-    height: 40
+    alignItems: 'center',
+    height: 40,
+    borderRadius: 30
   },
   submitButtonText: {
     color: 'white'

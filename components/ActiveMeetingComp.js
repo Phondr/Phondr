@@ -1,10 +1,12 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {connect} from 'react-redux'
-import {Icon, Left, Body, Right, Card, CardItem, Text, View} from 'native-base'
+import {Icon, Left, Body, Right, Card, CardItem, Text} from 'native-base'
+import {TouchableOpacity, Image} from 'react-native'
 import {withNavigation, NavigationEvents} from 'react-navigation'
 import {setChat, fetchCurrentChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
 import {fetchAllMeetings} from '../redux/meetings'
+import Spinner from '../components/Spinner'
 import CustomHeader from '../components/CustomHeader'
 const ActiveMeetingComp = ({
   user,
@@ -12,7 +14,9 @@ const ActiveMeetingComp = ({
   fetchAllMeetings,
   navigation,
   setChat,
-  fetchCurrentChat
+  fetchCurrentChat,
+  setParent,
+  loading
 }) => {
   const active = meetings.filter(meeting => meeting.status === 'active')
 
@@ -26,56 +30,74 @@ const ActiveMeetingComp = ({
   // useEffect(() => {
   //   fetchAllMeetings(user.id)
   // }, [])
-  return (
-    <View>
-      <CustomHeader title="Active Meetings" />
-      <Card>
-        <NavigationEvents
-          onWillFocus={payload => {
-            fetchAllMeetings(user.id)
-          }}
-        />
-        {active.map(cur => {
-          return (
-            <React.Fragment key={cur.id}>
-              <CardItem
-                style={{
-                  backgroundColor: '#FF0800',
-                  borderColor: 'black',
-                  borderWidth: 2
-                }}
-              >
-                <Text style={{color: 'white'}}>Name: {cur.name}</Text>
-              </CardItem>
-              <CardItem
-                button
-                onPress={async () => {
-                  await fetchCurrentChat(cur.chat.id)
-                  navigation.navigate('SingleChat')
-                }}
-                style={{backgroundColor: '#FF91AF'}}
-              >
-                <Text>
-                  With:{' '}
-                  {
-                    cur.users.find(u => {
-                      return u.fullName !== user.fullName
-                    }).fullName
-                  }{' '}
-                  {'\n'}
-                  Date: {cur.date.toString()} {'\n'}
-                  Map Link: {cur.link}
-                </Text>
 
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </CardItem>
-            </React.Fragment>
-          )
-        })}
+  // if (loading) {
+  //   return <Spinner />
+  // }
+  if (!active.length) {
+    return (
+      <Card>
+        <CardItem header>
+          <Text>No Active Meetings</Text>
+        </CardItem>
       </Card>
-    </View>
+    )
+  }
+  return (
+    <Card>
+      <NavigationEvents
+        onDidFocus={payload => {
+          fetchAllMeetings(user.id)
+        }}
+      />
+      <CardItem header>
+        <Text>Active Meetings</Text>
+      </CardItem>
+
+      {active.map(cur => {
+        console.log('cur imageRef', cur.imageRef)
+        return (
+          <TouchableOpacity
+            onPress={async () => {
+              await fetchCurrentChat(cur.chat.id)
+              navigation.navigate('SingleChat')
+            }}
+            key={cur.id}
+          >
+            <CardItem
+              style={{
+                backgroundColor: '#FF0800',
+                borderColor: 'black',
+                borderWidth: 2
+              }}
+            >
+              <Text style={{color: 'white'}}>Name: {cur.name}</Text>
+            </CardItem>
+
+            <CardItem cardBody>
+              <Image
+                source={{uri: cur.imageRef}}
+                style={{height: 120, width: null, flex: 1}}
+              />
+            </CardItem>
+
+            <CardItem style={{backgroundColor: '#FF91AF'}}>
+              <Text note>
+                With:{' '}
+                {
+                  cur.users.find(u => {
+                    return u.fullName !== user.fullName
+                  }).fullName
+                }
+                {'\n'}
+                Date: {new Date(+cur.date).toString()} {'\n'}
+                Map Link: {cur.link}
+              </Text>
+            </CardItem>
+          </TouchableOpacity>
+        )
+      })}
+    </Card>
   )
 }
 

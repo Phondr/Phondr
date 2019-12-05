@@ -4,39 +4,63 @@ import {Icon, Left, Card, CardItem, Text, Container, Content} from 'native-base'
 import {ScrollView, Platform} from 'react-native'
 import TabBarIcon from '../components/TabBarIcon'
 import ActiveMeetingComp from '../components/ActiveMeetingComp'
-
+import CustomHeader from '../components/CustomHeader'
 import {withNavigation, NavigationEvents} from 'react-navigation'
 import {fetchAllMeetings} from '../redux/meetings'
+import Spinner from '../components/Spinner'
 class ActiveScreen extends React.Component {
   constructor() {
     super()
+    this.state = {
+      loading: true
+    }
   }
-  componentDidMount() {
-    this.props.fetchAllMeetings(this.props.user.id)
-  }
+  // async componentDidMount() {
+  //   await this.props.fetchAllMeetings(this.props.user.id)
+  //   this.setState({loading: false})
+  // }
   static navigationOptions = {
     drawerIcon: ({tintColor}) => {
       return null
     }
   }
   render() {
-    const {meetings, navigation} = this.props
-
+    const {meetings, navigation, fetchAllMeetings, user} = this.props
+    if (this.state.loading) {
+      return (
+        <React.Fragment>
+          <Spinner />
+          <NavigationEvents
+            onDidFocus={async payload => {
+              this.setState({loading: true})
+              await fetchAllMeetings(user.id)
+              this.setState({loading: false})
+            }}
+          />
+        </React.Fragment>
+      )
+    }
     return (
-      <Container style= {{backgroundColor:'#343434'}}>
-        {/* <NavigationEvents
-        onWillFocus={payload => {
-          fetchAllMeetings(user.id)
-        }}
-      /> */}
+      <Container style={{backgroundColor: '#343434'}}>
+        <NavigationEvents
+          onDidFocus={async payload => {
+            this.setState({loading: true})
+            await fetchAllMeetings(user.id)
+            this.setState({loading: false})
+          }}
+        />
         <ScrollView>
-          <Content >
+          <CustomHeader title="Active Meetings" />
+          <Content>
             {meetings.length ? (
-              <ActiveMeetingComp />
+              <ActiveMeetingComp
+                setParent={this.setState.bind(this)}
+                loading={this.state.loading}
+              />
             ) : (
               <Card>
-                <CardItem style={{backgroundColor:'#FF91AF'}}>
-                  <Text style={{color:'white'}}>No Active Meetings</Text>
+                <CardItem style={{backgroundColor: '#FF91AF'}}>
+                  <Text style={{color: 'white'}}>No Active Meetings</Text>
                 </CardItem>
               </Card>
             )}
