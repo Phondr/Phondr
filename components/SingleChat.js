@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
-    marginTop: Dimensions.get('window').height * 0.83,
+    marginTop: Dimensions.get('window').height * 0.87,
     marginLeft: Dimensions.get('window').width * 0.78
   },
   android: {
