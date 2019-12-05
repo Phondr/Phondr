@@ -74,7 +74,7 @@ export class Profile extends Component {
         <StatusBar barStyle="light-content" />
         <CustomHeader title="Profile" />
         <View style={styles.header}></View>
-        <Image style={Dimensions.get('window').height === 812 ? styles.avatarMike : styles.avatar} source={{uri: user.profilePicture}} />
+        <Image style={Dimensions.get('window').height >= 812 ? styles.avatarMike : styles.avatar} source={{uri: user.profilePicture}} />
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <Text style={styles.name}>{user.fullName}</Text>

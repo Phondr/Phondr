@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {ImageBackground, View, StatusBar, StyleSheet, Text} from 'react-native'
+import {ImageBackground, View, StatusBar, StyleSheet, Text, Dimensions} from 'react-native'
 import {Container, Button, Icon, Content, Left, Right} from 'native-base'
 import {Platform} from '@unimodules/core'
 import {withNavigation} from 'react-navigation'
@@ -191,7 +191,7 @@ class Home extends Component {
                 <PendingComp />
               </>
             ) : (
-              <Text>user has no chats</Text>
+              <Text style={{alignSelf: 'center', fontSize: 20, marginTop: Dimensions.get('window').height*0.35}}>Click below to start growing Phondr!</Text>
             )}
 
             <Right>

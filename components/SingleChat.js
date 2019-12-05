@@ -176,7 +176,8 @@ class SingleChats extends Component {
       }
       console.log('formatted message inside sendmeeting', formattedMessage)
       await this.onSend(formattedMessage, true)
-      this.props.navigation.setParams({created: false})
+      setTimeout(()=> {this.props.navigation.setParams({created: false})}, 200)
+      
     }
     this.setState({loading: false})
   }
@@ -346,7 +347,7 @@ class SingleChats extends Component {
                   : styles.ios
                 : styles.android
             }
-            onPress={() => this.props.navigation.navigate('MeetingModal')}
+            onPress={() => {this.setState({loading: true}); this.props.navigation.navigate('MeetingModal')}}
           >
             <Icon name="meetup" style={{color: 'blue'}} type={'FontAwesome'} />
           </TouchableOpacity>

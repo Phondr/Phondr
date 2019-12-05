@@ -11,13 +11,10 @@ const imageRequest = async ref => {
 }
 
 const cheerioReq = async link => {
-  console.log('link inside cheerioReq: ', link)
   let {data} = await axios.get(link)
 
   const $ = cheerio.load(data.slice(0, 10000))
 
-  console.log('TCL: data', data.slice(0, 10000))
-  console.log('title', $('title').text())
   let imageUrl = ''
   // $('meta').each((i, cur) => {
   //   console.log('i', i)
@@ -27,8 +24,6 @@ const cheerioReq = async link => {
   //   }
   // })
   imageUrl = $('meta[property="og:image"]').attr('content')
-
-  console.log('imageUrl inside of cheerioReq: ', imageUrl)
 
   return imageUrl
 }
