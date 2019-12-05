@@ -47,7 +47,7 @@ import MeetingModal from './screens/MeetingModal'
 import ActiveMeetingScreen from './screens/ActiveMeetingScreen'
 import PendingMeetingScreen from './screens/PendingMeetingScreen'
 import PicturePicker from './components/picturePicker'
-import profile from './screens/Profile'
+
 const ActiveScreenStack = createStackNavigator(
   {
     ActiveScreen: {
@@ -96,7 +96,7 @@ const ActiveMeetingStack = createStackNavigator(
     initialRouteName: 'ActiveMeetingScreen',
     navigationOptions: {
       tabBarLabel: 'Active',
-      tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />,
+      tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />
     }
   }
 )
@@ -108,9 +108,10 @@ const ChatBottomTab = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      style: {paddingBottom: 5},
+      style: {backgroundColor:'#E0115F'},
       labelStyle: {fontSize: 12},
-      activeTintColor: 'orange'
+      activeTintColor: 'white',
+      activeBackgroundColor: '#FF91AF'
     },
     navigationOptions: {
       drawerIcon: ({tintColor}) => {
@@ -158,9 +159,9 @@ const EntryStack = createStackNavigator(
         header: null
       }
     },
-    Login: Login,
-    Signup: Signup,
-    LoginCamera: LoginCamera
+    Login: {screen: Login, navigationOptions: {header: null}},
+    Signup: {screen: Signup, navigationOptions: {header: null}},
+    LoginCamera: {screen: LoginCamera, navigationOptions: {header: null}}
   },
   {
     initialRouteName: 'Entry'
@@ -177,8 +178,8 @@ var drawer = createDrawerNavigator(
     Home: {
       screen: Home
     },
-    'profile':{
-      screen:Profile
+    profile: {
+      screen: Profile
     },
     'Picture Picker': {
       screen: PicturePicker
@@ -215,18 +216,18 @@ var drawer = createDrawerNavigator(
     // MeetingModal: {
     //   screen: MeetingModal
     // },
-    'UserProfileEdit': {
+    UserProfileEdit: {
       screen: UserProfileEdit
     },
-    'Login': {
+    Login: {
       screen: Login
     },
-    'Signup': {
+    Signup: {
       screen: Signup
     },
-    'Entry': {
+    Entry: {
       screen: Entry
-    },
+    }
   },
   {
     initialRouteName: 'Home',
