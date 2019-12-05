@@ -29,15 +29,15 @@ class PendingScreen extends React.Component {
     const {meetings, navigation} = this.props
 
     return (
-      <Container>
+      <Container style={{backgroundColor:'#343434'}}>
         {/* <NavigationEvents
         onWillFocus={payload => {
           fetchAllMeetings(user.id)
         }}
       /> */}
-        <ScrollView>
+        <ScrollView >
           <CustomHeader title="Pending Meetings" />
-          <Content>
+          <Content >
             {meetings.length ? (
               <PendingMeetingComp />
             ) : (

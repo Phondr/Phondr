@@ -93,7 +93,7 @@ const ActiveMeetingStack = createStackNavigator(
     initialRouteName: 'ActiveMeetingScreen',
     navigationOptions: {
       tabBarLabel: 'Active',
-      tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />
+      tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />,
     }
   }
 )

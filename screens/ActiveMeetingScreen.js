@@ -24,7 +24,7 @@ class ActiveScreen extends React.Component {
     const {meetings, navigation} = this.props
 
     return (
-      <Container>
+      <Container style= {{backgroundColor:'#343434'}}>
         {/* <NavigationEvents
         onWillFocus={payload => {
           fetchAllMeetings(user.id)
@@ -32,13 +32,13 @@ class ActiveScreen extends React.Component {
       /> */}
         <ScrollView>
           <CustomHeader title="Active Meetings" />
-          <Content>
+          <Content style={{backgroundColor:'#FF91AF'}}>
             {meetings.length ? (
               <ActiveMeetingComp />
             ) : (
               <Card>
-                <CardItem>
-                  <Text>No Active Meetings</Text>
+                <CardItem style={{backgroundColor:'#FF91AF'}}>
+                  <Text style={{color:'white'}}>No Active Meetings</Text>
                 </CardItem>
               </Card>
             )}

@@ -46,6 +46,7 @@ const ActiveMeetingComp = ({
               navigation.navigate('SingleChat')
             }}
             key={cur.id}
+            style={{backgroundColor:'#FF91AF'}}
           >
             <Left>
               <Icon name={'place'} type={'MaterialIcons'} />
