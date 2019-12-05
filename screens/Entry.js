@@ -5,7 +5,7 @@ import {navigation} from 'react-navigation'
 import Login from './Login'
 import Signup from './Signup'
 import {AsyncStorage} from 'react-native'
-import {fetchUserLogin, setUser} from '../redux/user'
+import {fetchUserLogin, setUser, fetchUserFromUserId} from '../redux/user'
 import {connect} from 'react-redux'
 
 export class Entry extends Component {
@@ -16,9 +16,6 @@ export class Entry extends Component {
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
 
-    // await this.props.fetchUserFromUserId(userd.id)
-    // const user = this.props.user
-
     //Current Settings
     // if (user) {
     //   await this.props.setUser(user)
@@ -28,11 +25,13 @@ export class Entry extends Component {
         this.setState({user}) //Sets user if user was previously logged in through asyncStorage
       }
       if (this.state.user !== '') {
-        await this.props.setUser(user)
+        await this.props.fetchUserFromUserId(user.id)
+        const userd = this.props.user
 
-        console.log('USER', user)
+        await this.props.setUser(userd)
+        console.log('ENTRY USER', userd)
         setTimeout(() => {
-          this.props.navigation.navigate('Home', {user})
+          this.props.navigation.navigate('Home', {user: userd})
         }, 100)
 
         //this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
@@ -112,5 +111,6 @@ export const styles = StyleSheet.create({
 
 export default connect(({user}) => ({user}), {
   fetchUserLogin,
-  setUser
+  setUser,
+  fetchUserFromUserId
 })(Entry)

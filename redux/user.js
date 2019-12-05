@@ -27,7 +27,7 @@ const UPDATENOOB = 'UPDATENOOB'
 export const setUser = user => ({type: GETUSER, user})
 export const editUser = user => ({type: EDITUSER, user})
 export const addUser = user => ({type: ADDUSER, user})
-export const updateN = user => ({type: UPDATENOOD, user})
+export const updateN = user => ({type: UPDATENOOB, user})
 
 //state
 const initialState = {}
@@ -91,7 +91,7 @@ export const fetchUserLogin = values => async dispatch => {
               iAm
               iPrefer
               distPref
-              
+              isNoob
             }
         }
         `
@@ -173,7 +173,7 @@ export const userSignUp = (
             age
             iAm
             iPrefer
-            
+            isNoob
             }
                 }`
       })
@@ -238,7 +238,6 @@ export const fetchUserFromUserId = userid => async dispatch => {
           iAm
           iPrefer
           isNoob
-          
         }
               }`
     })
@@ -304,7 +303,7 @@ export const ConvertUser = () => async dispatch => {
 
     let {data} = await client.mutate({
       mutation: gql`mutation{
-        updateNoob(id: ${user.id}, isNoob: ${falseguy}) {
+        updateNoob(id: ${user.id}) {
         id
         email
         fullName
@@ -315,7 +314,6 @@ export const ConvertUser = () => async dispatch => {
         iAm
         iPrefer
         isNoob
-        
         }
               }`
     })

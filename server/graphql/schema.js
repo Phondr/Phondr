@@ -355,7 +355,7 @@ const rootMutation = new GraphQLObjectType({
         let User = await db.models.user.findByPk(args.id)
 
         let updateduser = await User.update({
-          isNoob: args.isNoob
+          isNoob: false
         })
 
         if (updateduser) {

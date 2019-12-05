@@ -85,7 +85,7 @@ export class UserProfileEdit extends Component {
                         console.log(this.state)
                       }}
                     >
-                      <Text>Edit Name</Text>
+                      <Text style={{color: 'white'}}>Edit Name</Text>
                     </TouchableOpacity>
                   ) : (
                     <Input
@@ -108,7 +108,9 @@ export class UserProfileEdit extends Component {
                         console.log(this.state)
                       }}
                     >
-                      <Text>Edit Distance Prefered</Text>
+                      <Text style={{color: 'white'}}>
+                        Edit Distance Prefered
+                      </Text>
                     </TouchableOpacity>
                   ) : (
                     <Input
@@ -131,7 +133,7 @@ export class UserProfileEdit extends Component {
                         console.log(this.state)
                       }}
                     >
-                      <Text>Edit Email</Text>
+                      <Text style={{color: 'white'}}>Edit Email</Text>
                     </TouchableOpacity>
                   ) : (
                     <Input
@@ -154,7 +156,7 @@ export class UserProfileEdit extends Component {
                         console.log(this.state)
                       }}
                     >
-                      <Text>Edit Gender</Text>
+                      <Text style={{color: 'white'}}>Edit Gender</Text>
                     </TouchableOpacity>
                   ) : (
                     <Input
@@ -175,7 +177,7 @@ export class UserProfileEdit extends Component {
                   style={styles.buttonContainer}
                   onPress={this.submitHandler}
                 >
-                  <Text>Save</Text>
+                  <Text style={{color: 'white'}}>Save</Text>
                 </TouchableOpacity>
               </Right>
             </View>

@@ -41,7 +41,7 @@ const createUser = async () => {
       iAm: idents[randomizer(2)],
       iPrefer: [...randomSelector(idents)],
       distPref: randomizer(50),
-      isNoob: faker.random.boolean()
+      isNoob: true
     })
     console.log('iPrefer array', user.iPrefer)
     return user
@@ -108,7 +108,8 @@ async function seed() {
     password: 'test',
     iAm: idents[randomizer(2)],
     iPrefer: ['male', 'female'],
-    distPref: randomizer(50)
+    distPref: randomizer(50),
+    isNoob: true
   })
   await User.create({
     fullName: `Mike Lim`,
@@ -124,7 +125,8 @@ async function seed() {
     password: '123',
     iAm: idents[randomizer(2)],
     iPrefer: ['male', 'female'],
-    distPref: randomizer(50)
+    distPref: randomizer(50),
+    isNoob: true
   })
   for (let i = 0; i < 50; i++) {
     const user = await createUser()
