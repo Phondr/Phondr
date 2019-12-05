@@ -116,7 +116,7 @@ export class Login extends Component {
                 }
               }}
             />
-            <View style={{marginTop:20}}>
+            <View style={{marginTop:20, style:'#343434'}}>
               <Form ref={c => (this._form = c)} type={User} options={options} />
               <TouchableOpacity
                 onPress={this.login}
@@ -133,10 +133,6 @@ export class Login extends Component {
             source={require('../assets/images/fog.jpg')}
             resizeMode="cover"
           />
-          <Form ref={c => (this._form = c)} type={User} options={options} />
-          <TouchableOpacity onPress={this.login} style={styles.submitButton}>
-            <Text style={{color: 'white'}}>Login</Text>
-          </TouchableOpacity>
         </View>
       </View>
     )
@@ -165,7 +161,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 10,
     paddingRight: 10,
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#343434'
   },
   input: {
     margin: 15,

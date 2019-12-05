@@ -81,7 +81,7 @@ export class Entry extends Component {
             onPress={() => {
               this.gotToLogin()
             }}
-            style={styles.buttonNav}
+            style={styles.submitButton}
           >
             <Text style={{color: 'white'}}>Login</Text>
           </TouchableOpacity>
@@ -89,7 +89,7 @@ export class Entry extends Component {
             onPress={() => {
               this.goToSignUp()
             }}
-            style={styles.buttonNav}
+            style={styles.submitButton}
           >
             <Text style={{color: 'white'}}>Sign Up</Text>
           </TouchableOpacity>
@@ -139,7 +139,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   submitButton: {
-    backgroundColor: '#00BFFF',
+    backgroundColor: '#E0115F',
     padding: 10,
     margin: 15,
     alignItems: 'center',
