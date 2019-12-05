@@ -57,6 +57,7 @@ class Home extends Component {
   async componentDidMount() {
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
+      console.log('props.user.id', this.props.user.id)
       this.props.fetchMyChats(this.props.user.id)
     }
     //console.log('HOME PROPS', this.props)
@@ -139,8 +140,8 @@ class Home extends Component {
           >
             {this.props.myChats && this.props.myChats.length ? (
               <>
-                <ActiveComp />
-                <PendingComp />
+                <ActiveComp preview={true} />
+                <PendingComp preview={true} />
               </>
             ) : (
               <Text>user has no chats</Text>
