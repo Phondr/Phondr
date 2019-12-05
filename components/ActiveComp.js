@@ -35,8 +35,8 @@ const ActiveChats = ({
           <CardItem
             button
             onPress={() => {
+              setChat(cur)
               if (preview) {
-                setChat(cur)
                 navigation.navigate(
                   NavigationActions.navigate({
                     routeName: 'Chats',

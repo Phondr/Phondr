@@ -157,9 +157,7 @@ var drawer = createDrawerNavigator(
     Home: {
       screen: Home
     },
-    New: {
-      screen: New
-    },
+
     Login: {
       screen: Login
     },
@@ -169,18 +167,16 @@ var drawer = createDrawerNavigator(
     Entry: {
       screen: Entry
     },
-    MapV: {
-      screen: MapV
-    },
-    'Pending Chats': {
-      screen: PendingScreen
-    },
-    'Pending Meetings': {
-      screen: PendingMeetings
-    },
-    'Active Chats': {
-      screen: ActiveScreenStack
-    },
+
+    // 'Pending Chats': {
+    //   screen: PendingScreen
+    // },
+    // 'Pending Meetings': {
+    //   screen: PendingMeetings
+    // },
+    // 'Active Chats': {
+    //   screen: ActiveScreenStack
+    // },
     Chats: {
       screen: ChatBottomTab
     },
