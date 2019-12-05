@@ -1,6 +1,12 @@
 import React, {Component} from 'react'
 import {Icon, Fab} from 'native-base'
-import {ScrollView, View, StatusBar, KeyboardAvoidingView, Platform} from 'react-native'
+import {
+  ScrollView,
+  View,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
 import {fetchCurrentChat} from '../redux/currentChat'
@@ -12,14 +18,26 @@ import RecordAudio from './recordAudio'
 import RenderAudio from './renderAudio'
 import {placesAPI} from '../secrets'
 import axios from 'axios'
-
+import ChatBubbleWithReply from '../components/ChatBubbleWithReply'
+import ReplyToFooter from '../components/ReplyToFooter'
+import {fetchMeeting} from '../redux/currentMeeting'
+import MeetingResponse from '../components/MeetingResponse'
+import {NavigationEvents} from 'react-navigation'
+import ChatEvent from '../components/ChatEvent'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      reply: false,
+      curMessage: {}
+    }
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
     this.renderBubble = this.renderBubble.bind(this)
-    this.imageRequest = this.imageRequest.bind(this)
+    this.closeDialog = this.closeDialog.bind(this)
+    this.sendMeeting = this.sendMeeting.bind(this)
+    //this.renderChatFooter = this.renderChatFooter.bind(this)
+    //this.renderBubble = this.renderBubble.bind(this)
   }
   // componentWillMount() {
   //   this.setState({
@@ -44,6 +62,10 @@ class SingleChats extends Component {
   }
 
   componentDidMount() {
+    //this is necessary for users being sent from meetings
+    // if (!this.props.currentChat.users) {
+    //   this.props.fetchCurrentChat(this.props.currentChat.id)
+    // }
     socket.emit('subscribe-to-chat', {chatId: this.props.currentChat.id})
     socket.on('loginLogoutMessage', ({message}) => {
       showMessage({message, type: 'info', duration: 2500, icon: 'info'})
@@ -56,36 +78,118 @@ class SingleChats extends Component {
     this.props.fetchMessages(this.props.currentChat.id)
   }
 
-  async imageRequest(ref) {
-    const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
-    const image = await axios.post(url)
-    console.log('TCL: image', image)
+  // async imageRequest(ref) {
+  //   const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
+  //   const image = await axios.post(url)
+  //   console.log('TCL: image', image)
 
-    return image
-  }
+  //   return image
+  // }
 
-  UNSAFE_componentWillUpdate(nextProps) {
-    if (nextProps.currentMeeting !== this.props.currentMeeting) {
+  // UNSAFE_componentWillUpdate(nextProps) {
+  //   if (
+  //     nextProps.currentMeeting !== this.props.currentMeeting &&
+  //     this.props.navigation.getParam('created', 'none') === true
+  //   ) {
+  //     const {
+  //       name,
+  //       address,
+  //       link,
+  //       location,
+  //       date,
+  //       imageRef,
+  //       id
+  //     } = nextProps.currentMeeting
+  //     const formattedMessage = {
+  //       content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+  //         +date
+  //       ).toString()}++++Long press this message to respond.`,
+  //       imageRef: imageRef,
+  //       meetingId: id,
+  //       userId: nextProps.user.id,
+  //       length: 10,
+  //       chatId: nextProps.currentChat.id
+  //     }
+  //     this.onSend(formattedMessage, true)
+  //   }
+  // }
+  // componentDidUpdate(prevProps) {
+  //   if (
+  //     prevProps.currentMeeting !== this.props.currentMeeting &&
+  //     this.props.navigation.getParam('created', 'none') === true
+  //   ) {
+  //     const {
+  //       name,
+  //       address,
+  //       link,
+  //       location,
+  //       date,
+  //       imageRef,
+  //       id
+  //     } = this.props.currentMeeting
+  //     const formattedMessage = {
+  //       content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+  //         +date
+  //       ).toString()}++++Long press this message to respond.`,
+  //       imageRef: imageRef,
+  //       meetingId: id,
+  //       userId: this.props.user.id,
+  //       length: 10,
+  //       chatId: this.props.currentChat.id
+  //     }
+  //     this.onSend(formattedMessage, true)
+  //   }
+  // }
+
+  sendMeeting() {
+    console.log(
+      'outside send meeting',
+      this.props.navigation.getParam('created')
+    )
+    if (this.props.navigation.getParam('created')) {
       const {
         name,
         address,
         link,
         location,
         date,
-        imageRef
-      } = nextProps.currentMeeting
+        imageRef,
+        id
+      } = this.props.currentMeeting
       const formattedMessage = {
         content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
           +date
-        ).toString()}`,
+        ).toString()}++++Long press this message to respond.`,
         imageRef: imageRef,
-        userId: nextProps.user.id,
+        meetingId: id,
+        userId: this.props.user.id,
         length: 10,
-        chatId: nextProps.currentChat.id
+        chatId: this.props.currentChat.id
       }
+      console.log('formatted message inside sendmeeting', formattedMessage)
       this.onSend(formattedMessage, true)
+      this.props.navigation.setParams({created: false})
     }
   }
+
+  // async renderBubble(props) {
+  //   // if (this.props.currentMeeting) {
+  //   //   console.log('props current meeting', this.props.currentMeeting)
+  //   // }
+  //   // if (
+  //   //   props.currentMessage.text.includes('New Invitation To Meet!') &&
+  //   //   this.props.currentMeeting.name
+  //   // ) {
+  //   //   console.log('inside conditional preview link')
+  //   //   return <PreviewLink currentMeeting={this.props.currentMeeting} />
+  //   // }
+  //   // console.log('rendering bubble')
+  //   let image = ''
+  //   if (this.props.currentMeeting && this.props.currentMeeting.name) {
+  //     image = this.imageRequest(this.props.currentMeeting.imageRef)
+  //     props.currentMessage.image = image
+  //   }
+  // }
 
   componentWillUnmount() {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
@@ -93,13 +197,22 @@ class SingleChats extends Component {
     socket.off('receiveMessage')
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.currentChat !== this.props.currentChat) {
-      console.log('got here')
-    }
-    if (this.props.messages.length !== this.props.currentChat.messages.length) {
-      this.props.fetchCurrentChat(this.props.currentChat.id)
-    }
+  // renderChatFooter() {
+  //   if (this.state.reply) {
+  //     console.log('message inside of renderChatFooter', this.props.messages[0])
+  //     return (
+  //       <ReplyToFooter
+  //         reply_to={this.props.messages[0].user.name}
+  //         closeDialog={this.closeDialog}
+  //         meetingId={this.props.messages[0].meetingId}
+  //       />
+  //     )
+  //   }
+  //   return null
+  // }
+
+  closeDialog() {
+    this.setState({reply: false})
   }
 
   async onSend(message, noFormat) {
@@ -119,6 +232,7 @@ class SingleChats extends Component {
 
     //Create the message ONCE after click send but don't set to redux yet
     const newMessage = await this.props.newMessage(formattedMessage)
+    await this.props.fetchCurrentChat(this.props.currentChat.id)
     //Send created message to sockets with event sendMessage
     socket.emit('sendMessage', {
       message: newMessage,
@@ -131,15 +245,17 @@ class SingleChats extends Component {
   }
 
   renderBubble(props) {
-    if (props.currentMessage.audio) {//Render the play audio icon if the message has audio along with the timestamp
+    if (props.currentMessage.audio) {
+      //Render the play audio icon if the message has audio along with the timestamp
       return (
-        <View> 
+        <View>
           <RenderAudio message={props.currentMessage} user={this.props.user} />
           <Bubble {...props} />
         </View>
       )
     }
-    return (//Render normal text bubble with timestamp
+    return (
+      //Render normal text bubble with timestamp
       <View>
         <Bubble {...props} />
       </View>
@@ -149,6 +265,16 @@ class SingleChats extends Component {
   render() {
     return (
       <React.Fragment>
+        <NavigationEvents onDidFocus={this.sendMeeting} />
+
+        {this.state.curMessage.user && (
+          <MeetingResponse
+            reply={this.state.reply}
+            reply_to={this.state.curMessage.user.name}
+            closeDialog={this.closeDialog}
+            meetingId={this.state.curMessage.meetingId}
+          />
+        )}
         <StatusBar barStyle="light-content" />
         <CustomHeader
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
@@ -173,6 +299,15 @@ class SingleChats extends Component {
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
+          //renderChatFooter={this.renderChatFooter}
+          onLongPress={(context, message) => {
+            console.log('TCL: message inside onLongPress', message)
+            if (message.text.includes('New Invitation')) {
+              this.setState({reply: true, curMessage: message})
+            } else {
+              alert('You can only respond to invitations!')
+            }
+          }}
           user={{
             _id: this.props.user.id,
             name: this.props.user.fullName
@@ -200,7 +335,8 @@ const MapDispatchToProps = dispatch => {
     fetchMessages: chatId => dispatch(fetchMessages(chatId)),
     newMessage: message => dispatch(newMessage(message)),
     setNewMessage: message => dispatch(setNewMessage(message)),
-    fetchCurrentChat: chatId => dispatch(fetchCurrentChat(chatId))
+    fetchCurrentChat: chatId => dispatch(fetchCurrentChat(chatId)),
+    fetchMeeting: chatId => dispatch(fetchMeeting(chatId))
   }
 }
 

@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
+const roundDown = require('lodash.floor')
 
 const Chat = db.define('chat', {
   expirationDate: {
@@ -27,24 +28,15 @@ const Chat = db.define('chat', {
 
       const diffMs = now - start
       console.log('TCL: diffMs', diffMs)
-      const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000)
-      console.log('TCL: diffMins', diffMins)
 
-      return diffMins
+      const seconds = roundDown((diffMs / 1000) % 60)
+      const minutes = roundDown(diffMs / (1000 * 60))
+      const hours = roundDown((diffMs / (1000 * 60 * 60)) % 24)
+      return minutes
     }
   }
 })
 
-Chat.prototype.sinceMins = function(date) {
-  const start = date || this.getDataValue('createdAt')
-  const now = new Date()
-
-  const diffMs = now - start
-
-  const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000)
-
-  return diffMins
-}
 Chat.beforeCreate(chat => {
   chat.sinceCreation = new Date()
 })

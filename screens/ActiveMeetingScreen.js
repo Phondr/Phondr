@@ -3,37 +3,42 @@ import {connect} from 'react-redux'
 import {Icon, Left, Card, CardItem, Text, Container, Content} from 'native-base'
 import {ScrollView, Platform} from 'react-native'
 import CustomHeader from '../components/CustomHeader'
-import {withNavigation} from 'react-navigation'
-import ActiveComp from '../components/ActiveComp'
 import TabBarIcon from '../components/TabBarIcon'
+import ActiveMeetingComp from '../components/ActiveMeetingComp'
+
+import {withNavigation, NavigationEvents} from 'react-navigation'
+import {fetchAllMeetings} from '../redux/meetings'
 class ActiveScreen extends React.Component {
   constructor() {
     super()
   }
+  componentDidMount() {
+    this.props.fetchAllMeetings(this.props.user.id)
+  }
   static navigationOptions = {
     drawerIcon: ({tintColor}) => {
-      return (
-        <Icon
-          name="chat"
-          type="MaterialIcons"
-          style={{fontSize: 24, color: tintColor}}
-        ></Icon>
-      )
+      return null
     }
   }
   render() {
-    const {myChats, navigation} = this.props
+    const {meetings, navigation} = this.props
+
     return (
       <Container>
+        {/* <NavigationEvents
+        onWillFocus={payload => {
+          fetchAllMeetings(user.id)
+        }}
+      /> */}
         <ScrollView>
-          <CustomHeader title="Active Chats" />
+          <CustomHeader title="Active Meetings" />
           <Content>
-            {myChats.length ? (
-              <ActiveComp preview={true} />
+            {meetings.length ? (
+              <ActiveMeetingComp />
             ) : (
               <Card>
                 <CardItem>
-                  <Text>No Active Chats</Text>
+                  <Text>No Active Meetings</Text>
                 </CardItem>
               </Card>
             )}
@@ -43,4 +48,6 @@ class ActiveScreen extends React.Component {
     )
   }
 }
-export default connect(({myChats, user}) => ({myChats, user}))(ActiveScreen)
+export default connect(({meetings, user}) => ({meetings, user}), {
+  fetchAllMeetings
+})(ActiveScreen)

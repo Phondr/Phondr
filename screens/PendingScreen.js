@@ -11,11 +11,12 @@ import {
   Container
 } from 'native-base'
 import Modal from 'react-native-modal'
-import {View, StyleSheet} from 'react-native'
+import {View, StyleSheet, Platform} from 'react-native'
 import {deleteChat} from '../redux/myChats'
 import PendingComp from '../components/PendingComp'
 import {ScrollView} from 'react-native'
 import CustomHeader from '../components/CustomHeader'
+import TabBarIcon from '../components/TabBarIcon'
 
 class PendingScreen extends React.Component {
   constructor() {
@@ -30,7 +31,11 @@ class PendingScreen extends React.Component {
           style={{fontSize: 24, color: tintColor}}
         ></Icon>
       )
-    }
+    },
+    tabBarLabel: 'Pending',
+    tabBarIcon: ({focused}) => (
+      <TabBarIcon focused={focused} name={'ellipsis1'} />
+    )
   }
   render() {
     const {myChats, navigation} = this.props
