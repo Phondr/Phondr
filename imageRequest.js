@@ -16,7 +16,6 @@ const cheerioReq = async link => {
 
   const $ = cheerio.load(data.slice(0, 10000))
 
-  console.log('TCL: data', data.slice(0, 10000))
   console.log('title', $('title').text())
   let imageUrl = ''
   // $('meta').each((i, cur) => {

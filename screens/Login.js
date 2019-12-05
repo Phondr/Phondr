@@ -10,6 +10,7 @@ import {
   Dimensions,
   ScrollView
 } from 'react-native'
+import {Spinner} from 'native-base'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
 import {fetchUserLogin} from '../redux/user'
@@ -17,7 +18,6 @@ import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
 import {throwServerError} from 'apollo-link-http-common'
 import {navigate, NavigationEvents} from 'react-navigation'
-import Spinner from '../components/Spinner'
 
 const User = t.struct({
   email: t.String,
@@ -80,9 +80,13 @@ export class Login extends Component {
   }
 
   render() {
-    // if (this.state.loading) {
-    //   return <Spinner />
-    // }
+    if (this.state.loading) {
+      return (
+        <View style={styles.spinner}>
+          <Spinner />
+        </View>
+      )
+    }
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
@@ -96,7 +100,7 @@ export class Login extends Component {
           />
           <Form ref={c => (this._form = c)} type={User} options={options} />
           <TouchableOpacity onPress={this.login} style={styles.submitButton}>
-            <Text style={styles.submitButtonText}>Login</Text>
+            <Text style={{color: 'white'}}>Login</Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
@@ -105,6 +109,22 @@ export class Login extends Component {
 }
 
 export const styles = StyleSheet.create({
+  buttonContainer: {
+    marginTop: 10,
+    height: 45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: '#00BFFF'
+  },
+  spinner: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -119,11 +139,12 @@ export const styles = StyleSheet.create({
     borderWidth: 1
   },
   submitButton: {
-    backgroundColor: 'black',
+    backgroundColor: '#00BFFF',
     padding: 10,
     margin: 15,
     alignItems: 'center',
-    height: 40
+    height: 40,
+    borderRadius: 30
   },
   submitButtonText: {
     color: 'white'

@@ -61,7 +61,8 @@ const User = db.define('user', {
   //   defaultValue: 0
   // }
   isNoob: {
-    type: Sequelize.BOOLEAN
+    type: Sequelize.BOOLEAN,
+    defaultValue: true
   }
 })
 
