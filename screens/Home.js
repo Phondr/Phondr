@@ -57,10 +57,9 @@ class Home extends Component {
   async componentDidMount() {
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
-      console.log('props.user.id', this.props.user.id)
+
       this.props.fetchMyChats(this.props.user.id)
     }
-    console.log('HOME PROPS', this.props)
   }
 
   async componentDidUpdate(prevProps) {
@@ -69,7 +68,6 @@ class Home extends Component {
       await this.props.fetchMyChats(this.props.user.id)
       try {
         await this.props.fetchUserFromAsync()
-        console.log('AFTER ISNOOB', this.props.user)
       } catch (error) {
         alert('COULD NOT GET USER AFTER EDITING')
         console.log(error)
@@ -79,7 +77,6 @@ class Home extends Component {
 
   render() {
     const user = this.props.user || {}
-    console.log('HOME USER', user)
 
     return (
       <Container>

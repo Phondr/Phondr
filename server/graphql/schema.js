@@ -17,7 +17,7 @@ const {User, Chat, Message, Meeting} = require('../db/models')
 
 ;(async function hi() {
   const user = await User.findByPk(1)
-  console.log('iPrefer outside scope', user.iPrefer)
+  //console.log('iPrefer outside scope', user.iPrefer)
 })()
 //Type Definitions for GraphQL(what info should graphql expect from each model)
 const UserType = new GraphQLObjectType({
@@ -139,15 +139,15 @@ const rootQuery = new GraphQLObjectType({
           // where: { email: args.email, password: args.password },
         })
 
-        console.log('PASSWORD', args.password)
-        console.log(usermodel.correctPassword(args.password))
+        //console.log('PASSWORD', args.password)
+        //console.log(usermodel.correctPassword(args.password))
 
-        console.log('USERMODEL', usermodel)
+        //console.log('USERMODEL', usermodel)
         if (!usermodel) {
-          console.log('No such user found:', args.email)
+          //console.log('No such user found:', args.email)
           alert('Wrong username')
         } else if (!usermodel.correctPassword(args.password)) {
-          console.log('Incorrect password for user:', args.email)
+          //console.log('Incorrect password for user:', args.email)
           alert('Wrong password')
         } else {
           // console.log('PASSWORD', usermodel.cryptPassword(args.password))
@@ -170,11 +170,11 @@ const rootQuery = new GraphQLObjectType({
       async resolve(parent, args) {
         try {
           let user = await db.models.user.findByPk(args.userId)
-          console.log('TCL: user', user)
+          //console.log('TCL: user', user)
           const chats = await user.getChats({
             include: [{model: db.models.user}, {model: db.models.message}]
           })
-          console.log('TCL: chats.users', chats[0].users)
+          //console.log('TCL: chats.users', chats[0].users)
           return chats
         } catch (e) {
           console.error(e)
@@ -188,11 +188,11 @@ const rootQuery = new GraphQLObjectType({
       },
       async resolve(parent, args) {
         try {
-          console.log(args.chatId)
+          //console.log(args.chatId)
           let chat = await db.models.chat.findByPk(args.chatId, {
             include: [{model: db.models.user}, {model: db.models.message}]
           })
-          console.log('chat', chat)
+          //console.log('chat', chat)
           return chat
         } catch (e) {
           console.error(e)
@@ -246,7 +246,7 @@ const rootQuery = new GraphQLObjectType({
           let user = await db.models.user.findByPk(args.userId, {
             include: [db.models.meeting]
           })
-          console.log('user prototype', db.models.user.prototype)
+          //console.log('user prototype', db.models.user.prototype)
           const meetings = await user.getMeetings({
             include: [
               {model: db.models.user},
@@ -256,7 +256,7 @@ const rootQuery = new GraphQLObjectType({
               }
             ]
           })
-          console.log('meetings in getAllMeetings', meetings)
+          //console.log('meetings in getAllMeetings', meetings)
           return meetings
           // console.log('TCL: user', user)
           // const chats = await user.getChats({
@@ -299,7 +299,7 @@ const rootMutation = new GraphQLObjectType({
         homeLocation: {type: new GraphQLList(GraphQLFloat)}
       },
       async resolve(parent, args) {
-        console.log('ARGS', args)
+        //console.log('ARGS', args)
 
         const data = await db.models.user.create({
           fullName: args.fullName,
@@ -313,7 +313,7 @@ const rootMutation = new GraphQLObjectType({
           homeLocation: args.homeLocation
         })
 
-        console.log('CREATED USER', data)
+        //console.log('CREATED USER', data)
         if (data) {
           return data
         }
@@ -369,7 +369,6 @@ const rootMutation = new GraphQLObjectType({
         chatId: {type: GraphQLInt}
       },
       async resolve(parent, args) {
-        console.log('in delete chat')
         let chat = await db.models.chat.findByPk(args.chatId)
         await chat.destroy()
         return chat
@@ -383,17 +382,17 @@ const rootMutation = new GraphQLObjectType({
       async resolve(parent, args) {
         let chosen
         const user = await User.findByPk(args.userId)
-        console.log(
-          'TCL: iPrefer in schema',
-          user.iPrefer,
-          'typeof',
-          typeof user.iPrefer
-        )
-        console.log(user.fullName)
+        // console.log(
+        //   'TCL: iPrefer in schema',
+        //   user.iPrefer,
+        //   'typeof',
+        //   typeof user.iPrefer
+        // )
+        //console.log(user.fullName)
         const formatted = Array.isArray(user.iPrefer)
           ? user.iPrefer
           : user.iPrefer.slice(1, -1).split(',')
-        console.log(formatted)
+        //console.log(formatted)
         const chats = await db.models.chat.findAll({
           include: {
             model: db.models.user,
@@ -425,7 +424,7 @@ const rootMutation = new GraphQLObjectType({
               //   location2
               // ).human_readable()
               const distance = turf.distance(from, to, options)
-              console.log('distance human readable', distance)
+              //console.log('distance human readable', distance)
               if (distance < 10100134 && !cur.users.includes(user)) {
                 return cur
               }
@@ -443,7 +442,7 @@ const rootMutation = new GraphQLObjectType({
             meeting: null
           })
         }
-        console.log('TCL: chosen', chosen)
+        //console.log('TCL: chosen', chosen)
 
         await user.addChat(chosen)
         const updated = await db.models.chat.findByPk(chosen.id, {
@@ -504,7 +503,7 @@ const rootMutation = new GraphQLObjectType({
           const chat = await db.models.chat.findByPk(args.chatId, {
             include: [db.models.user]
           })
-          console.log('meeting prototype', db.models.meeting.prototype)
+          //console.log('meeting prototype', db.models.meeting.prototype)
           await meeting.addUsers(chat.users)
           const updated = await meeting.setChat(chat)
           await chat.addMeeting(updated)
