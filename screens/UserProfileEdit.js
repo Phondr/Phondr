@@ -80,7 +80,7 @@ export class UserProfileEdit extends Component {
         <CustomHeader title="Profile" />
         <View style={styles.header}></View>
         <Image
-          style={styles.avatar}
+          style={Dimensions.get('window').height >= 812 ? styles.avatarMike : styles.avatar}
           source={{uri: this.props.navigation.state.params.user.profilePicture}}
         />
 
@@ -224,6 +224,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     marginTop: 75
+  },
+  avatarMike: {
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    borderWidth: 4,
+    borderColor: 'white',
+    marginBottom: 10,
+    alignSelf: 'center',
+    position: 'absolute',
+    marginTop: 100
   },
   name: {
     fontSize: 22,

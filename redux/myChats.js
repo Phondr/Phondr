@@ -11,7 +11,7 @@ const REMOVECHAT = 'REMOVECHAT'
 const removeChat = badChat => {
   return {type: REMOVECHAT, badChat}
 }
-const addChat = newChat => {
+export const addChat = newChat => {
   return {type: ADDCHAT, newChat}
 }
 const getMyChats = myChats => {
@@ -55,8 +55,8 @@ export const findOrCreateChat = uid => {
           }
         }`
       })
-
       dispatch(addChat(findOrCreateChat))
+      return findOrCreateChat
     } catch (e) {
       console.error('messed up in focc thunk: ', e)
     }

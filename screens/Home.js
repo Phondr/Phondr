@@ -1,16 +1,7 @@
 import React, {Component} from 'react'
-import {ImageBackground, View, StatusBar, StyleSheet, Text} from 'react-native'
-import {
-  Container,
-  Button,
-  Icon,
-  Content,
-  Left,
-  Right,
-  Spinner
-} from 'native-base'
+import {ImageBackground, View, StatusBar, StyleSheet, Text, Dimensions} from 'react-native'
+import {Container, Button, Icon, Content, Left, Right} from 'native-base'
 import {Platform} from '@unimodules/core'
-
 import {withNavigation} from 'react-navigation'
 import CustomHeader from '../components/CustomHeader'
 import {connect} from 'react-redux'
@@ -30,6 +21,9 @@ import Dialog, {
   DialogFooter,
   DialogButton
 } from 'react-native-popup-dialog'
+import Spinner from '../components/Spinner'
+import socket from '../redux/socketClient'
+import {showMessage} from 'react-native-flash-message'
 
 class Home extends Component {
   constructor() {
@@ -59,9 +53,19 @@ class Home extends Component {
     this.setState({loading: true})
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
-      await this.setState({loading: false})
-      this.props.fetchMyChats(this.props.user.id)
+      console.log('props.user.id', this.props.user.id)
+      await this.props.fetchMyChats(this.props.user.id)
+      this.setState({loading: false})
     }
+    socket.emit('subscribe-to-user-room', {name: this.props.user.fullName}) //Subscribe to a room revolving around their name(notifications for new name and change pending chats to active)
+    socket.on('receiveNewChat', () => {
+      //Refetch chats to make a pending chat to active when other user matches into their chat. 
+      this.props.fetchMyChats(this.props.user.id)
+    })
+    socket.on('receiveNewMessageNotification', ({message}) => {
+      showMessage({message, type: 'info', duration: 4000, icon: 'info'})
+    })
+    //console.log('HOME PROPS', this.props)
   }
 
   async componentDidUpdate(prevProps) {
@@ -78,16 +82,11 @@ class Home extends Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return (
-        <View style={styles.spinner}>
-          <Spinner />
-        </View>
-      )
-    }
-
     const user = this.props.user || {}
-
+    // console.log('HOME USER', user)
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
       <Container>
         <ScrollView>
@@ -192,7 +191,7 @@ class Home extends Component {
                 <PendingComp />
               </>
             ) : (
-              <Text>user has no chats</Text>
+              <Text style={{alignSelf: 'center', fontSize: 20, marginTop: Dimensions.get('window').height*0.35}}>Click below to start growing Phondr!</Text>
             )}
 
             <Right>
@@ -200,7 +199,17 @@ class Home extends Component {
                 bordered
                 rounded
                 info
-                onPress={() => this.props.findOrCreateChat(this.props.user.id)}
+                onPress={async () => {
+                  const chat = await this.props.findOrCreateChat(
+                    this.props.user.id
+                  )
+                  const otherUser = chat.users.find(
+                    user => user.fullName !== this.props.user.fullName
+                  )
+                  if (otherUser) { //Only emit this chat, if the chat created is active. Emits so that other user knows they have to refetch to change their pending chat to active.
+                    socket.emit('sendNewChat', {chat, otherUser})
+                  }
+                }}
               >
                 <Icon name="pluscircle" type="AntDesign">
                   <Text> New Chat</Text>
@@ -214,13 +223,6 @@ class Home extends Component {
   }
 }
 
-export const styles = StyleSheet.create({
-  spinner: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
 
 export default connect(({myChats, user}) => ({myChats, user}), {
   fetchMyChats,

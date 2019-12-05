@@ -141,9 +141,25 @@ io.on('connection', socket => {
       .emit('loginLogoutMessage', {message: 'A user has left the room'})
   })
 
+  socket.on('subscribe-to-user-room', ({name}) => {
+    console.log(`joined ${name}`)
+    socket.join(name)
+    rooms.push(name)
+  })
+
   socket.on('sendMessage', ({message, chatId}) => {
     console.log(message)
     io.to(chatId).emit('receiveMessage', {message})
+  })
+
+  socket.on('sendNewChat', ({chat, otherUser})=>{
+    console.log(chat) //Send only to other user that had that pending chat
+    socket.to(`${otherUser.fullName}`).emit('receiveNewChat', {chat})
+  })
+
+  socket.on('sendNewMessageNotification', ({otherUser, user})=>{
+    console.log(otherUser)
+    socket.to(`${otherUser.fullName}`).emit('receiveNewMessageNotification', {message: `Got a new message from ${user.fullName}`})
   })
 
   socket.on('disconnect', () => {
