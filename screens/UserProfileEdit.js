@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Icon, Form, Input, Item} from 'native-base'
+import {View, Icon, Form, Input, Item, Right} from 'native-base'
 import {
   StyleSheet,
   Text,
@@ -70,111 +70,114 @@ export class UserProfileEdit extends Component {
           style={styles.avatar}
           source={{uri: this.props.navigation.state.params.user.profilePicture}}
         />
+
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.bodyDescription}>
-              <Form>
-                <View style={styles.formAlign}>
-                  <Item style={styles.inputItem}>
-                    {!this.state.fullnameswitch ? (
-                      <TouchableOpacity
-                        style={styles.buttonContainer}
-                        onPress={() => {
-                          this.setState({fullName: '', fullnameswitch: true})
-                          console.log(this.state)
-                        }}
-                      >
-                        <Text>Edit Name</Text>
-                      </TouchableOpacity>
-                    ) : (
-                      <Input
-                        placeholder={`Full Name: (Previously: ${this.props.navigation.state.params.user.fullName})`}
-                        name="fullName"
-                        style={styles.input}
-                        onChangeText={fullName => {
-                          this.setState({fullName})
-                        }}
-                        value={this.state.fullName}
-                      />
-                    )}
-                  </Item>
-                  <Item style={styles.inputItem}>
-                    {!this.state.distPrefswitch ? (
-                      <TouchableOpacity
-                        style={styles.buttonContainer}
-                        onPress={() => {
-                          this.setState({distPref: '', distPrefswitch: true})
-                          console.log(this.state)
-                        }}
-                      >
-                        <Text>Edit Distance Prefered</Text>
-                      </TouchableOpacity>
-                    ) : (
-                      <Input
-                        placeholder={`Distance Prefered: (Previously: ${this.props.navigation.state.params.user.distPref})`}
-                        style={styles.input}
-                        onChangeText={distPref => {
-                          this.setState({distPref})
-                        }}
-                        value={this.state.distPref}
-                        name="distPref"
-                      />
-                    )}
-                  </Item>
-                  <Item style={styles.inputItem}>
-                    {!this.state.emailswitch ? (
-                      <TouchableOpacity
-                        style={styles.buttonContainer}
-                        onPress={() => {
-                          this.setState({email: '', emailswitch: true})
-                          console.log(this.state)
-                        }}
-                      >
-                        <Text>Edit Email</Text>
-                      </TouchableOpacity>
-                    ) : (
-                      <Input
-                        placeholder={`Email: (Previously: ${this.props.navigation.state.params.user.email})`}
-                        name="email"
-                        style={styles.input}
-                        onChangeText={email => {
-                          this.setState({email})
-                        }}
-                        value={this.state.email}
-                      />
-                    )}
-                  </Item>
-                  <Item style={styles.inputItem}>
-                    {!this.state.iAmswitch ? (
-                      <TouchableOpacity
-                        style={styles.buttonContainer}
-                        onPress={() => {
-                          this.setState({iAm: '', iAmswitch: true})
-                          console.log(this.state)
-                        }}
-                      >
-                        <Text>Edit Gender</Text>
-                      </TouchableOpacity>
-                    ) : (
-                      <Input
-                        placeholder={`I Identify As: (Previously: ${this.props.navigation.state.params.user.iAm})`}
-                        style={styles.input}
-                        onChangeText={iAm => {
-                          this.setState({iAm})
-                        }}
-                        value={this.state.iAm}
-                        name="iAm"
-                      />
-                    )}
-                  </Item>
-                </View>
+              <Form style={styles.formAlign}>
+                {/* <View style={styles.formAlign}> */}
+                <Item>
+                  {!this.state.fullnameswitch ? (
+                    <TouchableOpacity
+                      style={styles.buttonContainer}
+                      onPress={() => {
+                        this.setState({fullName: '', fullnameswitch: true})
+                        console.log(this.state)
+                      }}
+                    >
+                      <Text>Edit Name</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <Input
+                      placeholder={`Full Name: (Previously: ${this.props.navigation.state.params.user.fullName})`}
+                      name="fullName"
+                      style={styles.input}
+                      onChangeText={fullName => {
+                        this.setState({fullName})
+                      }}
+                      value={this.state.fullName}
+                    />
+                  )}
+                </Item>
+                <Item>
+                  {!this.state.distPrefswitch ? (
+                    <TouchableOpacity
+                      style={styles.buttonContainer}
+                      onPress={() => {
+                        this.setState({distPref: '', distPrefswitch: true})
+                        console.log(this.state)
+                      }}
+                    >
+                      <Text>Edit Distance Prefered</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <Input
+                      placeholder={`Distance Prefered: (Previously: ${this.props.navigation.state.params.user.distPref})`}
+                      style={styles.input}
+                      onChangeText={distPref => {
+                        this.setState({distPref})
+                      }}
+                      value={this.state.distPref}
+                      name="distPref"
+                    />
+                  )}
+                </Item>
+                <Item>
+                  {!this.state.emailswitch ? (
+                    <TouchableOpacity
+                      style={styles.buttonContainer}
+                      onPress={() => {
+                        this.setState({email: '', emailswitch: true})
+                        console.log(this.state)
+                      }}
+                    >
+                      <Text>Edit Email</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <Input
+                      placeholder={`Email: (Previously: ${this.props.navigation.state.params.user.email})`}
+                      name="email"
+                      style={styles.input}
+                      onChangeText={email => {
+                        this.setState({email})
+                      }}
+                      value={this.state.email}
+                    />
+                  )}
+                </Item>
+                <Item>
+                  {!this.state.iAmswitch ? (
+                    <TouchableOpacity
+                      style={styles.buttonContainer}
+                      onPress={() => {
+                        this.setState({iAm: '', iAmswitch: true})
+                        console.log(this.state)
+                      }}
+                    >
+                      <Text>Edit Gender</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <Input
+                      placeholder={`I Identify As: (Previously: ${this.props.navigation.state.params.user.iAm})`}
+                      style={styles.input}
+                      onChangeText={iAm => {
+                        this.setState({iAm})
+                      }}
+                      value={this.state.iAm}
+                      name="iAm"
+                    />
+                  )}
+                </Item>
+                {/* </View> */}
               </Form>
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={this.submitHandler}
-              >
-                <Text>Save</Text>
-              </TouchableOpacity>
+              <Right>
+                <TouchableOpacity
+                  style={styles.buttonContainer}
+                  onPress={this.submitHandler}
+                >
+                  <Text>Save</Text>
+                </TouchableOpacity>
+              </Right>
             </View>
           </View>
         </View>
@@ -265,10 +268,10 @@ const styles = StyleSheet.create({
   },
   formAlign: {
     flex: 1,
-    padding: 2.5,
+    textAlign: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center'
+    alignItems: 'center'
   }
 })
 

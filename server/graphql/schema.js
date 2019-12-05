@@ -37,7 +37,8 @@ const UserType = new GraphQLObjectType({
     messages: {type: new GraphQLList(MessageType)},
     iAm: {type: GraphQLString},
     iPrefer: {type: new GraphQLList(GraphQLString)},
-    distPref: {type: GraphQLInt}
+    distPref: {type: GraphQLInt},
+    isNoob: {type: GraphQLBoolean}
   })
 })
 
@@ -289,7 +290,13 @@ const rootMutation = new GraphQLObjectType({
       args: {
         fullName: {type: GraphQLString},
         email: {type: GraphQLString},
-        password: {type: GraphQLString}
+        password: {type: GraphQLString},
+        iAm: {type: GraphQLString},
+        age: {type: GraphQLInt},
+        distPref: {type: GraphQLInt},
+        iPrefer: {type: new GraphQLList(GraphQLString)},
+        profilePicture: {type: GraphQLString},
+        homeLocation: {type: new GraphQLList(GraphQLFloat)}
       },
       async resolve(parent, args) {
         console.log('ARGS', args)
@@ -297,7 +304,13 @@ const rootMutation = new GraphQLObjectType({
         const data = await db.models.user.create({
           fullName: args.fullName,
           email: args.email,
-          password: args.password
+          password: args.password,
+          iAm: args.iAm,
+          age: args.age,
+          iPrefer: args.iPrefer,
+          distPref: args.distPref,
+          profilePicture: args.profilePicture,
+          homeLocation: args.homeLocation
         })
 
         console.log('CREATED USER', data)
@@ -325,6 +338,24 @@ const rootMutation = new GraphQLObjectType({
           iAm: args.iAm,
           distPref: args.distPref,
           age: args.age
+        })
+
+        if (updateduser) {
+          return updateduser
+        }
+      }
+    },
+    updateNoob: {
+      type: UserType,
+      args: {
+        id: {type: GraphQLInt},
+        isNoob: {type: GraphQLBoolean}
+      },
+      async resolve(parent, args) {
+        let User = await db.models.user.findByPk(args.id)
+
+        let updateduser = await User.update({
+          isNoob: args.isNoob
         })
 
         if (updateduser) {

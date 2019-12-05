@@ -1,5 +1,11 @@
 import React, {Component} from 'react'
-import {View, StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Platform
+} from 'react-native'
 import {
   Container,
   Content,
@@ -18,6 +24,10 @@ import {
 import {connect} from 'react-redux'
 import {userSignUp} from '../redux/user'
 import CameraComponent from './CameraComponent'
+import Geocoder from 'react-native-geocoding'
+import Constants from 'expo-constants'
+import * as Location from 'expo-location'
+import * as Permissions from 'expo-permissions'
 
 import t, {MultiSelectExample} from 'tcomb-form-native'
 
@@ -30,7 +40,7 @@ import t, {MultiSelectExample} from 'tcomb-form-native'
 // const EnumChoices = t.enums(Choices, 'Choices')
 
 const User = t.struct({
-  fullName: t.String,
+  name: t.String,
   age: t.Integer,
   //address: t.String,
   radius: t.Integer,
@@ -42,7 +52,7 @@ const User = t.struct({
 
 const options = {
   fields: {
-    fullName: {
+    name: {
       error: 'You need your fullname to sign up'
     },
     age: {
@@ -84,7 +94,10 @@ export class Signup extends Component {
       checked1: false,
       checked2: false,
       checked3: false,
-      preferences: []
+      preferences: [],
+      location: null,
+      errorMessage: null,
+      address: []
     }
 
     this.doitchecked1 = this.doitchecked1.bind(this)
@@ -97,19 +110,55 @@ export class Signup extends Component {
     drawerLabel: () => null
   }
 
-  componentDidUpdate() {
-    const user = this.props.user
-    if (this.props.user.id) {
-      this.props.navigation.navigate('Home', {user})
+  componentDidMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage:
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!'
+      })
+    } else {
+      this._getLocationAsync()
+    }
+  }
+
+  _getLocationAsync = async () => {
+    let {status} = await Permissions.askAsync(Permissions.LOCATION)
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied'
+      })
+    }
+
+    let location = await Location.getCurrentPositionAsync({})
+    this.setState({location})
+
+    let text = 'Waiting..'
+    let lat = ''
+    let lon = ''
+    const address = []
+    if (this.state.errorMessage) {
+      text = this.state.errorMessage
+    } else if (this.state.location) {
+      text = this.state.location
+      address.push(this.state.location.coords.latitude)
+      address.push(this.state.location.coords.longitude)
+
+      this.setState({address})
+
+      console.log('ADDRESS', this.state.address)
     }
   }
 
   async signup() {
     const values = this._form.getValue()
     const preferences = this.state.preferences
+    const address = this.state.address
+    const user = {values, preferences, address}
     //console.log(values)
     try {
-      await this.props.addUser(values, preferences)
+      //send to camera with
+      //await this.props.addUser(values, preferences)
+      this.props.navigation.navigate('LoginCamera', {user})
     } catch (error) {
       alert('COULD NOT SIGNUP')
       console.log(error)
@@ -149,13 +198,16 @@ export class Signup extends Component {
     return (
       <ScrollView>
         <View style={styles.container}>
+          {/* <View style={styles.locationcontainer}>
+            <Text style={styles.paragraph}>{text}</Text>
+          </View> */}
           <View styles={styles.checkboxcontainer}>
             <Header>
               <Left>
                 <Title>Gender Preference</Title>
               </Left>
             </Header>
-            <Content>
+            <Content style={styles.checkboxcontent}>
               <ListItem>
                 <CheckBox
                   checked={this.state.checked1}
@@ -195,7 +247,6 @@ export class Signup extends Component {
               </ListItem>
             </Content>
           </View>
-
           <Form
             ref={c => (this._form = c)}
             type={User}
@@ -203,10 +254,9 @@ export class Signup extends Component {
             style={styles.formcontainer}
           />
 
-          <CameraComponent />
-
+          {/* <CameraComponent /> */}
           <TouchableOpacity style={styles.submitButton} onPress={this.signup}>
-            <Text style={styles.submitButtonText}>Sign Up</Text>
+            <Text style={styles.submitButtonText}>Proceed to Photo</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -218,7 +268,6 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 35,
-
     padding: 20,
     backgroundColor: '#F5FCFF'
   },
@@ -226,6 +275,10 @@ export const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     backgroundColor: '#F5FCFF',
     flex: 1,
+    margin: 10
+  },
+  checkboxcontent: {
+    padding: 10,
     margin: 10
   },
   logintext: {
@@ -246,6 +299,18 @@ export const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: 'white'
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  locationcontainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: Constants.statusBarHeight,
+    backgroundColor: '#ecf0f1'
   }
 })
 

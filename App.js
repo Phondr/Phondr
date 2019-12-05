@@ -11,6 +11,7 @@ import {
   createBottomTabNavigator,
   createAppContainer,
   createStackNavigator,
+  createSwitchNavigator,
   createMaterialTopTabNavigator
 } from 'react-navigation'
 import Home from './screens/Home'
@@ -39,6 +40,8 @@ import PendingMeetings from './components/PendingMeetingComp'
 import UserProfileEdit from './screens/UserProfileEdit'
 import Spinner from './components/Spinner'
 import MapV from './components/MapView'
+import LoginCamera from './screens/LoginCamera'
+
 import TabBarIcon from './components/TabBarIcon'
 const {url} = require('./secrets')
 import PlaceSearch from './components/PlaceSearch'
@@ -149,6 +152,28 @@ const MeetingBottomTab = createBottomTabNavigator(
   }
 )
 
+const EntryStack = createStackNavigator(
+  {
+    Entry: {
+      screen: Entry,
+      navigationOptions: {
+        header: null
+      }
+    },
+    Login: Login,
+    Signup: Signup,
+    LoginCamera: LoginCamera
+  },
+  {
+    initialRouteName: 'Entry'
+  },
+  {
+    navigationOptions: {
+      gesturesEnabled: true
+    }
+  }
+)
+
 var drawer = createDrawerNavigator(
   {
     Profile: {
@@ -157,9 +182,7 @@ var drawer = createDrawerNavigator(
     Home: {
       screen: Home
     },
-    New: {
-      screen: New
-    },
+
     Login: {
       screen: Login
     },
@@ -169,18 +192,18 @@ var drawer = createDrawerNavigator(
     Entry: {
       screen: Entry
     },
-    MapV: {
-      screen: MapV
-    },
     'Picture Picker': {
       screen: PicturePicker
     },
-    'Pending Meetings': {
-      screen: PendingMeetings
-    },
-    'Active Chats': {
-      screen: ActiveScreenStack
-    },
+    // 'Pending Chats': {
+    //   screen: PendingScreen
+    // },
+    // 'Pending Meetings': {
+    //   screen: PendingMeetings
+    // },
+    // 'Active Chats': {
+    //   screen: ActiveScreenStack
+    // },
     Chats: {
       screen: ChatBottomTab
     },
@@ -196,7 +219,7 @@ var drawer = createDrawerNavigator(
     // MeetingModal: {}
   },
   {
-    initialRouteName: 'Entry',
+    initialRouteName: 'Home',
     contentComponent: CustomDrawer,
     contentOptions: {
       activeTintColor: 'orange'
@@ -207,7 +230,16 @@ var drawer = createDrawerNavigator(
   }
 )
 
-const DrawerContainer = createAppContainer(drawer)
+const OuterSwitch = createSwitchNavigator({
+  notLoggedIn: {
+    screen: EntryStack
+  },
+  loggedIn: {
+    screen: drawer
+  }
+})
+
+const OuterNav = createAppContainer(OuterSwitch)
 
 function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
@@ -238,7 +270,7 @@ function App(props) {
           {/* <AppNavigator /> */}
           {/* <AnatomyExample /> */}
           {/* <AuthPages /> */}
-          <DrawerContainer />
+          <OuterNav />
           <FlashMessage position="top" />
           {/* <New /> */}
         </View>

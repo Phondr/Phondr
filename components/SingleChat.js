@@ -5,7 +5,10 @@ import {
   View,
   StatusBar,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity
 } from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
@@ -32,7 +35,7 @@ class SingleChats extends Component {
     this.state = {
       reply: false,
       curMessage: {},
-      loading: true,
+      loading: true
     }
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
@@ -78,7 +81,9 @@ class SingleChats extends Component {
       this.props.setNewMessage(message)
     })
 
-    this.props.fetchMessages(this.props.currentChat.id).then(()=> this.setState({loading: false}))
+    this.props
+      .fetchMessages(this.props.currentChat.id)
+      .then(() => this.setState({loading: false}))
   }
 
   // async imageRequest(ref) {
@@ -266,7 +271,7 @@ class SingleChats extends Component {
   }
 
   render() {
-    if(this.state.loading) {
+    if (this.state.loading) {
       return <Spinner />
     }
     return (
@@ -287,16 +292,12 @@ class SingleChats extends Component {
           currentChat={this.props.currentChat}
         />
         {calcProgress(this.props.currentChat) >= 100 ? (
-          <Fab
-            active={true}
-            direction="up"
-            containerStyle={{}}
-            style={{backgroundColor: '#5067FF'}}
-            position="topRight"
+          <TouchableOpacity
+            style={Platform.OS === 'ios' ? styles.ios : styles.android}
             onPress={() => this.props.navigation.navigate('MeetingModal')}
           >
-            <Icon name="meetup" type={'FontAwesome'} />
-          </Fab>
+            <Icon name="meetup" color="blue" type={'FontAwesome'} />
+          </TouchableOpacity>
         ) : null}
         {calcProgress(this.props.currentChat) > 25 ? (
           <RecordAudio
@@ -331,6 +332,23 @@ class SingleChats extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  ios: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.87,
+    marginLeft: Dimensions.get('window').width * 0.78
+  },
+  android: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.88,
+    marginLeft: Dimensions.get('window').width * 0.78
+  }
+})
 
 const MapStateToProps = state => {
   return {

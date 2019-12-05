@@ -14,28 +14,30 @@ export class SignOut extends Component {
   }
 
   render() {
-    return <View>
-    <NavigationEvents
-        onDidFocus={async (payload) => {
-          try {
-            await AsyncStorage.removeItem('userKey')
-            this.props.setUser({})
-            this.props.navigation.navigate('Entry')
-            console.log('REMOVED KEY')
-          } catch (e) {
-            // error reading value
-            console.log('COULD NOT REMOVE ASYNC STORAGE KEY ON SIGNOUT', e)
-          }
-        }}
-      />
-    </View>
+    return (
+      <View>
+        <NavigationEvents
+          onDidFocus={async payload => {
+            try {
+              await AsyncStorage.removeItem('userKey')
+              this.props.setUser({})
+              this.props.navigation.navigate('notLoggedIn')
+              console.log('REMOVED KEY')
+            } catch (e) {
+              // error reading value
+              console.log('COULD NOT REMOVE ASYNC STORAGE KEY ON SIGNOUT', e)
+            }
+          }}
+        />
+      </View>
+    )
   }
 }
 
 const mapDispatchToProps = function(dispatch) {
   return {
-    setUser: (user) => dispatch(setUser(user))
+    setUser: user => dispatch(setUser(user))
   }
 }
 
-export default connect(null,mapDispatchToProps)(SignOut)
+export default connect(null, mapDispatchToProps)(SignOut)

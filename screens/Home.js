@@ -20,7 +20,7 @@ import {fetchMyChats, findOrCreateChat} from '../redux/myChats'
 import ActiveComp from '../components/ActiveComp'
 import PendingComp from '../components/PendingComp'
 import {ScrollView} from 'react-native-gesture-handler'
-import {setUser} from '../redux/user'
+import {setUser, ConvertUser} from '../redux/user'
 import {fetchUserLogin} from '../redux/user'
 import {setLoading} from '../redux/loading'
 import Dialog, {
@@ -36,7 +36,7 @@ class Home extends Component {
     this.state = {
       user: {fullName: 'Avaree Warrick', id: 1, isNoob: true},
       defaultAnimationDialog: true,
-      loading:true
+      loading: true
     }
   }
   static navigationOptions = {
@@ -46,19 +46,20 @@ class Home extends Component {
   }
 
   // componentDidMount() {
-    //this is just for testing
-    // this.props.setUser(this.state.user)
+  //this is just for testing
+  // this.props.setUser(this.state.user)
 
-    // if (!this.props.user.id) {
-    //   this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
-    // }
-    // if (this.props.user.id) {
-    //   console.log('in comp did mouth fmc')
+  // if (!this.props.user.id) {
+  //   this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
+  // }
+  // if (this.props.user.id) {
+  //   console.log('in comp did mouth fmc')
   async componentDidMount() {
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
+      console.log('props.user.id', this.props.user.id)
       this.props.fetchMyChats(this.props.user.id)
-    } 
+    }
     //console.log('HOME PROPS', this.props)
   }
 
@@ -70,10 +71,13 @@ class Home extends Component {
   }
 
   render() {
+    const user = this.props.user || {}
+    console.log('HOME USER', user)
+
     return (
       <Container>
         <ScrollView>
-          {this.state.user.isNoob === true ? (
+          {/* {this.state.user.isNoob === true ? (
             <Dialog
               onDismiss={() => {
                 this.setState({defaultAnimationDialog: false})
@@ -84,34 +88,27 @@ class Home extends Component {
               actionsBordered
               dialogTitle={
                 <DialogTitle
-                  title="Intro to the App"
+                  title="Welcome to Phondr!"
                   style={{
                     backgroundColor: '#F7F7F8'
                   }}
                   hasTitleBar={false}
-                  align="left"
+                  align="center"
                 />
               }
               footer={
                 <DialogFooter>
                   <DialogButton
-                    text="Turn off intro"
+                    text="OK"
                     bordered
                     onPress={() => {
                       this.setState({
                         defaultAnimationDialog: false,
                         isNoob: false
                       })
+                      this.props.ConvertUser()
                     }}
                     key="button-1"
-                  />
-                  <DialogButton
-                    text="OK"
-                    bordered
-                    onPress={() => {
-                      this.setState({defaultAnimationDialog: false})
-                    }}
-                    key="button-2"
                   />
                 </DialogFooter>
               }
@@ -121,10 +118,18 @@ class Home extends Component {
                   backgroundColor: '#F7F7F8'
                 }}
               >
-                <Text>INPUT THE INTRO HERE</Text>
+                <Text>
+                  HOME:{'\n'}This is your home page. You are able to view your
+                  active chats and pending chats here.
+                  {'\n'}
+                  {'\n'}
+                  DASHBOARD:{'\n'}To your top left is your dashboard. You are
+                  able to view Profile, Map View, Pending/Active Chats and
+                  Meetings here.
+                </Text>
               </DialogContent>
             </Dialog>
-          ) : null}
+          ) : null} */}
 
           <StatusBar barStyle="light-content" />
           <CustomHeader title="Home" />
@@ -133,9 +138,9 @@ class Home extends Component {
               flex: 1
             }}
           >
-            {this.props.myChats.length ? (
+            {this.props.myChats && this.props.myChats.length ? (
               <>
-                <ActiveComp />
+                <ActiveComp preview={true} />
                 <PendingComp />
               </>
             ) : (
@@ -165,5 +170,6 @@ export default connect(({myChats, user}) => ({myChats, user}), {
   fetchMyChats,
   findOrCreateChat,
   setUser,
-  fetchUserLogin
+  fetchUserLogin,
+  ConvertUser
 })(Home)
