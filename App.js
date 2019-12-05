@@ -111,7 +111,8 @@ const ChatBottomTab = createBottomTabNavigator(
       style: {backgroundColor:'#E0115F'},
       labelStyle: {fontSize: 12},
       activeTintColor: 'white',
-      activeBackgroundColor: '#FF91AF'
+      activeBackgroundColor: '#FF91AF',
+      tabStyle:{borderRightColor:'black' ,borderLeftColor:'black',borderLeftWidth:2,borderRightWidth:2}
     },
     navigationOptions: {
       drawerIcon: ({tintColor}) => {
@@ -133,9 +134,11 @@ const MeetingBottomTab = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      style: {paddingBottom: 5},
+      style: {backgroundColor:'#E0115F'},
       labelStyle: {fontSize: 12},
-      activeTintColor: 'orange'
+      activeTintColor: 'white',
+      activeBackgroundColor: '#FF91AF',
+      tabStyle:{borderRightColor:'black' ,borderLeftColor:'black',borderLeftWidth:2,borderRightWidth:2}
     },
     navigationOptions: {
       drawerIcon: ({tintColor}) => {
