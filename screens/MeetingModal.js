@@ -126,8 +126,9 @@ const MeetingModal = ({
     setNearby(data.results)
   }
 
-  const submitMeeting = (chatId, userId, inv) => {
-    createMeeting(chatId, userId, inv)
+  const submitMeeting = async (chatId, userId, inv) => {
+    if (invitation.date && invitation.name)
+      await createMeeting(chatId, userId, inv)
     navigation.navigate('SingleChat', {created: true})
   }
   useEffect(() => {
@@ -169,7 +170,13 @@ const MeetingModal = ({
     //   onBackdropPress={() => {}}
     // >
     <Container>
-      <Content contentContainerStyle={{marginTop: 20}}>
+      <Content contentContainerStyle={{marginTop: 30}}>
+        <Card>
+          <CardItem header>
+            <Text>Search a place or click on the map for recommendations</Text>
+          </CardItem>
+        </Card>
+
         <PlaceSearch />
 
         <View>

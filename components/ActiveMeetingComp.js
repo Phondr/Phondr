@@ -1,18 +1,21 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {connect} from 'react-redux'
 import {Icon, Left, Body, Right, Card, CardItem, Text} from 'native-base'
+import {TouchableOpacity, Image} from 'react-native'
 import {withNavigation, NavigationEvents} from 'react-navigation'
 import {setChat, fetchCurrentChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
 import {fetchAllMeetings} from '../redux/meetings'
-
+import Spinner from '../components/Spinner'
 const ActiveMeetingComp = ({
   user,
   meetings,
   fetchAllMeetings,
   navigation,
   setChat,
-  fetchCurrentChat
+  fetchCurrentChat,
+  setParent,
+  loading
 }) => {
   const active = meetings.filter(meeting => meeting.status === 'active')
 
@@ -26,10 +29,23 @@ const ActiveMeetingComp = ({
   // useEffect(() => {
   //   fetchAllMeetings(user.id)
   // }, [])
+
+  // if (loading) {
+  //   return <Spinner />
+  // }
+  if (!active.length) {
+    return (
+      <Card>
+        <CardItem header>
+          <Text>No Active Meetings</Text>
+        </CardItem>
+      </Card>
+    )
+  }
   return (
     <Card>
       <NavigationEvents
-        onWillFocus={payload => {
+        onDidFocus={payload => {
           fetchAllMeetings(user.id)
         }}
       />
@@ -38,35 +54,40 @@ const ActiveMeetingComp = ({
       </CardItem>
 
       {active.map(cur => {
+        console.log('cur imageRef', cur.imageRef)
         return (
-          <React.Fragment key={cur.id}>
+          <TouchableOpacity
+            onPress={async () => {
+              await fetchCurrentChat(cur.chat.id)
+              navigation.navigate('SingleChat')
+            }}
+            key={cur.id}
+          >
             <CardItem>
-              <Text style={{color: 'blue'}}>Name: {cur.name}</Text>
+              <Text style={{color: 'green'}}>Name: {cur.name}</Text>
             </CardItem>
-            <CardItem
-              button
-              onPress={async () => {
-                await fetchCurrentChat(cur.chat.id)
-                navigation.navigate('SingleChat')
-              }}
-            >
-              <Text>
+
+            <CardItem cardBody>
+              <Image
+                source={{uri: cur.imageRef}}
+                style={{height: 120, width: null, flex: 1}}
+              />
+            </CardItem>
+
+            <CardItem>
+              <Text note>
                 With:{' '}
                 {
                   cur.users.find(u => {
                     return u.fullName !== user.fullName
                   }).fullName
-                }{' '}
+                }
                 {'\n'}
-                Date: {cur.date.toString()} {'\n'}
+                Date: {new Date(+cur.date).toString()} {'\n'}
                 Map Link: {cur.link}
               </Text>
-
-              <Right>
-                <Icon name="arrow-forward" />
-              </Right>
             </CardItem>
-          </React.Fragment>
+          </TouchableOpacity>
         )
       })}
     </Card>

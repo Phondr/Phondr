@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
+const {cheerioReq} = require('../../../imageRequest')
 
 const Meeting = db.define('meeting', {
   location: {
@@ -9,7 +10,18 @@ const Meeting = db.define('meeting', {
     type: Sequelize.STRING
   },
   imageRef: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    get() {
+      const ref = this.getDataValue('link')
+      if (ref && ref.length) {
+        // const googleImage = await imageRequest(ref)
+        // return googleImage
+        const cheerioImage = cheerioReq(ref)
+        return cheerioImage
+      }
+
+      return ''
+    }
   },
   name: {
     type: Sequelize.STRING
@@ -27,8 +39,8 @@ const Meeting = db.define('meeting', {
     type: Sequelize.DATE
     // allowNull: false,
   },
-  status:{
-    type:Sequelize.ENUM(['pending','active','declined'])
+  status: {
+    type: Sequelize.ENUM(['pending', 'active', 'declined'])
   }
 })
 

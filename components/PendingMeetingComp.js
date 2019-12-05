@@ -1,18 +1,21 @@
 import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
+import {TouchableOpacity, Image} from 'react-native'
 import {Icon, Left, Body, Right, Card, CardItem, Text} from 'native-base'
 import {withNavigation, NavigationEvents} from 'react-navigation'
 import {setChat, fetchCurrentChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
 import {fetchAllMeetings} from '../redux/meetings'
-
+import Spinner from '../components/Spinner'
 const PendingMeetingComp = ({
   user,
   meetings,
   fetchAllMeetings,
   navigation,
   setChat,
-  fetchCurrentChat
+  fetchCurrentChat,
+  setParent,
+  loading
 }) => {
   const pending = meetings.filter(meeting => meeting.status === 'pending')
 
@@ -26,10 +29,23 @@ const PendingMeetingComp = ({
   // useEffect(() => {
   //   fetchAllMeetings(user.id)
   // }, [])
+
+  // if (loading) {
+  //   return <Spinner />
+  // }
+  if (!pending.length) {
+    return (
+      <Card>
+        <CardItem header>
+          <Text>No Pending Meetings</Text>
+        </CardItem>
+      </Card>
+    )
+  }
   return (
     <Card>
       <NavigationEvents
-        onWillFocus={payload => {
+        onDidFocus={payload => {
           fetchAllMeetings(user.id)
         }}
       />
@@ -38,19 +54,28 @@ const PendingMeetingComp = ({
       </CardItem>
 
       {pending.map(cur => {
+        console.log('cur imageRef', cur.imageRef)
         return (
-          <React.Fragment key={cur.id}>
+          <TouchableOpacity
+            onPress={async () => {
+              await fetchCurrentChat(cur.chat.id)
+              navigation.navigate('SingleChat')
+            }}
+            key={cur.id}
+          >
             <CardItem>
               <Text style={{color: 'green'}}>Name: {cur.name}</Text>
             </CardItem>
-            <CardItem
-              button
-              onPress={async () => {
-                await fetchCurrentChat(cur.chat.id)
-                navigation.navigate('SingleChat')
-              }}
-            >
-              <Text>
+
+            <CardItem cardBody>
+              <Image
+                source={{uri: cur.imageRef}}
+                style={{height: 120, width: null, flex: 1}}
+              />
+            </CardItem>
+
+            <CardItem>
+              <Text note>
                 With:{' '}
                 {
                   cur.users.find(u => {
@@ -58,15 +83,11 @@ const PendingMeetingComp = ({
                   }).fullName
                 }
                 {'\n'}
-                Date: {cur.date.toString()} {'\n'}
+                Date: {new Date(+cur.date).toString()} {'\n'}
                 Map Link: {cur.link}
               </Text>
-
-              <Right>
-                <Icon name="arrow-forward" />
-              </Right>
             </CardItem>
-          </React.Fragment>
+          </TouchableOpacity>
         )
       })}
     </Card>

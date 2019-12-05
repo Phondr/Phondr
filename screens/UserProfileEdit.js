@@ -7,11 +7,14 @@ import {
   TouchableOpacity,
   StatusBar,
   ScrollView,
-  Dimensions
+  Dimensions,
+  Platform,
+  KeyboardAvoidingView
 } from 'react-native'
 import CustomHeader from '../components/CustomHeader'
 import {EditUser, fetchUserFromAsync} from '../redux/user'
 import {connect} from 'react-redux'
+import {NavigationEvents} from 'react-navigation'
 
 export class UserProfileEdit extends Component {
   constructor(props) {
@@ -31,6 +34,7 @@ export class UserProfileEdit extends Component {
       iAmswitch: false
     }
     this.submitHandler = this.submitHandler.bind(this)
+    this.resetBooleans = this.resetBooleans.bind(this)
   }
 
   static navigationOptions = {
@@ -58,11 +62,20 @@ export class UserProfileEdit extends Component {
       this.props.navigation.navigate('Profile', {userguy})
     }
   }
-
+  resetBooleans() {
+    this.setState({
+      fullnameswitch: false,
+      emailswitch: false,
+      ageswitch: false,
+      distPrefswitch: false,
+      iAmswitch: false
+    })
+  }
   render() {
     const user = this.props.user || {}
     return (
       <ScrollView style={styles.container}>
+        <NavigationEvents onWillFocus={this.resetBooleans} />
         <StatusBar barStyle="light-content" />
         <CustomHeader title="Profile" />
         <View style={styles.header}></View>
@@ -181,6 +194,9 @@ export class UserProfileEdit extends Component {
             </View>
           </View>
         </View>
+        {Platform.OS === 'android' && (
+          <KeyboardAvoidingView behavior="padding" />
+        )}
       </ScrollView>
     )
   }
@@ -222,7 +238,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10
   },
-  name: {
+  name2: {
     fontSize: 28,
     color: '#696969',
     fontWeight: '600'

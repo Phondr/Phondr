@@ -149,7 +149,7 @@ class SingleChats extends Component {
   //   }
   // }
 
-  sendMeeting() {
+  async sendMeeting() {
     console.log(
       'outside send meeting',
       this.props.navigation.getParam('created')
@@ -165,19 +165,20 @@ class SingleChats extends Component {
         id
       } = this.props.currentMeeting
       const formattedMessage = {
-        content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+        content: `${link}++++New Invitation To Meet!++Name: ${name}++Address: ${address}++Date: ${new Date(
           +date
         ).toString()}++++Long press this message to respond.`,
-        imageRef: imageRef,
+        imageRef: link,
         meetingId: id,
         userId: this.props.user.id,
         length: 10,
         chatId: this.props.currentChat.id
       }
       console.log('formatted message inside sendmeeting', formattedMessage)
-      this.onSend(formattedMessage, true)
+      await this.onSend(formattedMessage, true)
       this.props.navigation.setParams({created: false})
     }
+    this.setState({loading: false})
   }
 
   // async renderBubble(props) {
@@ -225,6 +226,7 @@ class SingleChats extends Component {
 
   async onSend(message, noFormat) {
     //Format message for input into thunk
+
     let formattedMessage
     if (noFormat) {
       formattedMessage = message
@@ -273,11 +275,24 @@ class SingleChats extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner />
+      return (
+        <React.Fragment>
+          <Spinner />
+          <NavigationEvents
+            onDidFocus={() => {
+              this.sendMeeting()
+            }}
+          />
+        </React.Fragment>
+      )
     }
     return (
       <React.Fragment>
-        <NavigationEvents onDidFocus={this.sendMeeting} />
+        <NavigationEvents
+          onDidFocus={() => {
+            this.sendMeeting()
+          }}
+        />
 
         {this.state.curMessage.user && (
           <MeetingResponse
