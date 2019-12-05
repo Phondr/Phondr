@@ -141,7 +141,7 @@ class Home extends Component {
             {this.props.myChats && this.props.myChats.length ? (
               <>
                 <ActiveComp preview={true} />
-                <PendingComp preview={true} />
+                <PendingComp />
               </>
             ) : (
               <Text>user has no chats</Text>

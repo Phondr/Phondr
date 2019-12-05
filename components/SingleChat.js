@@ -5,7 +5,10 @@ import {
   View,
   StatusBar,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity
 } from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
@@ -24,6 +27,7 @@ import {fetchMeeting} from '../redux/currentMeeting'
 import MeetingResponse from '../components/MeetingResponse'
 import {NavigationEvents} from 'react-navigation'
 import ChatEvent from '../components/ChatEvent'
+
 class SingleChats extends Component {
   constructor(props) {
     super(props)
@@ -280,16 +284,24 @@ class SingleChats extends Component {
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
           currentChat={this.props.currentChat}
         />
-        <Fab
+        {/* <Fab
           active={true}
           direction="up"
           containerStyle={{}}
           style={{backgroundColor: '#5067FF'}}
-          position="topRight"
+          position={''}
           onPress={() => this.props.navigation.navigate('MeetingModal')}
         >
           <Icon name="meetup" type={'FontAwesome'} />
-        </Fab>
+        </Fab> */}
+
+        <TouchableOpacity
+          style={Platform.OS === 'ios' ? styles.ios : styles.android}
+          onPress={() => this.props.navigation.navigate('MeetingModal')}
+        >
+          <Icon name="meetup" color="blue" type={'FontAwesome'} />
+        </TouchableOpacity>
+
         <RecordAudio
           onSend={this.onSend}
           user={this.props.user}
@@ -321,6 +333,23 @@ class SingleChats extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  ios: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.83,
+    marginLeft: Dimensions.get('window').width * 0.78
+  },
+  android: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.88,
+    marginLeft: Dimensions.get('window').width * 0.78
+  }
+})
 
 const MapStateToProps = state => {
   return {
