@@ -96,7 +96,7 @@ export class Login extends Component {
           />
           <Form ref={c => (this._form = c)} type={User} options={options} />
           <TouchableOpacity onPress={this.login} style={styles.submitButton}>
-            <Text style={styles.submitButtonText}>Login</Text>
+            <Text style={{color: 'white'}}>Login</Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
@@ -105,6 +105,17 @@ export class Login extends Component {
 }
 
 export const styles = StyleSheet.create({
+  buttonContainer: {
+    marginTop: 10,
+    height: 45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: '#00BFFF'
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -119,11 +130,12 @@ export const styles = StyleSheet.create({
     borderWidth: 1
   },
   submitButton: {
-    backgroundColor: 'black',
+    backgroundColor: '#00BFFF',
     padding: 10,
     margin: 15,
     alignItems: 'center',
-    height: 40
+    height: 40,
+    borderRadius: 30
   },
   submitButtonText: {
     color: 'white'

@@ -138,7 +138,9 @@ export class UserProfileEdit extends Component {
                       placeholder={`Email: (Previously: ${this.props.navigation.state.params.user.email})`}
                       name="email"
                       style={styles.input}
-                      onChangeText={email => {}}
+                      onChangeText={email => {
+                        this.setState({email})
+                      }}
                       value={this.state.email}
                     />
                   </Item>
@@ -197,15 +199,15 @@ const styles = StyleSheet.create({
     height: 200
   },
   avatar: {
-    width: 130,
-    height: 130,
-    borderRadius: 63,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
     borderWidth: 4,
     borderColor: 'white',
     marginBottom: 10,
     alignSelf: 'center',
     position: 'absolute',
-    marginTop: 130
+    marginTop: 75
   },
   name: {
     fontSize: 22,

@@ -1,5 +1,12 @@
 import React, {Component} from 'react'
-import {Text, View, StyleSheet, Image, Button} from 'react-native'
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  Button,
+  TouchableOpacity
+} from 'react-native'
 import Spinner from '../components/Spinner'
 import {navigation} from 'react-navigation'
 import Login from './Login'
@@ -65,18 +72,34 @@ export class Entry extends Component {
             source={require('../assets/images/PhondrLogos/PhondrLarge-removebg-preview.png')}
           />
         </View>
-        <Button
+        <TouchableOpacity
+          onPress={() => {
+            this.gotToLogin()
+          }}
+          style={styles.submitButton}
+        >
+          <Text style={{color: 'white'}}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            this.goToSignUp()
+          }}
+          style={styles.submitButton}
+        >
+          <Text style={{color: 'white'}}>Sign Up</Text>
+        </TouchableOpacity>
+        {/* <Button
           title="Login"
           onPress={() => {
             this.gotToLogin()
           }}
-        />
-        <Button
+        /> */}
+        {/* <Button
           title="Sign Up"
           onPress={() => {
             this.goToSignUp()
           }}
-        />
+        /> */}
       </View>
     )
   }
@@ -85,9 +108,9 @@ export class Entry extends Component {
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
     justifyContent: 'center',
-    alignItems: 'center',
+    paddingLeft: 10,
+    paddingRight: 10,
     backgroundColor: '#F5FCFF'
   },
   phonderimage: {
@@ -106,6 +129,14 @@ export const styles = StyleSheet.create({
     padding: 20,
     margin: 10,
     backgroundColor: '#ffffff'
+  },
+  submitButton: {
+    backgroundColor: '#00BFFF',
+    padding: 10,
+    margin: 15,
+    alignItems: 'center',
+    height: 40,
+    borderRadius: 30
   }
 })
 
