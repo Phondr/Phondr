@@ -93,7 +93,7 @@ export class Profile extends Component {
                 this.props.navigation.navigate('UserProfileEdit', {user})
               }}
             >
-              <Text>Edit Profile</Text>
+              <Text style={{color: 'white'}}>Edit Profile</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -108,15 +108,15 @@ const styles = StyleSheet.create({
     height: 200
   },
   avatar: {
-    width: 130,
-    height: 130,
-    borderRadius: 63,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
     borderWidth: 4,
     borderColor: 'white',
     marginBottom: 10,
     alignSelf: 'center',
     position: 'absolute',
-    marginTop: 130
+    marginTop: 75
   },
   name: {
     fontSize: 22,

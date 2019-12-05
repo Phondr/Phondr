@@ -12,8 +12,9 @@ import ActiveComp from '../components/ActiveComp'
 import PendingComp from '../components/PendingComp'
 import {ScrollView} from 'react-native-gesture-handler'
 import {setUser, ConvertUser} from '../redux/user'
-import {fetchUserLogin} from '../redux/user'
+import {fetchUserLogin, fetchUserFromAsync} from '../redux/user'
 import {setLoading} from '../redux/loading'
+import Loading from './Loading'
 import Dialog, {
   DialogTitle,
   DialogContent,
@@ -49,6 +50,7 @@ class Home extends Component {
   // if (this.props.user.id) {
   //   console.log('in comp did mouth fmc')
   async componentDidMount() {
+    this.setState({loading: true})
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
       console.log('props.user.id', this.props.user.id)
@@ -66,17 +68,28 @@ class Home extends Component {
     //console.log('HOME PROPS', this.props)
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id && this.props.user.id) {
       console.log('in comp did update fmc')
-      this.setState({loading: true})
-      this.props
-        .fetchMyChats(this.props.user.id)
-        .then(this.setState({loading: false}))
+      await this.props.fetchMyChats(this.props.user.id)
+      try {
+        await this.props.fetchUserFromAsync()
+      } catch (error) {
+        alert('COULD NOT GET USER AFTER EDITING')
+        console.log(error)
+      }
     }
   }
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.spinner}>
+          <Spinner />
+        </View>
+      )
+    }
+
     const user = this.props.user || {}
     // console.log('HOME USER', user)
     if (this.state.loading) {
@@ -85,7 +98,7 @@ class Home extends Component {
     return (
       <Container>
         <ScrollView>
-          {/* {this.state.user.isNoob === true ? (
+          {this.props.user.isNoob === true ? (
             <Dialog
               onDismiss={() => {
                 this.setState({defaultAnimationDialog: false})
@@ -109,14 +122,25 @@ class Home extends Component {
                   <DialogButton
                     text="OK"
                     bordered
+                    onPress={async () => {
+                      this.setState({
+                        defaultAnimationDialog: false,
+                        isNoob: false
+                      })
+                      await this.props.ConvertUser()
+                    }}
+                    key="button-1"
+                  />
+                  <DialogButton
+                    text="Cancel"
+                    bordered
                     onPress={() => {
                       this.setState({
                         defaultAnimationDialog: false,
                         isNoob: false
                       })
-                      this.props.ConvertUser()
                     }}
-                    key="button-1"
+                    key="button-2"
                   />
                 </DialogFooter>
               }
@@ -126,18 +150,41 @@ class Home extends Component {
                   backgroundColor: '#F7F7F8'
                 }}
               >
-                <Text>
-                  HOME:{'\n'}This is your home page. You are able to view your
-                  active chats and pending chats here.
-                  {'\n'}
-                  {'\n'}
-                  DASHBOARD:{'\n'}To your top left is your dashboard. You are
-                  able to view Profile, Map View, Pending/Active Chats and
-                  Meetings here.
-                </Text>
+                <ScrollView>
+                  <Text>
+                    Phondr is your one stop shop for anonymous dating/pen
+                    paling! Through Phondr you will be able to chat with random
+                    people(within your preferences) within your city's
+                    proximity, and see your phondr bar go up within your chat.
+                    At 25%, 50%, 75%, and 100% you unlock special rewards
+                    relating to your chat! At 100% you get the opportunity to
+                    meet with your affiliated chat member!
+                    {'\n'}
+                    {'\n'}
+                    HOME:{'\n'}This is your home page. You are able to view your
+                    active chats and pending chats here.
+                    {'\n'}
+                    {'\n'}
+                    DASHBOARD:{'\n'}To your top left is your dashboard. You are
+                    able to view Profile, Map View, Pending/Active Chats and
+                    Meetings here.
+                    {'\n'}
+                    {'\n'}
+                    CHATS:{'\n'}In the Dashboard and on the Home page you are
+                    able to chat with others. After you click the '+ Chat'
+                    button our database will create a pending chat, to which
+                    will match you with somebody relative to your preferences.
+                    {'\n'}
+                    {'\n'}
+                    MEETINGS:{'\n'}In the Dashboard you are able to see your
+                    meetings. These can be pending or active based on if you or
+                    your linked partner accept an invitation to a meeting in
+                    your chat.
+                  </Text>
+                </ScrollView>
               </DialogContent>
             </Dialog>
-          ) : null} */}
+          ) : null}
 
           <StatusBar barStyle="light-content" />
           <CustomHeader title="Home" />
@@ -184,10 +231,19 @@ class Home extends Component {
   }
 }
 
+export const styles = StyleSheet.create({
+  spinner: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
+
 export default connect(({myChats, user}) => ({myChats, user}), {
   fetchMyChats,
   findOrCreateChat,
   setUser,
   fetchUserLogin,
-  ConvertUser
+  ConvertUser,
+  fetchUserFromAsync
 })(Home)
