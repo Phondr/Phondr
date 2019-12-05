@@ -3,6 +3,7 @@ const db = require('../db')
 const {placesAPI, url} = require('../../../secrets')
 const axios = require('axios')
 const cheerio = require('cheerio')
+const {cheerioReq} = require('../../../imageRequest')
 
 const Message = db.define('message', {
   content: {
@@ -33,28 +34,28 @@ const Message = db.define('message', {
   }
 })
 
-const cheerioReq = async link => {
-  console.log('link inside cheerioReq: ', link)
-  let {data} = await axios.get(link)
+// const cheerioReq = async link => {
+//   console.log('link inside cheerioReq: ', link)
+//   let {data} = await axios.get(link)
 
-  const $ = cheerio.load(data.slice(0, 1000))
+//   const $ = cheerio.load(data.slice(0, 1000))
 
-  console.log('TCL: data', data.slice(0, 1000))
-  console.log('title', $('title').text())
-  let imageUrl = ''
-  // $('meta').each((i, cur) => {
-  //   console.log('i', i)
-  //   console.log('cur.attr', cur.attribs)
-  //   if (cur.attribs.property === 'og:image') {
-  //     imageUrl = cur.attribs.content
-  //   }
-  // })
-  imageUrl = $('meta[property="og:image"]').attr('content')
+//   console.log('TCL: data', data.slice(0, 1000))
+//   console.log('title', $('title').text())
+//   let imageUrl = ''
+//   // $('meta').each((i, cur) => {
+//   //   console.log('i', i)
+//   //   console.log('cur.attr', cur.attribs)
+//   //   if (cur.attribs.property === 'og:image') {
+//   //     imageUrl = cur.attribs.content
+//   //   }
+//   // })
+//   imageUrl = $('meta[property="og:image"]').attr('content')
 
-  console.log('imageUrl inside of cheerioReq: ', imageUrl)
+//   console.log('imageUrl inside of cheerioReq: ', imageUrl)
 
-  return imageUrl
-}
+//   return imageUrl
+// }
 
 const imageRequest = async ref => {
   const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`

@@ -9,13 +9,18 @@ import PendingMeetingComp from '../components/PendingMeetingComp'
 
 import {withNavigation, NavigationEvents} from 'react-navigation'
 import {fetchAllMeetings} from '../redux/meetings'
+import Spinner from '../components/Spinner'
 class PendingScreen extends React.Component {
   constructor() {
     super()
+    this.state = {
+      loading: true
+    }
   }
-  componentDidMount() {
-    this.props.fetchAllMeetings(this.props.user.id)
-  }
+  // componentDidMount() {
+  //   this.props.fetchAllMeetings(this.props.user.id)
+  //   this.setState({loading: false})
+  // }
   static navigationOptions = {
     drawerIcon: ({tintColor}) => {
       return null
@@ -26,20 +31,38 @@ class PendingScreen extends React.Component {
     )
   }
   render() {
-    const {meetings, navigation} = this.props
-
+    const {meetings, navigation, fetchAllMeetings, user} = this.props
+    if (this.state.loading) {
+      return (
+        <React.Fragment>
+          <Spinner />
+          <NavigationEvents
+            onDidFocus={async payload => {
+              this.setState({loading: true})
+              await fetchAllMeetings(user.id)
+              this.setState({loading: false})
+            }}
+          />
+        </React.Fragment>
+      )
+    }
     return (
       <Container>
-        {/* <NavigationEvents
-        onWillFocus={payload => {
-          fetchAllMeetings(user.id)
-        }}
-      /> */}
+        <NavigationEvents
+          onDidFocus={async payload => {
+            this.setState({loading: true})
+            await fetchAllMeetings(user.id)
+            this.setState({loading: false})
+          }}
+        />
         <ScrollView>
           <CustomHeader title="Pending Meetings" />
           <Content>
             {meetings.length ? (
-              <PendingMeetingComp />
+              <PendingMeetingComp
+                setParent={this.setState.bind(this)}
+                loading={this.state.loading}
+              />
             ) : (
               <Card>
                 <CardItem>

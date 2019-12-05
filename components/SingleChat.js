@@ -149,7 +149,7 @@ class SingleChats extends Component {
   //   }
   // }
 
-  sendMeeting() {
+  async sendMeeting() {
     console.log(
       'outside send meeting',
       this.props.navigation.getParam('created')
@@ -165,7 +165,7 @@ class SingleChats extends Component {
         id
       } = this.props.currentMeeting
       const formattedMessage = {
-        content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
+        content: `${link}++++New Invitation To Meet!++Name: ${name}++Address: ${address}++Date: ${new Date(
           +date
         ).toString()}++++Long press this message to respond.`,
         imageRef: link,
@@ -175,9 +175,10 @@ class SingleChats extends Component {
         chatId: this.props.currentChat.id
       }
       console.log('formatted message inside sendmeeting', formattedMessage)
-      this.onSend(formattedMessage, true)
+      await this.onSend(formattedMessage, true)
       this.props.navigation.setParams({created: false})
     }
+    this.setState({loading: false})
   }
 
   // async renderBubble(props) {
@@ -224,7 +225,6 @@ class SingleChats extends Component {
   }
 
   async onSend(message, noFormat) {
-    this.setState({loading: true})
     //Format message for input into thunk
 
     let formattedMessage
@@ -248,7 +248,6 @@ class SingleChats extends Component {
       message: newMessage,
       chatId: this.props.currentChat.id
     })
-    this.setState({loading: false})
   }
 
   getOtherUserInChat(chat) {
@@ -276,11 +275,24 @@ class SingleChats extends Component {
   render() {
     console.log('dimensions', Dimensions.get('window').height)
     if (this.state.loading) {
-      return <Spinner />
+      return (
+        <React.Fragment>
+          <Spinner />
+          <NavigationEvents
+            onDidFocus={() => {
+              this.sendMeeting()
+            }}
+          />
+        </React.Fragment>
+      )
     }
     return (
       <React.Fragment>
-        <NavigationEvents onWillFocus={this.sendMeeting} />
+        <NavigationEvents
+          onDidFocus={() => {
+            this.sendMeeting()
+          }}
+        />
 
         {this.state.curMessage.user && (
           <MeetingResponse
@@ -295,7 +307,7 @@ class SingleChats extends Component {
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
           currentChat={this.props.currentChat}
         />
-        {calcProgress(this.props.currentChat) >= 100 ? (
+        {calcProgress(this.props.currentChat) >= 0 ? (
           <TouchableOpacity
             style={
               Platform.OS === 'ios'
@@ -304,7 +316,10 @@ class SingleChats extends Component {
                   : styles.ios
                 : styles.android
             }
-            onPress={() => this.props.navigation.navigate('MeetingModal')}
+            onPress={() => {
+              this.setState({loading: true})
+              this.props.navigation.navigate('MeetingModal')
+            }}
           >
             <Icon name="meetup" color="blue" type={'FontAwesome'} />
           </TouchableOpacity>
