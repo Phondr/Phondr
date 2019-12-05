@@ -10,6 +10,7 @@ import {
   Dimensions,
   ScrollView
 } from 'react-native'
+import {Spinner} from 'native-base'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
 import {fetchUserLogin} from '../redux/user'
@@ -17,7 +18,6 @@ import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
 import {throwServerError} from 'apollo-link-http-common'
 import {navigate, NavigationEvents} from 'react-navigation'
-import Spinner from '../components/Spinner'
 
 const User = t.struct({
   email: t.String,
@@ -80,9 +80,13 @@ export class Login extends Component {
   }
 
   render() {
-    // if (this.state.loading) {
-    //   return <Spinner />
-    // }
+    if (this.state.loading) {
+      return (
+        <View style={styles.spinner}>
+          <Spinner />
+        </View>
+      )
+    }
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
@@ -115,6 +119,11 @@ export const styles = StyleSheet.create({
     width: 250,
     borderRadius: 30,
     backgroundColor: '#00BFFF'
+  },
+  spinner: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   container: {
     flex: 1,

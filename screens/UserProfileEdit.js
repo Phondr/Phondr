@@ -189,7 +189,7 @@ export class UserProfileEdit extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 35,
+
     marginBottom: 20,
     paddingBottom: 20,
     backgroundColor: '#F5FCFF'

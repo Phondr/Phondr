@@ -23,6 +23,7 @@ import {ScrollView} from 'react-native-gesture-handler'
 import {setUser, ConvertUser} from '../redux/user'
 import {fetchUserLogin, fetchUserFromAsync} from '../redux/user'
 import {setLoading} from '../redux/loading'
+import Loading from './Loading'
 import Dialog, {
   DialogTitle,
   DialogContent,
@@ -55,9 +56,10 @@ class Home extends Component {
   // if (this.props.user.id) {
   //   console.log('in comp did mouth fmc')
   async componentDidMount() {
+    this.setState({loading: true})
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
-
+      await this.setState({loading: false})
       this.props.fetchMyChats(this.props.user.id)
     }
   }
@@ -76,6 +78,14 @@ class Home extends Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.spinner}>
+          <Spinner />
+        </View>
+      )
+    }
+
     const user = this.props.user || {}
 
     return (
@@ -203,6 +213,14 @@ class Home extends Component {
     )
   }
 }
+
+export const styles = StyleSheet.create({
+  spinner: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
 
 export default connect(({myChats, user}) => ({myChats, user}), {
   fetchMyChats,

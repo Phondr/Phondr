@@ -62,7 +62,11 @@ export class Entry extends Component {
 
   render() {
     // if (this.state.loading) {
-    //   return <Spinner />
+    //   return (
+    //     <View style={styles.spinner}>
+    //       <Spinner />
+    //     </View>
+    //   )
     // }
     return (
       <View style={styles.container}>
@@ -137,6 +141,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     height: 40,
     borderRadius: 30
+  },
+  spinner: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
 
