@@ -141,9 +141,20 @@ io.on('connection', socket => {
       .emit('loginLogoutMessage', {message: 'A user has left the room'})
   })
 
+  socket.on('subscribe-to-user-room', ({name}) => {
+    console.log(`joined ${name}`)
+    socket.join(name)
+    rooms.push(name)
+  })
+
   socket.on('sendMessage', ({message, chatId}) => {
     console.log(message)
     io.to(chatId).emit('receiveMessage', {message})
+  })
+
+  socket.on('sendNewChat', ({chat})=>{
+    console.log(chat)
+    socket.to('Mike Lim').emit('receiveNewChat', {chat})
   })
 
   socket.on('disconnect', () => {

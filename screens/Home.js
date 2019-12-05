@@ -1,13 +1,6 @@
 import React, {Component} from 'react'
 import {ImageBackground, View, StatusBar, StyleSheet, Text} from 'react-native'
-import {
-  Container,
-  Button,
-  Icon,
-  Content,
-  Left,
-  Right,
-} from 'native-base'
+import {Container, Button, Icon, Content, Left, Right} from 'native-base'
 import {Platform} from '@unimodules/core'
 import {withNavigation} from 'react-navigation'
 import CustomHeader from '../components/CustomHeader'
@@ -28,6 +21,7 @@ import Dialog, {
   DialogButton
 } from 'react-native-popup-dialog'
 import Spinner from '../components/Spinner'
+import socket from '../redux/socketClient'
 
 class Home extends Component {
   constructor() {
@@ -60,6 +54,10 @@ class Home extends Component {
       await this.props.fetchMyChats(this.props.user.id)
       this.setState({loading: false})
     }
+    socket.emit('subscribe-to-user-room', {name: this.props.user.fullName})
+    socket.on('receiveNewChat', () => {
+      this.props.fetchMyChats(this.props.user.id)
+    })
     //console.log('HOME PROPS', this.props)
   }
 
@@ -67,14 +65,16 @@ class Home extends Component {
     if (prevProps.user.id !== this.props.user.id && this.props.user.id) {
       console.log('in comp did update fmc')
       this.setState({loading: true})
-      this.props.fetchMyChats(this.props.user.id).then(this.setState({loading: false}))
+      this.props
+        .fetchMyChats(this.props.user.id)
+        .then(this.setState({loading: false}))
     }
   }
 
   render() {
     const user = this.props.user || {}
     // console.log('HOME USER', user)
-    if(this.state.loading) {
+    if (this.state.loading) {
       return <Spinner />
     }
     return (
@@ -155,7 +155,12 @@ class Home extends Component {
                 bordered
                 rounded
                 info
-                onPress={() => this.props.findOrCreateChat(this.props.user.id)}
+                onPress={async () => {
+                  const chat = await this.props.findOrCreateChat(
+                    this.props.user.id
+                  )
+                  socket.emit('sendNewChat', {chat})
+                }}
               >
                 <Icon name="pluscircle" type="AntDesign">
                   <Text> New Chat</Text>
