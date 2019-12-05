@@ -16,6 +16,7 @@ import {
 import { connect } from 'react-redux'
 import {url} from '../secrets'
 import axios from 'axios'
+import CustomHeader from './CustomHeader'
 
 const cards = [
   {
@@ -50,14 +51,14 @@ class PicturePicker extends React.Component {
   render() {
     this.getPictures()
     return (
-      <Container>
-        <Header />
+      <Container style={{backgroundColor: '#343434'}}>
+        <CustomHeader title='picture picker' />
         <View>
           <DeckSwiper
             dataSource={[this.props.user]}
             renderItem={item => (
               <Card style={{elevation: 3}}>
-                <CardItem>
+                <CardItem style={{backgroundColor: "#FF43A4"}}>
                   <Left>
                     <Thumbnail source={{uri: item.profilePicture}} />
                     <Body>
@@ -69,7 +70,7 @@ class PicturePicker extends React.Component {
                 <CardItem cardBody>
                   <Image style={{height: 300, flex: 1}} source={{uri: item.profilePicture}} />
                 </CardItem>
-                <CardItem>
+                <CardItem style={{backgroundColor: "#FF43A4"}}>
                   <Icon name="heart" style={{color: '#ED4A6A'}} />
                   <Text>{item.fullName}</Text>
                 </CardItem>
