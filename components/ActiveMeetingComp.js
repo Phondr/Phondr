@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
-import {Icon, Left, Body, Right, Card, CardItem, Text} from 'native-base'
+import {Icon, Left, Body, Right, Card, CardItem, Text, Image} from 'native-base'
 import {withNavigation, NavigationEvents} from 'react-navigation'
 import {setChat, fetchCurrentChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
@@ -63,7 +63,9 @@ const ActiveMeetingComp = ({
               </Text>
 
               <Right>
-                <Icon name="arrow-forward" />
+                <Image source={cur.imageRef} />
+
+                {/* <Icon name="arrow-forward" /> */}
               </Right>
             </CardItem>
           </React.Fragment>

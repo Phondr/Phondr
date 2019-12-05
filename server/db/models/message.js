@@ -10,10 +10,10 @@ const Message = db.define('message', {
   },
   imageRef: {
     type: Sequelize.STRING,
-    get() {
+    async get() {
       const ref = this.getDataValue('imageRef')
       if (ref && ref.length) {
-        const googleImage = imageRequest(ref)
+        const googleImage = await imageRequest(ref)
         return googleImage
       }
 
@@ -26,8 +26,8 @@ const Message = db.define('message', {
   },
   audio: {
     type: Sequelize.STRING,
-    defaultValue: null,
-  },
+    defaultValue: null
+  }
 })
 
 const imageRequest = async ref => {
