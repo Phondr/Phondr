@@ -24,12 +24,15 @@ import {fetchMeeting} from '../redux/currentMeeting'
 import MeetingResponse from '../components/MeetingResponse'
 import {NavigationEvents} from 'react-navigation'
 import ChatEvent from '../components/ChatEvent'
+import {calcProgress} from '../util'
+import Spinner from '../components/Spinner'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
     this.state = {
       reply: false,
-      curMessage: {}
+      curMessage: {},
+      loading: true,
     }
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
@@ -75,7 +78,7 @@ class SingleChats extends Component {
       this.props.setNewMessage(message)
     })
 
-    this.props.fetchMessages(this.props.currentChat.id)
+    this.props.fetchMessages(this.props.currentChat.id).then(()=> this.setState({loading: false}))
   }
 
   // async imageRequest(ref) {
@@ -263,6 +266,9 @@ class SingleChats extends Component {
   }
 
   render() {
+    if(this.state.loading) {
+      return <Spinner />
+    }
     return (
       <React.Fragment>
         <NavigationEvents onDidFocus={this.sendMeeting} />
@@ -280,22 +286,26 @@ class SingleChats extends Component {
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
           currentChat={this.props.currentChat}
         />
-        <Fab
-          active={true}
-          direction="up"
-          containerStyle={{}}
-          style={{backgroundColor: '#5067FF'}}
-          position="topRight"
-          onPress={() => this.props.navigation.navigate('MeetingModal')}
-        >
-          <Icon name="meetup" type={'FontAwesome'} />
-        </Fab>
-        <RecordAudio
-          onSend={this.onSend}
-          user={this.props.user}
-          chat={this.props.currentChat}
-          messageLength={this.props.messages.length}
-        />
+        {calcProgress(this.props.currentChat) >= 100 ? (
+          <Fab
+            active={true}
+            direction="up"
+            containerStyle={{}}
+            style={{backgroundColor: '#5067FF'}}
+            position="topRight"
+            onPress={() => this.props.navigation.navigate('MeetingModal')}
+          >
+            <Icon name="meetup" type={'FontAwesome'} />
+          </Fab>
+        ) : null}
+        {calcProgress(this.props.currentChat) > 25 ? (
+          <RecordAudio
+            onSend={this.onSend}
+            user={this.props.user}
+            chat={this.props.currentChat}
+            messageLength={this.props.messages.length}
+          />
+        ) : null}
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}

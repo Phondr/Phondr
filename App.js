@@ -45,6 +45,7 @@ import PlaceSearch from './components/PlaceSearch'
 import MeetingModal from './screens/MeetingModal'
 import ActiveMeetingScreen from './screens/ActiveMeetingScreen'
 import PendingMeetingScreen from './screens/PendingMeetingScreen'
+import PicturePicker from './components/picturePicker'
 
 const ActiveScreenStack = createStackNavigator(
   {
@@ -171,8 +172,8 @@ var drawer = createDrawerNavigator(
     MapV: {
       screen: MapV
     },
-    'Pending Chats': {
-      screen: PendingScreen
+    'Picture Picker': {
+      screen: PicturePicker
     },
     'Pending Meetings': {
       screen: PendingMeetings
