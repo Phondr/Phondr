@@ -2,7 +2,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Icon, Left, Card, CardItem, Text, Container, Content} from 'native-base'
 import {ScrollView, Platform} from 'react-native'
-import CustomHeader from '../components/CustomHeader'
 import TabBarIcon from '../components/TabBarIcon'
 import ActiveMeetingComp from '../components/ActiveMeetingComp'
 
@@ -42,7 +41,7 @@ class ActiveScreen extends React.Component {
       )
     }
     return (
-      <Container>
+      <Container style= {{backgroundColor:'#343434'}}>
         <NavigationEvents
           onDidFocus={async payload => {
             this.setState({loading: true})
@@ -51,8 +50,7 @@ class ActiveScreen extends React.Component {
           }}
         />
         <ScrollView>
-          <CustomHeader title="Active Meetings" />
-          <Content>
+          <Content >
             {meetings.length ? (
               <ActiveMeetingComp
                 setParent={this.setState.bind(this)}
@@ -60,8 +58,8 @@ class ActiveScreen extends React.Component {
               />
             ) : (
               <Card>
-                <CardItem>
-                  <Text>No Active Meetings</Text>
+                <CardItem style={{backgroundColor:'#FF91AF'}}>
+                  <Text style={{color:'white'}}>No Active Meetings</Text>
                 </CardItem>
               </Card>
             )}

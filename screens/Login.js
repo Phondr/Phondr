@@ -1,16 +1,16 @@
 import React, {Component} from 'react'
 import {
   Text,
-  View,
   StyleSheet,
   Button,
   TouchableOpacity,
+  Image,
   TouchableWithoutFeedback,
   Keyboard,
   Dimensions,
   ScrollView
 } from 'react-native'
-import {Spinner} from 'native-base'
+import {View} from 'native-base'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
 import {fetchUserLogin} from '../redux/user'
@@ -18,7 +18,12 @@ import {Query} from 'react-apollo'
 import gql from 'graphql-tag'
 import {throwServerError} from 'apollo-link-http-common'
 import {navigate, NavigationEvents} from 'react-navigation'
+import Spinner from '../components/Spinner'
+import _ from 'lodash'
 
+const Form = t.form.Form
+Form.stylesheet.textbox.normal.color = 'white'
+Form.stylesheet.controlLabel.normal.color = 'white'
 const User = t.struct({
   email: t.String,
   password: t.String
@@ -37,7 +42,7 @@ const options = {
   }
 }
 
-const Form = t.form.Form
+// const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
 
 export class Login extends Component {
   constructor() {
@@ -88,22 +93,47 @@ export class Login extends Component {
       )
     }
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.container}>
-          <NavigationEvents
-            onDidFocus={async payload => {
-              if (this.props.user.id) {
-                console.log('go home')
-                this.navigateHome()
-              }
-            }}
+      <View style={{backgroundColor: '#343434', height: '100%'}}>
+        <View style={{alignItems: 'center', backgroundColor: '#343434'}}>
+          <Image
+            style={{width: '90%', height: 150, marginTop: 40}}
+            source={require('../assets/images/fog.jpg')}
+            resizeMode="cover"
+          />
+        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.container}>
+            <NavigationEvents
+              onDidFocus={async payload => {
+                if (this.props.user.id) {
+                  console.log('go home')
+                  this.navigateHome()
+                }
+              }}
+            />
+            <View style={{marginTop: 20}}>
+              <Form ref={c => (this._form = c)} type={User} options={options} />
+              <TouchableOpacity
+                onPress={this.login}
+                style={styles.submitButton}
+              >
+                <Text style={styles.submitButtonText}>Login</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+        <View style={{alignItems: 'center', backgroundColor: '#343434'}}>
+          <Image
+            style={{width: '90%', height: 160, marginTop: 10}}
+            source={require('../assets/images/fog.jpg')}
+            resizeMode="cover"
           />
           <Form ref={c => (this._form = c)} type={User} options={options} />
           <TouchableOpacity onPress={this.login} style={styles.submitButton}>
             <Text style={{color: 'white'}}>Login</Text>
           </TouchableOpacity>
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     )
   }
 }
@@ -139,7 +169,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1
   },
   submitButton: {
-    backgroundColor: '#00BFFF',
+    backgroundColor: '#E0115F',
     padding: 10,
     margin: 15,
     alignItems: 'center',
@@ -149,9 +179,9 @@ export const styles = StyleSheet.create({
   submitButtonText: {
     color: 'white'
   },
-  logintext: {
-    margin: 2,
-    fontSize: 30
+  formcontainer: {
+    marginTop: 30,
+    backgroundColor: '#343434'
   }
 })
 

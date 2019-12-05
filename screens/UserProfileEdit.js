@@ -78,6 +78,7 @@ export class UserProfileEdit extends Component {
         <NavigationEvents onWillFocus={this.resetBooleans} />
         <StatusBar barStyle="light-content" />
         <CustomHeader title="Profile" />
+        <StatusBar barStyle="light-content" />
         <View style={styles.header}></View>
         <Image
           style={styles.avatar}
@@ -208,10 +209,10 @@ const styles = StyleSheet.create({
 
     marginBottom: 20,
     paddingBottom: 20,
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#FC89AC'
   },
   header: {
-    backgroundColor: '#00BFFF',
+    backgroundColor: '#DE6FA1',
     height: 200
   },
   avatar: {
@@ -231,7 +232,8 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   body: {
-    marginTop: 5
+    marginTop: 5,
+    backgroundColor: '#FC89AC'
   },
   bodyContent: {
     flex: 1,
@@ -264,13 +266,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   buttonContainer: {
-    marginTop: 10,
-    height: 45,
+    height: 30,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 250,
+    width: '100%',
     borderRadius: 30,
-    backgroundColor: '#00BFFF'
+    backgroundColor: '#E0115F'
   },
   input: {
     borderWidth: 1,

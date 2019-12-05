@@ -14,7 +14,7 @@ export const calcProgress = chat => {
     }
   })
   const secondsSince = chat.sinceCreation * 60
-  console.log('hours',secondsSince/60/60) 
+  console.log('hours',secondsSince/60/60)
   let progress
   if (secondsSince /60 /60 > 336) { //Two weeks
     progress = (sum * sum) / (secondsSince * 0.000055)
@@ -49,6 +49,79 @@ export const calcProgress = chat => {
   return progress
 }
 
+export const colors = [
+  'indigo',
+  'gold',
+  'purple',
+  'plum',
+  'aqua',
+  'teal',
+  'turquoise',
+  'tomato',
+  'navy',
+  'linen',
+  'yellow',
+  'violet',
+  'blue',
+  'red',
+  'orange',
+  'wheat',
+  'tan',
+  'green',
+  '#9F8170',
+  '#5F9EA0'
+]
+export const PlaceTypes = [
+  'amusement_park',
+  'aquarium',
+  'art_gallery',
+  'bakery',
+  'bar',
+  'book_store',
+  'bus_station',
+  'cafe',
+  'cemetery',
+  'clothing_store',
+  'convenience_store',
+  'department_store',
+  'electronics_store',
+  'funeral_home',
+  'furniture_store',
+  'gas_station',
+  'grocery_or_supermarket',
+  'gym',
+  'hardware_store',
+  'home_goods_store',
+  'jewelry_store',
+  'library',
+  'liquor_store',
+  'movie_theater',
+  'museum',
+  'night_club',
+  'park',
+  'pet_store',
+  'restaurant',
+  'shoe_store',
+  'shopping_mall',
+  'spa',
+  'stadium',
+  'store',
+  'subway_station',
+  'tourist_attraction',
+  'train_station',
+  'transit_station',
+  'university',
+  'zoo'
+]
+// const sum = 200;
+// const hoursSince = 48;
+// console.log(
+//   'in calcProgress',
+//   sum,
+//   hoursSince,
+//   (sum*sum / (hoursSince*hoursSince* 0.1*2)), //After 3 days
+//   (sum*sum / (hoursSince*hoursSince*0.15))   //First 3 days
+// )
 // const sum = 10
 // const hoursSince = 24
 // const sec = 3600

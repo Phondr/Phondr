@@ -1,5 +1,5 @@
 import React, {Component, useState, useEffect} from 'react'
-import {Text, StyleSheet, View, ScrollView} from 'react-native'
+import {Text, StyleSheet,  ScrollView} from 'react-native'
 import {
   Container,
   Content,
@@ -7,6 +7,7 @@ import {
   Icon,
   Card,
   CardItem,
+  View,
   Body,
   Form
 } from 'native-base'
@@ -15,12 +16,13 @@ import Modal from 'react-native-modal'
 import MapView, {Marker, Callout, PROVIDER_GOOGLE} from 'react-native-maps'
 import {connect} from 'react-redux'
 import CustomDatePicker from '../components/CustomDatePicker'
-import {colors} from '../placesData'
+import {colors} from '../util'
 import {placesAPI} from '../secrets'
 import {updatePendingLocation} from '../redux/invitation'
 import {createMeeting} from '../redux/currentMeeting'
 import axios from 'axios'
 import Spinner from '../components/Spinner'
+import CustomHeader from '../components/CustomHeader'
 
 const MeetingModal = ({
   invitation,
@@ -155,21 +157,22 @@ const MeetingModal = ({
     //console.log('TCL: invitation', invitation)
     //console.log('formated invitation', formatRegion(invitation))
   }
-
-  if (loading || !currentCoord.latitude || !region.latitude) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Spinner />
-      </View>
-    )
-  }
+  console.log('nearby', nearby)
+  // if (loading || !currentCoord.latitude || !region.latitude) {
+  //   return (
+  //     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+  //       <Spinner />
+  //     </View>
+  //   )
+  // }
   return (
     // <Modal
     //   coverScreen={false}
     //   isVisible={true} // this will be tied to state from parent
     //   onBackdropPress={() => {}}
     // >
-    <Container>
+    <Container style={{backgroundColor: '#2a3439'}}>
+      <CustomHeader title="Meeting" />
       <Content contentContainerStyle={{marginTop: 30}}>
         <Card>
           <CardItem header>
@@ -178,12 +181,13 @@ const MeetingModal = ({
         </Card>
 
         <PlaceSearch />
-
-        <View>
+        <View style={{marginBottom: 30}}>
           {invitation.name && (
             <Card>
-              <CardItem>
-                <Text>Selected: {invitation.address}</Text>
+              <CardItem style={{backgroundColor: '#D3212D'}}>
+                <Text style={{color: 'white'}}>
+                  Selected: {invitation.address}
+                </Text>
               </CardItem>
             </Card>
           )}
@@ -219,8 +223,8 @@ const MeetingModal = ({
                         longitude: x.geometry.location.lng
                       }}
                       title={`${x.name}(${x.rating} rating)`}
-                      description={`${x.name}, ${x.vicinity} `}
-                      //pinColor={colors[i]}
+                      description={`In the vicinity of : ${x.vicinity} `}
+                      pinColor={colors[i]}
                       //style={{position: 'absolute'}}
                       onPress={() => updateInvitation(x)}
                       onCalloutPress={() => updateInvitation(x)}
@@ -240,29 +244,35 @@ const MeetingModal = ({
             </MapView>
           )}
         </View>
-
         <CustomDatePicker />
-
         {!!invitation.date && (
           <Card>
-            <CardItem>
-              <Text>
+            <CardItem style={{backgroundColor: '#D3212D'}}>
+              <Text style={{color: 'white'}}>
                 Chosen Date: {invitation.date.toString().substr(4, 12)}
               </Text>
             </CardItem>
           </Card>
         )}
-        {!!invitation.date && !!invitation.name ? (
-          <Button
-            onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
-          >
-            <Text>Send</Text>
-          </Button>
-        ) : (
-          <Button disabled bordered>
-            <Text>Send</Text>
-          </Button>
-        )}
+        <View style={{alignItems:'center'}}>
+          {!!invitation.date && !!invitation.name ? (
+            <Button
+              onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
+              style={{
+                marginTop: 10,
+                backgroundColor: '#D3212D',
+              }}
+            >
+              <Text style={{color: 'white', backgroundColor: '#D3212D', width:'100%', textAlign:'center'}}>
+                Send
+              </Text>
+            </Button>
+          ) : (
+            <Button disabled bordered style={{marginTop: 10}}>
+              <Text style={{color: 'white', width:'100%', textAlign:'center'}}>Send</Text>
+            </Button>
+          )}
+        </View>
       </Content>
     </Container>
     // </Modal>

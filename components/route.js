@@ -1,7 +1,6 @@
 import {
   createAppContainer,
   createStackNavigator,
-  withNavigation
 } from 'react-navigation'
 import React from 'react'
 import {
@@ -9,32 +8,16 @@ import {
   Text,
   Button,
   Icon,
-  Header,
-  Left,
-  Right,
-  Body,
-  Container,
-  Content
 } from 'native-base'
-import { StyleSheet, StatusBar } from 'react-native'
-import Profile from './Profile'
+
 import Mapv from './MapView'
 import SingleChats from './SingleChat'
-import {Platform} from '@unimodules/core'
-import CustomHeader from '../components/CustomHeader'
 import MeetingModal from '../screens/MeetingModal'
 
 class Stack extends React.Component {
   render() {
     return (
       <View>
-        <Button
-          onPress={() => {
-            this.props.navigation.navigate('profile')
-          }}
-        >
-          <Text>profile</Text>
-        </Button>
         <Button
           onPress={() => {
             this.props.navigation.navigate('mapview')
@@ -45,13 +28,6 @@ class Stack extends React.Component {
         <Button
           onPress={() => {
             this.props.navigation.navigate('meetview')
-          }}
-        >
-          <Text>meetview</Text>
-        </Button>
-        <Button
-          onPress={() => {
-            this.props.navigation.navigate('sendmeeting')
           }}
         >
           <Text>singlechat</Text>
@@ -72,9 +48,6 @@ const Temp = createStackNavigator(
   {
     stack: {
       screen: Stack
-    },
-    profile: {
-      screen: Profile
     },
     mapview: {
       screen: Mapv
@@ -97,7 +70,6 @@ class New extends React.Component {
   render() {
     return (
       <>
-        {/* <CustomHeader /> */}
         <StackContainer />
       </>
     )

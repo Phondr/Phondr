@@ -14,7 +14,7 @@ const CustomHeader = ({title = '', navigation, currentChat = {}}) => {
         </Button>
       </Left>
       <Body>
-        <Title>{title}</Title>
+        <Title style={{color:'white'}}>{title}</Title>
       </Body>
       <Right>
         {currentChat.id && (
@@ -27,7 +27,8 @@ const CustomHeader = ({title = '', navigation, currentChat = {}}) => {
 const styles = StyleSheet.create({
   header: {
     marginTop: Platform.OS !== 'ios' ? StatusBar.currentHeight : 0,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    backgroundColor: '#E0115F'
   }
 })
 

@@ -41,7 +41,7 @@ class PendingScreen extends React.Component {
     const {myChats, navigation} = this.props
 
     return (
-      <Container>
+      <Container style={{backgroundColor:	'#343434'}}>
         <ScrollView>
           <CustomHeader title="Pending Chats" />
           <Content>
@@ -50,7 +50,7 @@ class PendingScreen extends React.Component {
             ) : (
               <Card>
                 <CardItem>
-                  <Text>No Pending Chats</Text>
+                  <Text style={{color:'white'}}>No Pending Chats</Text>
                 </CardItem>
               </Card>
             )}

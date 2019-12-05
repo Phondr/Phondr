@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Icon, Fab} from 'native-base'
+import {Icon, Fab, Button} from 'native-base'
 import {
   ScrollView,
   View,
@@ -38,6 +38,7 @@ class SingleChats extends Component {
       loading: true
     }
     this.onSend = this.onSend.bind(this)
+    this.setActive = this.setActive.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
     this.renderBubble = this.renderBubble.bind(this)
     this.closeDialog = this.closeDialog.bind(this)
@@ -249,6 +250,9 @@ class SingleChats extends Component {
       chatId: this.props.currentChat.id
     })
   }
+  setActive() {
+    this.setState({active: true})
+  }
 
   getOtherUserInChat(chat) {
     return chat.users.find(user => user.fullName !== this.props.user.fullName)
@@ -273,7 +277,6 @@ class SingleChats extends Component {
   }
 
   render() {
-    console.log('dimensions', Dimensions.get('window').height)
     if (this.state.loading) {
       return (
         <React.Fragment>
@@ -293,7 +296,6 @@ class SingleChats extends Component {
             this.sendMeeting()
           }}
         />
-
         {this.state.curMessage.user && (
           <MeetingResponse
             reply={this.state.reply}
@@ -326,11 +328,46 @@ class SingleChats extends Component {
         ) : null}
         {calcProgress(this.props.currentChat) > 25 ? (
           <RecordAudio
-            onSend={this.onSend}
             user={this.props.user}
             chat={this.props.currentChat}
             messageLength={this.props.messages.length}
           />
+        ) : null}
+        {calcProgress(this.props.currentChat) > 50 ? (
+          <TouchableOpacity
+            style={
+              Platform.OS === 'ios'
+                ? Dimensions.get('window').height === 812
+                  ? styles.iosPictureMike
+                  : styles.iosPicture
+                : styles.androidPicture
+            }
+            onPress={() =>
+              this.props.navigation.navigate('PicturePicker', {
+                otherUserId: this.getOtherUserInChat(this.props.currentChat)
+              })
+            }
+          >
+            <Icon
+              name="ios-contacts"
+              style={{color: '#6de0e8'}}
+              type={'Ionicons'}
+            />
+          </TouchableOpacity>
+        ) : null}
+        {calcProgress(this.props.currentChat) >= 100 ? (
+          <TouchableOpacity
+            style={
+              Platform.OS === 'ios'
+                ? Dimensions.get('window').height === 812
+                  ? styles.iosMike
+                  : styles.ios
+                : styles.android
+            }
+            onPress={() => this.props.navigation.navigate('MeetingModal')}
+          >
+            <Icon name="meetup" style={{color: 'blue'}} type={'FontAwesome'} />
+          </TouchableOpacity>
         ) : null}
         <GiftedChat
           messages={this.props.messages || []}
@@ -353,32 +390,69 @@ class SingleChats extends Component {
         {Platform.OS === 'android' && (
           <KeyboardAvoidingView behavior="padding" />
         )}
+        <Button
+          rounded
+          style={{
+            backgroundColor: '#E0115F',
+            position: 'absolute',
+            marginTop: 595,
+            marginLeft: 260
+          }}
+          onPress={() => this.props.navigation.navigate('MeetingModal')}
+        >
+          <Icon
+            style={{alignSelf: 'center', backgroundColor: '#E0115F'}}
+            name="meetup"
+            type={'FontAwesome'}
+          />
+        </Button>
       </React.Fragment>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  iosPicture: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.865,
+    marginLeft: Dimensions.get('window').width * 0.8
+  },
+  iosPictureMike: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.85,
+    marginLeft: Dimensions.get('window').width * 0.8
+  },
+  androidPicture: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.88,
+    marginLeft: Dimensions.get('window').width * 0.8
+  },
   ios: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
-    marginTop: Dimensions.get('window').height * 0.87,
-    marginLeft: Dimensions.get('window').width * 0.78
+    marginTop: Dimensions.get('window').height * 0.865,
+    marginLeft: Dimensions.get('window').width * 0.7
   },
   iosMike: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.85,
-    marginLeft: Dimensions.get('window').width * 0.78
+    marginLeft: Dimensions.get('window').width * 0.7
   },
   android: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.88,
-    marginLeft: Dimensions.get('window').width * 0.78
+    marginLeft: Dimensions.get('window').width * 0.7
   }
 })
 

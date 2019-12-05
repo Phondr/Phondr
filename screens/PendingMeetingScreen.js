@@ -47,7 +47,7 @@ class PendingScreen extends React.Component {
       )
     }
     return (
-      <Container>
+      <Container style={{backgroundColor: '#343434'}}>
         <NavigationEvents
           onDidFocus={async payload => {
             this.setState({loading: true})
@@ -56,7 +56,6 @@ class PendingScreen extends React.Component {
           }}
         />
         <ScrollView>
-          <CustomHeader title="Pending Meetings" />
           <Content>
             {meetings.length ? (
               <PendingMeetingComp
@@ -65,8 +64,8 @@ class PendingScreen extends React.Component {
               />
             ) : (
               <Card>
-                <CardItem>
-                  <Text>No Pending Meetings</Text>
+                <CardItem style={{backgroundColor: '#FF91AF'}}>
+                  <Text style={{color: 'white'}}>No Pending Meetings</Text>
                 </CardItem>
               </Card>
             )}

@@ -7,6 +7,7 @@ import {setChat, fetchCurrentChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
 import {fetchAllMeetings} from '../redux/meetings'
 import Spinner from '../components/Spinner'
+import CustomHeader from '../components/CustomHeader'
 const ActiveMeetingComp = ({
   user,
   meetings,
@@ -63,8 +64,14 @@ const ActiveMeetingComp = ({
             }}
             key={cur.id}
           >
-            <CardItem>
-              <Text style={{color: 'green'}}>Name: {cur.name}</Text>
+            <CardItem
+              style={{
+                backgroundColor: '#FF0800',
+                borderColor: 'black',
+                borderWidth: 2
+              }}
+            >
+              <Text style={{color: 'white'}}>Name: {cur.name}</Text>
             </CardItem>
 
             <CardItem cardBody>
@@ -74,7 +81,7 @@ const ActiveMeetingComp = ({
               />
             </CardItem>
 
-            <CardItem>
+            <CardItem style={{backgroundColor: '#FF91AF'}}>
               <Text note>
                 With:{' '}
                 {

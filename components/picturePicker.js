@@ -13,9 +13,12 @@ import {
   Body,
   Icon
 } from 'native-base'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import {url} from '../secrets'
 import axios from 'axios'
+import CustomHeader from './CustomHeader'
+import {NavigationEvents} from 'react-navigation'
+import Spinner from './Spinner'
 
 const cards = [
   {
@@ -29,14 +32,20 @@ const cards = [
 class PicturePicker extends React.Component {
   constructor() {
     super()
-    this.state = {}
+    this.state = {
+      pictures: [],
+      loading: true
+    }
+    this.getPictures = this.getPictures.bind(this)
   }
 
   async getPictures() {
-    const {data} = await axios.post(url + '/graphql', {
+    let {data} = await axios.post(url + '/graphql', {
       query: `
         query{
-          allUsers(userId: ${this.props.user.id}, targetId: ${2}, numPeople: ${20}) {
+          allUsers(userId: ${
+            this.props.user.id
+          }, targetId: ${2}, numPeople: ${20}) {
             id,
             profilePicture,
             fullName,
@@ -44,34 +53,63 @@ class PicturePicker extends React.Component {
         }
         `
     })
-    console.log(data.data.allUsers)
+    const pictureData = data.data.allUsers
+    const data2 = await axios.post(url + '/graphql', {
+      query: `
+        query{
+          user(id: ${this.props.navigation.getParam('otherUserId').id}) {
+            iAm,
+            profilePicture,
+            fullName,
+          }
+        }
+        `
+    })
+    const otherUser = data2.data.data.user
+    this.setState({pictures: [otherUser, ...pictureData]})
+    this.setState({loading: false})
   }
 
   render() {
-    this.getPictures()
+    if (this.state.loading) {
+      return (
+        <React.Fragment>
+          <Spinner />
+          <NavigationEvents onDidFocus={this.getPictures} />
+        </React.Fragment>
+      )
+    }
     return (
-      <Container>
-        <Header />
+      <Container style={{backgroundColor: '#343434'}}>
+        <CustomHeader title='picture picker' />
         <View>
           <DeckSwiper
-            dataSource={[this.props.user]}
+            dataSource={this.state.pictures || cards}
+            key={this.state.pictures.length}
             renderItem={item => (
               <Card style={{elevation: 3}}>
-                <CardItem>
+                <CardItem style={{backgroundColor: "#FF43A4"}}>
                   <Left>
                     <Thumbnail source={{uri: item.profilePicture}} />
                     <Body>
-                      <Text>{item.fullName}</Text>
-                      <Text note>NativeBase</Text>
+                      <Text style={{color:'white'}}>
+                        {this.props.navigation.getParam('otherUserId').fullName}
+                      </Text>
+                      <Text note>Phondr</Text>
                     </Body>
                   </Left>
                 </CardItem>
                 <CardItem cardBody>
-                  <Image style={{height: 300, flex: 1}} source={{uri: item.profilePicture}} />
+                  <Image
+                    style={{height: 300, flex: 1}}
+                    source={{uri: item.profilePicture}}
+                  />
                 </CardItem>
-                <CardItem>
+                <CardItem style={{backgroundColor: "#FF43A4"}}>
                   <Icon name="heart" style={{color: '#ED4A6A'}} />
-                  <Text>{item.fullName}</Text>
+                  <Text style={{color:'white'}}>
+                    {this.props.navigation.getParam('otherUserId').fullName}
+                  </Text>
                 </CardItem>
               </Card>
             )}
@@ -82,4 +120,4 @@ class PicturePicker extends React.Component {
   }
 }
 
-export default connect(({user})=>({user}))(PicturePicker)
+export default connect(({user}) => ({user}))(PicturePicker)

@@ -47,17 +47,12 @@ export class CameraComponent extends Component {
           >
             <View
               style={{
-                flex: 1,
                 backgroundColor: 'transparent',
-                flexDirection: 'row'
+                flexDirection: 'row',
+                justifyContent: 'space-between'
               }}
             >
               <TouchableOpacity
-                style={{
-                  flex: 0.1,
-                  alignSelf: 'flex-end',
-                  alignItems: 'left'
-                }}
                 onPress={() => {
                   this.setState({
                     type:
@@ -68,21 +63,14 @@ export class CameraComponent extends Component {
                 }}
               >
                 <Text style={{fontSize: 18, marginBottom: 10, color: 'white'}}>
-                  {' '}
-                  Flip{' '}
+                  Flip
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={{
-                  flex: 0.5,
-                  alignSelf: 'flex-start',
-                  alignItems: 'right'
-                }}
                 onPress={this.snap}
               >
                 <Text style={{fontSize: 18, marginBottom: 10, color: 'white'}}>
-                  {' '}
-                  Take{' '}
+                  Take
                 </Text>
               </TouchableOpacity>
             </View>

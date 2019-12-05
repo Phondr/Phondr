@@ -1,17 +1,16 @@
-import {Platform, StatusBar, StyleSheet, View, Text, Image} from 'react-native'
+import {Platform, StatusBar, StyleSheet, Image} from 'react-native'
 import React, {useState} from 'react'
-import {Container, Content, Header, Body, Drawer} from 'native-base'
+import {Container, Content} from 'native-base'
 import {DrawerItems} from 'react-navigation'
 
 const CustomDrawer = props => {
   return (
-    <Container>
-      <Content>
+    <Container  style={{backgroundColor:'#D9004C'}}>
+      <Content >
         <Image
           style={styles.drawerImage}
           source={require('../assets/images/PhondrLogos/PhondrLarge.png')}
         />
-
         <DrawerItems {...props} />
       </Content>
     </Container>

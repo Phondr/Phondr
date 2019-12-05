@@ -20,14 +20,14 @@ const ActiveChats = ({
   const active = myChats.filter(chat => chat.status === 'active')
 
   return (
-    <Card>
+    <Card >
       <NavigationEvents
         onWillFocus={payload => {
           fetchMyChats(user.id)
         }}
       />
-      <CardItem header>
-        <Text>Active Chats</Text>
+      <CardItem header style={{backgroundColor: '#FF0800',borderColor:'black',borderWidth:2}}>
+        <Text style={{color:'white'}}>Active Chats</Text>
       </CardItem>
 
       {active.map(cur => {
@@ -56,8 +56,9 @@ const ActiveChats = ({
               }
             }}
             key={cur.id}
+            style={{backgroundColor:'#FF91AF'}}
           >
-            <ProgressBar currentChat={cur} />
+      <ProgressBar currentChat={cur}/>
             <Left>
               <Icon name="person" />
             </Left>

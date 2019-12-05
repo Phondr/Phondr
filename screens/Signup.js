@@ -204,7 +204,7 @@ export class Signup extends Component {
           <View styles={styles.checkboxcontainer}>
             <Header>
               <Left>
-                <Title>Gender Preference</Title>
+                <Title>Sign Up Form</Title>
               </Left>
             </Header>
             <Content style={styles.checkboxcontent}>
@@ -268,11 +268,10 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 35,
-    padding: 20,
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#343434'
   },
   checkboxcontainer: {
-    alignSelf: 'flex-end',
+    // alignSelf: 'flex-end',
     backgroundColor: '#F5FCFF',
     flex: 1,
     margin: 10
@@ -294,9 +293,13 @@ export const styles = StyleSheet.create({
     backgroundColor: '#00BFFF',
     padding: 10,
     margin: 15,
+<<<<<<< HEAD
     alignItems: 'center',
     height: 40,
     borderRadius: 30
+=======
+    height: 40
+>>>>>>> 6fbbcda92bf4df0c46f46249a051ac260433ce6e
   },
   submitButtonText: {
     color: 'white'

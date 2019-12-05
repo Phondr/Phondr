@@ -1,12 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import {connect} from 'react-redux'
 import {
-  Icon,
   Left,
-  Card,
-  CardItem,
   Text,
-  Container,
   Content,
   Right,
   Body
@@ -20,8 +16,6 @@ const ProgressBar = ({
   currentChat,
   currentProgress,
   header = false,
-  navigation,
-
   setCurrentProgress
 }) => {
   let progress = round(calcProgress(currentChat), 2) || 0
@@ -37,16 +31,24 @@ const ProgressBar = ({
         <Left>
           {header == true ? (
             <Bar
+              borderColor="#FF43A4"
+              color="#FF43A4"
               progress={currentProgress / 100}
               width={100}
               animated={false}
             />
           ) : (
-            <Bar progress={progress / 100} width={100} animated={false} />
+            <Bar
+              borderColor="#FF43A4"
+              color="#FF43A4"
+              progress={progress / 100}
+              width={100}
+              animated={false}
+            />
           )}
         </Left>
         <Body>
-          <Text style={{color: 'blue'}}>{progress}%</Text>
+          <Text style={{color: '#FF43A4'}}>{progress}%</Text>
         </Body>
         <Right />
       </Content>

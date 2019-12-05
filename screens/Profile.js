@@ -14,13 +14,15 @@ import CustomHeader from '../components/CustomHeader'
 import Geocoder from 'react-native-geocoding'
 const {placesAPI} = require('../secrets')
 import axios from 'axios'
+import Spinner from '../components/Spinner'
 
 export class Profile extends Component {
   constructor() {
     super()
     this.state = {
       user: '',
-      address: ''
+      address: '',
+      loading: true
     }
   }
 
@@ -35,6 +37,7 @@ export class Profile extends Component {
   async componentDidMount() {
     try {
       await this.props.getUser()
+      this.setState({loading: false})
     } catch (error) {
       alert('COULD NOT LOGIN')
       console.log(error)
@@ -52,7 +55,9 @@ export class Profile extends Component {
   async componentDidUpdate(prevProps) {
     if (prevProps.user !== this.props.user && this.props.user.id) {
       try {
+        this.setState({loading: true})
         await this.props.getUser()
+        this.setState({loading: false})
       } catch (error) {
         alert('COULD NOT GET USER AFTER EDITING')
         console.log(error)
@@ -62,10 +67,11 @@ export class Profile extends Component {
 
   render() {
     const user = this.props.user
-    //console.log('USER', user)
-
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={{backgroundColor: '#FC89AC'}}>
         <StatusBar barStyle="light-content" />
         <CustomHeader title="Profile" />
         <View style={styles.header}></View>
@@ -100,7 +106,7 @@ export class Profile extends Component {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#00BFFF',
+    backgroundColor: '#DE6FA1',
     height: 200
   },
   avatar: {
@@ -120,7 +126,8 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   body: {
-    marginTop: 40
+    marginTop: 40,
+    backgroundColor: '#FC89AC'
   },
   bodyContent: {
     flex: 1,
@@ -134,7 +141,7 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 15,
-    color: '#00BFFF',
+    color: '#696969',
     marginTop: 10
   },
   description: {
@@ -161,7 +168,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: 250,
     borderRadius: 30,
-    backgroundColor: '#00BFFF'
+    backgroundColor: '#FF2400'
   }
 })
 

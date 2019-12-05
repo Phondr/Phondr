@@ -4,7 +4,7 @@ import {AppLoading} from 'expo'
 import {Asset} from 'expo-asset'
 import * as Font from 'expo-font'
 import React, {Component, useState, useEffect} from 'react'
-import {Platform, StatusBar, StyleSheet, View, Text, Image} from 'react-native'
+import {Platform, StatusBar, StyleSheet, View} from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
 import {
   createDrawerNavigator,
@@ -22,8 +22,6 @@ import New from './components/route'
 import ApolloClient from 'apollo-boost'
 import {connect, Provider} from 'react-redux'
 import store from './redux/store'
-import AppNavigator from './navigation/AppNavigator'
-import AuthPages from './navigation/MainLoginNavigator'
 import Login from './screens/Login'
 import FlashMessage from 'react-native-flash-message'
 import Signup from './screens/Signup'
@@ -69,7 +67,13 @@ const ActiveScreenStack = createStackNavigator(
       navigationOptions: {
         header: null
       }
-    }
+    },
+    PicturePicker: {
+      screen: PicturePicker,
+      navigationOptions:{
+        header: null
+      }
+    },
   },
   {
     initialRouteName: 'ActiveScreen',
@@ -110,9 +114,11 @@ const ChatBottomTab = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      style: {paddingBottom: 5},
+      style: {backgroundColor:'#E0115F'},
       labelStyle: {fontSize: 12},
-      activeTintColor: 'orange'
+      activeTintColor: 'white',
+      activeBackgroundColor: '#FF91AF',
+      tabStyle:{borderRightColor:'black' ,borderLeftColor:'black',borderLeftWidth:2,borderRightWidth:2}
     },
     navigationOptions: {
       drawerIcon: ({tintColor}) => {
@@ -134,9 +140,11 @@ const MeetingBottomTab = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      style: {paddingBottom: 5},
+      style: {backgroundColor:'#E0115F'},
       labelStyle: {fontSize: 12},
-      activeTintColor: 'orange'
+      activeTintColor: 'white',
+      activeBackgroundColor: '#FF91AF',
+      tabStyle:{borderRightColor:'black' ,borderLeftColor:'black',borderLeftWidth:2,borderRightWidth:2}
     },
     navigationOptions: {
       drawerIcon: ({tintColor}) => {
@@ -160,9 +168,9 @@ const EntryStack = createStackNavigator(
         header: null
       }
     },
-    Login: Login,
-    Signup: Signup,
-    LoginCamera: LoginCamera
+    Login: {screen: Login, navigationOptions: {header: null}},
+    Signup: {screen: Signup, navigationOptions: {header: null}},
+    LoginCamera: {screen: LoginCamera, navigationOptions: {header: null}}
   },
   {
     initialRouteName: 'Entry'
@@ -176,13 +184,15 @@ const EntryStack = createStackNavigator(
 
 var drawer = createDrawerNavigator(
   {
-    Profile: {
-      screen: Profile
-    },
     Home: {
       screen: Home
     },
-
+    profile: {
+      screen: Profile
+    },
+    // 'Picture Picker': {
+    //   screen: PicturePicker
+    // },
     Login: {
       screen: Login
     },
@@ -191,9 +201,6 @@ var drawer = createDrawerNavigator(
     },
     Entry: {
       screen: Entry
-    },
-    'Picture Picker': {
-      screen: PicturePicker
     },
     // 'Pending Chats': {
     //   screen: PendingScreen
@@ -213,16 +220,31 @@ var drawer = createDrawerNavigator(
     'Sign Out': {
       screen: SignOut
     },
+
+    // MeetingModal: {
+    //   screen: MeetingModal
+    // },
     UserProfileEdit: {
       screen: UserProfileEdit
+    },
+    Login: {
+      screen: Login
+    },
+    Signup: {
+      screen: Signup
+    },
+    Entry: {
+      screen: Entry
     }
-    // MeetingModal: {}
   },
   {
     initialRouteName: 'Home',
     contentComponent: CustomDrawer,
     contentOptions: {
-      activeTintColor: 'orange'
+      activeTintColor: 'black',
+      inactiveTintColor: 'white',
+      activeBackgroundColor: '#FF91AF',
+      itemStyle: {borderColor: 'black', borderWidth: 1}
     },
     drawerOpenRoute: 'DrawerOpen',
     drawerCloseRoute: 'DrawerClose',
@@ -272,7 +294,6 @@ function App(props) {
           {/* <AuthPages /> */}
           <OuterNav />
           <FlashMessage position="top" />
-          {/* <New /> */}
         </View>
       </Provider>
     )

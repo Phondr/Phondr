@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
-import {View, Text, Dimensions} from 'react-native'
-import {Button, Form, Item, Icon} from 'native-base'
+import {Text, Dimensions} from 'react-native'
+import {Button, Form, Item, Icon, View} from 'native-base'
 import {connect} from 'react-redux'
 import {updatePendingDate} from '../redux/invitation'
 import DateTimePicker from 'react-native-modal-datetime-picker'
@@ -26,8 +26,9 @@ const CustomDatePicker = ({invitation, updatePendingDate}) => {
     hideDateTimePicker()
   }
   return (
-    <Item last>
+    <Item>
       <Icon
+        style={{color: 'red'}}
         name="date-range"
         type={'MaterialIcons'}
         onPress={() => showDateTimePicker()}
@@ -36,6 +37,7 @@ const CustomDatePicker = ({invitation, updatePendingDate}) => {
         <Text
           style={{width: Dimensions.get('window').width}}
           onPress={() => showDateTimePicker()}
+          style={{color: 'white', width: '90%'}}
         >
           Select a date
         </Text>
@@ -43,6 +45,7 @@ const CustomDatePicker = ({invitation, updatePendingDate}) => {
         <Text
           style={{width: Dimensions.get('window').width}}
           onPress={() => showDateTimePicker()}
+          style={{color: 'white', width: '90%'}}
         >
           Select new date
         </Text>

@@ -1,12 +1,6 @@
 import React, {Component} from 'react'
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Button,
-  TouchableOpacity
-} from 'react-native'
+import {Text, View, StyleSheet, Image} from 'react-native'
+import {Button} from 'native-base'
 import Spinner from '../components/Spinner'
 import {navigation} from 'react-navigation'
 import Login from './Login'
@@ -73,7 +67,7 @@ export class Entry extends Component {
         <View style={styles.title}>
           <Image
             style={styles.phonderimage}
-            source={require('../assets/images/PhondrLogos/PhondrLarge-removebg-preview.png')}
+            source={require('../assets/images/PhondrLogos/PhondrLarge.png')}
           />
         </View>
         <TouchableOpacity
@@ -115,17 +109,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 10,
     paddingRight: 10,
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#353839'
   },
   phonderimage: {
     width: 350,
     height: 350,
     position: 'relative',
     justifyContent: 'center'
-  },
-  logintext: {
-    margin: 2,
-    fontSize: 30
   },
   formcontainer: {
     justifyContent: 'center',
@@ -146,6 +136,11 @@ export const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  buttonNav: {
+    backgroundColor: '#E0115F',
+    marginTop: 30,
+    justifyContent: 'center'
   }
 })
 
