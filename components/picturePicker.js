@@ -57,7 +57,7 @@ class PicturePicker extends React.Component {
     const data2 = await axios.post(url + '/graphql', {
       query: `
         query{
-          user(id: ${this.props.navigation.getParam('otherUserId').id}) {
+          user(id: ${this.props.navigation.getParam('otherUser').id}) {
             iAm,
             profilePicture,
             fullName,
@@ -93,7 +93,7 @@ class PicturePicker extends React.Component {
                     <Thumbnail source={{uri: item.profilePicture}} />
                     <Body>
                       <Text style={{color:'white'}}>
-                        {this.props.navigation.getParam('otherUserId').fullName}
+                        {this.props.navigation.getParam('otherUser').fullName}
                       </Text>
                       <Text note>Phondr</Text>
                     </Body>
@@ -108,7 +108,7 @@ class PicturePicker extends React.Component {
                 <CardItem style={{backgroundColor: "#FF43A4"}}>
                   <Icon name="heart" style={{color: '#ED4A6A'}} />
                   <Text style={{color:'white'}}>
-                    {this.props.navigation.getParam('otherUserId').fullName}
+                    {this.props.navigation.getParam('otherUser').fullName}
                   </Text>
                 </CardItem>
               </Card>

@@ -152,9 +152,14 @@ io.on('connection', socket => {
     io.to(chatId).emit('receiveMessage', {message})
   })
 
-  socket.on('sendNewChat', ({chat})=>{
-    console.log(chat)
-    socket.to('Mike Lim').emit('receiveNewChat', {chat})
+  socket.on('sendNewChat', ({chat, otherUser})=>{
+    console.log(chat) //Send only to other user that had that pending chat
+    socket.to(`${otherUser.fullName}`).emit('receiveNewChat', {chat})
+  })
+
+  socket.on('sendNewMessageNotification', ({otherUser, user})=>{
+    console.log(otherUser)
+    socket.to(`${otherUser.fullName}`).emit('receiveNewMessageNotification', {message: `Got a new message from ${user.fullName}`})
   })
 
   socket.on('disconnect', () => {
