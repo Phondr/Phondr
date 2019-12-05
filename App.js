@@ -47,7 +47,7 @@ import MeetingModal from './screens/MeetingModal'
 import ActiveMeetingScreen from './screens/ActiveMeetingScreen'
 import PendingMeetingScreen from './screens/PendingMeetingScreen'
 import PicturePicker from './components/picturePicker'
-
+import profile from './screens/Profile'
 const ActiveScreenStack = createStackNavigator(
   {
     ActiveScreen: {
@@ -177,7 +177,9 @@ var drawer = createDrawerNavigator(
     Home: {
       screen: Home
     },
-
+    'profile':{
+      screen:Profile
+    },
     Login: {
       screen: Login
     },
