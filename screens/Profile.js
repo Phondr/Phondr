@@ -6,7 +6,8 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
-  ScrollView
+  ScrollView,
+  Dimensions,
 } from 'react-native'
 import {connect} from 'react-redux'
 import {fetchUserFromAsync} from '../redux/user'
@@ -73,7 +74,7 @@ export class Profile extends Component {
         <StatusBar barStyle="light-content" />
         <CustomHeader title="Profile" />
         <View style={styles.header}></View>
-        <Image style={styles.avatar} source={{uri: user.profilePicture}} />
+        <Image style={Dimensions.get('window').height === 812 ? styles.avatarMike : styles.avatar} source={{uri: user.profilePicture}} />
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <Text style={styles.name}>{user.fullName}</Text>
@@ -117,6 +118,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     marginTop: 75
+  },
+  avatarMike: {
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    borderWidth: 4,
+    borderColor: 'white',
+    marginBottom: 10,
+    alignSelf: 'center',
+    position: 'absolute',
+    marginTop: 100
   },
   name: {
     fontSize: 22,

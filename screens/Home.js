@@ -82,14 +82,6 @@ class Home extends Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return (
-        <View style={styles.spinner}>
-          <Spinner />
-        </View>
-      )
-    }
-
     const user = this.props.user || {}
     // console.log('HOME USER', user)
     if (this.state.loading) {
@@ -231,13 +223,6 @@ class Home extends Component {
   }
 }
 
-export const styles = StyleSheet.create({
-  spinner: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
 
 export default connect(({myChats, user}) => ({myChats, user}), {
   fetchMyChats,
