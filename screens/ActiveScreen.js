@@ -29,7 +29,7 @@ class ActiveScreen extends React.Component {
           <CustomHeader title="Active Chats" />
           <Content>
             {myChats.length ? (
-              <ActiveComp preview={true} />
+              <ActiveComp />
             ) : (
               <Card>
                 <CardItem>

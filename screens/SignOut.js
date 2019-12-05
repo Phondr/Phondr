@@ -21,7 +21,7 @@ export class SignOut extends Component {
             try {
               await AsyncStorage.removeItem('userKey')
               this.props.setUser({})
-              this.props.navigation.navigate('Entry')
+              this.props.navigation.navigate('notLoggedIn')
               console.log('REMOVED KEY')
             } catch (e) {
               // error reading value

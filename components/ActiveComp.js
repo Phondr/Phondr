@@ -1,11 +1,22 @@
 import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {Icon, Left, Card, CardItem, Text} from 'native-base'
-import {withNavigation, NavigationEvents} from 'react-navigation'
+import {
+  withNavigation,
+  NavigationEvents,
+  NavigationActions
+} from 'react-navigation'
 import {setChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
 import {fetchMyChats} from '../redux/myChats'
-const ActiveChats = ({myChats, user, setChat, fetchMyChats, navigation}) => {
+const ActiveChats = ({
+  myChats,
+  user,
+  setChat,
+  fetchMyChats,
+  navigation,
+  preview
+}) => {
   const active = myChats.filter(chat => chat.status === 'active')
 
   return (
@@ -25,7 +36,24 @@ const ActiveChats = ({myChats, user, setChat, fetchMyChats, navigation}) => {
             button
             onPress={() => {
               setChat(cur)
-              navigation.navigate('SingleChat')
+              if (preview) {
+                navigation.navigate(
+                  NavigationActions.navigate({
+                    routeName: 'Chats',
+                    action: NavigationActions.navigate(
+                      NavigationActions.navigate({
+                        routeName: 'Active',
+                        action: NavigationActions.navigate({
+                          routeName: 'SingleChat',
+                          action: navigation.navigate('SingleChat')
+                        })
+                      })
+                    )
+                  })
+                )
+              } else {
+                navigation.navigate('SingleChat')
+              }
             }}
             key={cur.id}
             style={{backgroundColor:'#FF91AF'}}

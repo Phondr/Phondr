@@ -28,50 +28,48 @@ const PendingMeetingComp = ({
   //   fetchAllMeetings(user.id)
   // }, [])
   return (
-    <View >
-      <CustomHeader title='pendingMeeting' />
+    <View>
+      <CustomHeader title="pendingMeeting" />
       <Card>
         <NavigationEvents
           onWillFocus={payload => {
             fetchAllMeetings(user.id)
           }}
         />
-        <CardItem header style={{backgroundColor:'#E0115F'}}>
+        <CardItem header style={{backgroundColor: '#E0115F'}}>
           <Text style={{color: 'white'}}>Pending Meetings</Text>
         </CardItem>
 
         {pending.map(cur => {
           return (
-            <CardItem
-              button
-              onPress={async () => {
-                await fetchCurrentChat(cur.chat.id)
-                navigation.navigate('SingleChat')
-              }}
-              style={{backgroundColor:'#FF91AF'}}
-              key={cur.id}
-            >
-              <Left>
-                <Icon name={'place'} type={'MaterialIcons'} />
-              </Left>
-              <Body>
+            <React.Fragment key={cur.id}>
+              <CardItem>
+                <Text style={{color: 'green'}}>Name: {cur.name}</Text>
+              </CardItem>
+              <CardItem
+                button
+                onPress={async () => {
+                  await fetchCurrentChat(cur.chat.id)
+                  navigation.navigate('SingleChat')
+                }}
+              >
                 <Text>
-                  Name: {cur.name} {'\n'}
-                  Address: {cur.address} {'\n'}
-                  Date: {cur.date.toString()} {'\n'}
-                  Map Link: {cur.link}
-                </Text>
-              </Body>
-              <Right>
-                <Text>
+                  With:{' '}
                   {
                     cur.users.find(u => {
                       return u.fullName !== user.fullName
                     }).fullName
                   }
+                  {'\n'}
+                  Date: {cur.date.toString()} {'\n'}
+                  Map Link: {cur.link}
                 </Text>
-              </Right>
-            </CardItem>
+
+                <Right>
+                  <Icon name="arrow-forward" />
+                </Right>
+              </CardItem>
+            </React.Fragment>
           )
         })}
       </Card>

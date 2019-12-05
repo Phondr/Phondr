@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Icon, Form, Input, Item} from 'native-base'
+import {View, Icon, Form, Input, Item, Right} from 'native-base'
 import {
   StyleSheet,
   Text,
@@ -70,6 +70,7 @@ export class UserProfileEdit extends Component {
           style={styles.avatar}
           source={{uri: this.props.navigation.state.params.user.profilePicture}}
         />
+
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <View style={styles.bodyDescription}>
@@ -171,7 +172,7 @@ export class UserProfileEdit extends Component {
                   </Item>
                 </View>
               </Form>
-              <View style={{ justifyContent:'center'}}>
+              <View style={{justifyContent: 'center'}}>
                 <TouchableOpacity
                   style={styles.buttonContainer}
                   onPress={this.submitHandler}
@@ -266,7 +267,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width
   },
   formAlign: {
-    textAlign: 'center'
+    flex: 1,
+    textAlign: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
 

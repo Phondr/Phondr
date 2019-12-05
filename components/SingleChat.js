@@ -5,7 +5,10 @@ import {
   View,
   StatusBar,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity
 } from 'react-native'
 import {GiftedChat, Bubble} from 'react-native-gifted-chat'
 import {fetchMessages, newMessage, setNewMessage} from '../redux/message'
@@ -24,12 +27,15 @@ import {fetchMeeting} from '../redux/currentMeeting'
 import MeetingResponse from '../components/MeetingResponse'
 import {NavigationEvents} from 'react-navigation'
 import ChatEvent from '../components/ChatEvent'
+import {calcProgress} from '../util'
+import Spinner from '../components/Spinner'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
     this.state = {
       reply: false,
-      curMessage: {}
+      curMessage: {},
+      loading: true
     }
     this.onSend = this.onSend.bind(this)
     this.setActive = this.setActive.bind(this)
@@ -76,7 +82,9 @@ class SingleChats extends Component {
       this.props.setNewMessage(message)
     })
 
-    this.props.fetchMessages(this.props.currentChat.id)
+    this.props
+      .fetchMessages(this.props.currentChat.id)
+      .then(() => this.setState({loading: false}))
   }
 
   // async imageRequest(ref) {
@@ -267,6 +275,10 @@ class SingleChats extends Component {
   }
 
   render() {
+    console.log('dimensions', Dimensions.get('window').height)
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
       <React.Fragment>
         <NavigationEvents onDidFocus={this.sendMeeting} />
@@ -284,12 +296,22 @@ class SingleChats extends Component {
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
           currentChat={this.props.currentChat}
         />
-        <RecordAudio
-          onSend={this.onSend}
-          user={this.props.user}
-          chat={this.props.currentChat}
-          messageLength={this.props.messages.length}
-        />
+        {calcProgress(this.props.currentChat) >= 100 ? (
+          <TouchableOpacity
+            style={Platform.OS === 'ios' ? Dimensions.get('window').height===812 ? styles.iosMike : styles.ios : styles.android}
+            onPress={() => this.props.navigation.navigate('MeetingModal')}
+          >
+            <Icon name="meetup" color="blue" type={'FontAwesome'} />
+          </TouchableOpacity>
+        ) : null}
+        {calcProgress(this.props.currentChat) > 25 ? (
+          <RecordAudio
+            onSend={this.onSend}
+            user={this.props.user}
+            chat={this.props.currentChat}
+            messageLength={this.props.messages.length}
+          />
+        ) : null}
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
@@ -331,6 +353,30 @@ class SingleChats extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  ios: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.87,
+    marginLeft: Dimensions.get('window').width * 0.78
+  },
+  iosMike: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.85,
+    marginLeft: Dimensions.get('window').width * 0.78
+  },
+  android: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.88,
+    marginLeft: Dimensions.get('window').width * 0.78
+  }
+})
 
 const MapStateToProps = state => {
   return {
