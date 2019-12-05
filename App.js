@@ -67,7 +67,10 @@ const ActiveScreenStack = createStackNavigator(
       navigationOptions: {
         header: null
       }
-    }
+    },
+    PicturePicker: {
+      screen: PicturePicker
+    },
   },
   {
     initialRouteName: 'ActiveScreen',
@@ -196,7 +199,6 @@ var drawer = createDrawerNavigator(
     Entry: {
       screen: Entry
     },
-
     // 'Pending Chats': {
     //   screen: PendingScreen
     // },

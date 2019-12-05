@@ -14,13 +14,15 @@ import CustomHeader from '../components/CustomHeader'
 import Geocoder from 'react-native-geocoding'
 const {placesAPI} = require('../secrets')
 import axios from 'axios'
+import Spinner from '../components/Spinner'
 
 export class Profile extends Component {
   constructor() {
     super()
     this.state = {
       user: '',
-      address: ''
+      address: '',
+      loading: true,
     }
   }
 
@@ -35,6 +37,7 @@ export class Profile extends Component {
   async componentDidMount() {
     try {
       await this.props.getUser()
+      this.setState({loading: false})
     } catch (error) {
       alert('COULD NOT LOGIN')
       console.log(error)
@@ -52,7 +55,9 @@ export class Profile extends Component {
   async componentDidUpdate(prevProps) {
     if (prevProps.user !== this.props.user && this.props.user.id) {
       try {
+        this.setState({loading: true})
         await this.props.getUser()
+        this.setState({loading: false})
       } catch (error) {
         alert('COULD NOT GET USER AFTER EDITING')
         console.log(error)
@@ -62,8 +67,7 @@ export class Profile extends Component {
 
   render() {
     const user = this.props.user
-    //console.log('USER', user)
-
+    if(this.state.loading) {return <Spinner />}
     return (
       <ScrollView style={{backgroundColor:'#FC89AC'}}>
         <StatusBar barStyle="light-content" />

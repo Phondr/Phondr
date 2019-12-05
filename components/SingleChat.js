@@ -275,7 +275,6 @@ class SingleChats extends Component {
   }
 
   render() {
-    console.log('dimensions', Dimensions.get('window').height)
     if (this.state.loading) {
       return <Spinner />
     }
@@ -296,14 +295,6 @@ class SingleChats extends Component {
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
           currentChat={this.props.currentChat}
         />
-        {calcProgress(this.props.currentChat) >= 100 ? (
-          <TouchableOpacity
-            style={Platform.OS === 'ios' ? Dimensions.get('window').height===812 ? styles.iosMike : styles.ios : styles.android}
-            onPress={() => this.props.navigation.navigate('MeetingModal')}
-          >
-            <Icon name="meetup" color="blue" type={'FontAwesome'} />
-          </TouchableOpacity>
-        ) : null}
         {calcProgress(this.props.currentChat) > 25 ? (
           <RecordAudio
             onSend={this.onSend}
@@ -311,6 +302,42 @@ class SingleChats extends Component {
             chat={this.props.currentChat}
             messageLength={this.props.messages.length}
           />
+        ) : null}
+        {calcProgress(this.props.currentChat) > 50 ? (
+          <TouchableOpacity
+            style={
+              Platform.OS === 'ios'
+                ? Dimensions.get('window').height === 812
+                  ? styles.iosPictureMike
+                  : styles.iosPicture
+                : styles.androidPicture
+            }
+            onPress={() =>
+              this.props.navigation.navigate('PicturePicker', {
+                otherUserId: this.getOtherUserInChat(this.props.currentChat)
+              })
+            }
+          >
+            <Icon
+              name="ios-contacts"
+              style={{color: '#6de0e8'}}
+              type={'Ionicons'}
+            />
+          </TouchableOpacity>
+        ) : null}
+        {calcProgress(this.props.currentChat) >= 100 ? (
+          <TouchableOpacity
+            style={
+              Platform.OS === 'ios'
+                ? Dimensions.get('window').height === 812
+                  ? styles.iosMike
+                  : styles.ios
+                : styles.android
+            }
+            onPress={() => this.props.navigation.navigate('MeetingModal')}
+          >
+            <Icon name="meetup" style={{color: 'blue'}} type={'FontAwesome'} />
+          </TouchableOpacity>
         ) : null}
         <GiftedChat
           messages={this.props.messages || []}
@@ -355,27 +382,48 @@ class SingleChats extends Component {
 }
 
 const styles = StyleSheet.create({
+  iosPicture: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.865,
+    marginLeft: Dimensions.get('window').width * 0.80
+  },
+  iosPictureMike: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.85,
+    marginLeft: Dimensions.get('window').width * 0.80
+  },
+  androidPicture: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.88,
+    marginLeft: Dimensions.get('window').width * 0.80
+  },
   ios: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
-    marginTop: Dimensions.get('window').height * 0.87,
-    marginLeft: Dimensions.get('window').width * 0.78
+    marginTop: Dimensions.get('window').height * 0.865,
+    marginLeft: Dimensions.get('window').width * 0.7
   },
   iosMike: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.85,
-    marginLeft: Dimensions.get('window').width * 0.78
+    marginLeft: Dimensions.get('window').width * 0.7
   },
   android: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.88,
-    marginLeft: Dimensions.get('window').width * 0.78
-  }
+    marginLeft: Dimensions.get('window').width * 0.7
+  },
 })
 
 const MapStateToProps = state => {
