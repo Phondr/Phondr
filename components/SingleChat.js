@@ -246,6 +246,7 @@ class SingleChats extends Component {
       message: newMessage,
       chatId: this.props.currentChat.id
     })
+    socket.emit('sendNewMessageNotification', {otherUser: this.getOtherUserInChat(this.props.currentChat), user: this.props.user})
   }
 
   getOtherUserInChat(chat) {
@@ -310,7 +311,7 @@ class SingleChats extends Component {
             }
             onPress={() =>
               this.props.navigation.navigate('PicturePicker', {
-                otherUserId: this.getOtherUserInChat(this.props.currentChat)
+                otherUser: this.getOtherUserInChat(this.props.currentChat)
               })
             }
           >

@@ -22,6 +22,7 @@ import Dialog, {
 } from 'react-native-popup-dialog'
 import Spinner from '../components/Spinner'
 import socket from '../redux/socketClient'
+import {showMessage} from 'react-native-flash-message'
 
 class Home extends Component {
   constructor() {
@@ -54,9 +55,13 @@ class Home extends Component {
       await this.props.fetchMyChats(this.props.user.id)
       this.setState({loading: false})
     }
-    socket.emit('subscribe-to-user-room', {name: this.props.user.fullName})
+    socket.emit('subscribe-to-user-room', {name: this.props.user.fullName}) //Subscribe to a room revolving around their name(notifications for new name and change pending chats to active)
     socket.on('receiveNewChat', () => {
+      //Refetch chats to make a pending chat to active when other user matches into their chat. 
       this.props.fetchMyChats(this.props.user.id)
+    })
+    socket.on('receiveNewMessageNotification', ({message}) => {
+      showMessage({message, type: 'info', duration: 4000, icon: 'info'})
     })
     //console.log('HOME PROPS', this.props)
   }
@@ -159,7 +164,12 @@ class Home extends Component {
                   const chat = await this.props.findOrCreateChat(
                     this.props.user.id
                   )
-                  socket.emit('sendNewChat', {chat})
+                  const otherUser = chat.users.find(
+                    user => user.fullName !== this.props.user.fullName
+                  )
+                  if (otherUser) { //Only emit this chat, if the chat created is active. Emits so that other user knows they have to refetch to change their pending chat to active.
+                    socket.emit('sendNewChat', {chat, otherUser})
+                  }
                 }}
               >
                 <Icon name="pluscircle" type="AntDesign">
