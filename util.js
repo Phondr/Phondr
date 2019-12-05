@@ -14,7 +14,6 @@ export const calcProgress = chat => {
     }
   })
   const secondsSince = chat.sinceCreation * 60
-  console.log('hours',secondsSince/60/60) 
   let progress
   if (secondsSince /60 /60 > 336) { //Two weeks
     progress = (sum * sum) / (secondsSince * 0.000055)

@@ -7,10 +7,8 @@ import {
   Content,
   Left,
   Right,
-  Spinner
 } from 'native-base'
 import {Platform} from '@unimodules/core'
-
 import {withNavigation} from 'react-navigation'
 import CustomHeader from '../components/CustomHeader'
 import {connect} from 'react-redux'
@@ -29,6 +27,7 @@ import Dialog, {
   DialogFooter,
   DialogButton
 } from 'react-native-popup-dialog'
+import Spinner from '../components/Spinner'
 
 class Home extends Component {
   constructor() {
@@ -58,7 +57,8 @@ class Home extends Component {
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
       console.log('props.user.id', this.props.user.id)
-      this.props.fetchMyChats(this.props.user.id)
+      await this.props.fetchMyChats(this.props.user.id)
+      this.setState({loading: false})
     }
     //console.log('HOME PROPS', this.props)
   }
@@ -66,14 +66,17 @@ class Home extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id && this.props.user.id) {
       console.log('in comp did update fmc')
-      this.props.fetchMyChats(this.props.user.id)
+      this.setState({loading: true})
+      this.props.fetchMyChats(this.props.user.id).then(this.setState({loading: false}))
     }
   }
 
   render() {
     const user = this.props.user || {}
-    console.log('HOME USER', user)
-
+    // console.log('HOME USER', user)
+    if(this.state.loading) {
+      return <Spinner />
+    }
     return (
       <Container>
         <ScrollView>
