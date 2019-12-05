@@ -26,7 +26,7 @@ const ActiveChats = ({
           fetchMyChats(user.id)
         }}
       />
-      <CardItem header style={{backgroundColor:'#E0115F',borderColor:'black',borderWidth:2}}>
+      <CardItem header style={{backgroundColor: '#FF0800',borderColor:'black',borderWidth:2}}>
         <Text style={{color:'white'}}>Active Chats</Text>
       </CardItem>
 

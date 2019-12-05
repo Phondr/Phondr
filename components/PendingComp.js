@@ -12,7 +12,7 @@ const PendingChats = ({myChats, user, deleteChat}) => {
   console.log('pending', pending, 'user', user)
   return (
     <Card>
-      <CardItem header style={{backgroundColor:'#E0115F', borderColor:'black',borderWidth:2}}>
+      <CardItem header style={{backgroundColor: '#FF0800', borderColor:'black',borderWidth:2}}>
         <Text style={{color:'white'}}>Pending Chats</Text>
       </CardItem>
       <Modal
