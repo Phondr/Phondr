@@ -164,7 +164,7 @@ class SingleChats extends Component {
         content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
           +date
         ).toString()}++++Long press this message to respond.`,
-        imageRef: imageRef,
+        imageRef: link,
         meetingId: id,
         userId: this.props.user.id,
         length: 10,

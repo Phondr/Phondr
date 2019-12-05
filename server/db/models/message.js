@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 const {placesAPI, url} = require('../../../secrets')
 const axios = require('axios')
+const cheerio = require('cheerio')
 
 const Message = db.define('message', {
   content: {
@@ -10,11 +11,13 @@ const Message = db.define('message', {
   },
   imageRef: {
     type: Sequelize.STRING,
-    async get() {
+    get() {
       const ref = this.getDataValue('imageRef')
       if (ref && ref.length) {
-        const googleImage = await imageRequest(ref)
-        return googleImage
+        // const googleImage = await imageRequest(ref)
+        // return googleImage
+        const cheerioImage = cheerioReq(ref)
+        return cheerioImage
       }
 
       return ''
@@ -29,6 +32,14 @@ const Message = db.define('message', {
     defaultValue: null
   }
 })
+
+const cheerioReq = async link => {
+  console.log('link inside cheerioReq: ', link)
+  const html = await axios.get(link)
+  const $ = cheerio.load(html)
+  const image = $('meta[property="og:image"]').attr('content')
+  return image
+}
 
 const imageRequest = async ref => {
   const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
