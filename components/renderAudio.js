@@ -47,6 +47,7 @@ export default class renderAudio extends React.Component {
         {androidImplementation: 'MediaPlayer'}
       )
       .catch(err => {
+        alert('Error has occured. Audio could not be loaded.')
         console.error(err)
       })
     await this.soundObject
@@ -58,6 +59,7 @@ export default class renderAudio extends React.Component {
         }, playbackStatus.durationMillis)
       })
       .catch(err => {
+        alert('Error has occurred. Audio cannot be played')
         console.error(err)
       })
   }

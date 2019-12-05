@@ -26,6 +26,9 @@ const Meeting = db.define('meeting', {
   date: {
     type: Sequelize.DATE
     // allowNull: false,
+  },
+  status:{
+    type:Sequelize.ENUM(['pending','active','declined'])
   }
 })
 

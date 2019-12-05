@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 /* eslint-disable no-undef */
 import {AppLoading} from 'expo'
 import {Asset} from 'expo-asset'
@@ -7,10 +8,15 @@ import {Platform, StatusBar, StyleSheet, View} from 'react-native'
 import {Ionicons} from '@expo/vector-icons'
 import {
   createDrawerNavigator,
+  createBottomTabNavigator,
   createAppContainer,
-  createStackNavigator
+  createStackNavigator,
+  createMaterialTopTabNavigator
 } from 'react-navigation'
+
 import Home from './screens/Home'
+import {Container, Content, Header, Body, Drawer, Icon} from 'native-base'
+import drawerStyles from './styles/drawerStyle'
 import CustomDrawer from './components/CustomDrawer'
 import New from './components/route'
 import ApolloClient from 'apollo-boost'
@@ -28,35 +34,118 @@ import ActiveComponent from './components/ActiveComp'
 import {AsyncStorage} from 'react-native'
 import {getData} from './redux/user'
 import Profile from './screens/Profile'
-import PendingMeetings from './screens/PendingMeetings'
+import PendingMeetings from './components/PendingMeetingComp'
 import UserProfileEdit from './screens/UserProfileEdit'
 import Spinner from './components/Spinner'
 import MapV from './components/MapView'
-
+import TabBarIcon from './components/TabBarIcon'
 const {url} = require('./secrets')
 import PlaceSearch from './components/PlaceSearch'
 import MeetingModal from './screens/MeetingModal'
+import ActiveMeetingScreen from './screens/ActiveMeetingScreen'
+import PendingMeetingScreen from './screens/PendingMeetingScreen'
 
-const ActiveScreenStack = createStackNavigator({
-  ActiveScreen: {
-    screen: ActiveScreen,
-    navigationOptions: {
-      header: null
+const ActiveScreenStack = createStackNavigator(
+  {
+    ActiveScreen: {
+      screen: ActiveScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    SingleChat: {
+      screen: SingleChat,
+      navigationOptions: {
+        header: null
+      }
+    },
+    MeetingModal: {
+      screen: MeetingModal,
+      navigationOptions: {
+        header: null
+      }
     }
   },
-  SingleChat: {
-    screen: SingleChat,
+  {
+    initialRouteName: 'ActiveScreen',
     navigationOptions: {
-      header: null
-    }
-  },
-  MeetingModal: {
-    screen: MeetingModal,
-    navigationOptions: {
-      header: null
+      tabBarLabel: 'Active',
+      tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />
     }
   }
-})
+)
+const ActiveMeetingStack = createStackNavigator(
+  {
+    ActiveMeetingScreen: {
+      screen: ActiveMeetingScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    SingleChat: {
+      screen: SingleChat,
+      navigationOptions: {
+        header: null
+      }
+    }
+  },
+  {
+    initialRouteName: 'ActiveMeetingScreen',
+    navigationOptions: {
+      tabBarLabel: 'Active',
+      tabBarIcon: ({focused}) => <TabBarIcon focused={focused} name={'bars'} />
+    }
+  }
+)
+
+const ChatBottomTab = createBottomTabNavigator(
+  {
+    Active: {screen: ActiveScreenStack},
+    Pending: {screen: PendingScreen}
+  },
+  {
+    tabBarOptions: {
+      style: {paddingBottom: 5},
+      labelStyle: {fontSize: 12},
+      activeTintColor: 'orange'
+    },
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => {
+        return (
+          <Icon
+            name="chat"
+            type={'Entypo'}
+            style={{fontSize: 24, color: tintColor}}
+          ></Icon>
+        )
+      }
+    }
+  }
+)
+const MeetingBottomTab = createBottomTabNavigator(
+  {
+    Active: {screen: ActiveMeetingStack},
+    Pending: {screen: PendingMeetingScreen}
+  },
+  {
+    tabBarOptions: {
+      style: {paddingBottom: 5},
+      labelStyle: {fontSize: 12},
+      activeTintColor: 'orange'
+    },
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => {
+        return (
+          <Icon
+            name="place"
+            type={'MaterialIcons'}
+            style={{fontSize: 24, color: tintColor}}
+          ></Icon>
+        )
+      }
+    }
+  }
+)
 
 var drawer = createDrawerNavigator(
   {
@@ -77,6 +166,12 @@ var drawer = createDrawerNavigator(
     },
     'Active Chats': {
       screen: ActiveScreenStack
+    },
+    Chats: {
+      screen: ChatBottomTab
+    },
+    Meetings: {
+      screen: MeetingBottomTab
     },
     'Sign Out': {
       screen: SignOut

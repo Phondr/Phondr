@@ -18,14 +18,13 @@ const ProgressBar = ({
   header = false,
   setCurrentProgress
 }) => {
-  let progress = round(calcProgress(currentChat), 2)
+  let progress = round(calcProgress(currentChat), 2) || 0
 
   useEffect(() => {
     if (header) {
       setCurrentProgress(progress)
     }
-  }, [currentChat.messages.length])
-
+  }, [currentChat.messages])
   return (
     <>
       <Content>

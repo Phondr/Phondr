@@ -1,11 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Icon, Left, Card, CardItem, Text, Container, Content} from 'native-base'
-import {ScrollView} from 'react-native'
+import {ScrollView, Platform} from 'react-native'
 import CustomHeader from '../components/CustomHeader'
 import {withNavigation} from 'react-navigation'
 import ActiveComp from '../components/ActiveComp'
-
+import TabBarIcon from '../components/TabBarIcon'
 class ActiveScreen extends React.Component {
   constructor() {
     super()
