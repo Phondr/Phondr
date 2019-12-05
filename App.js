@@ -182,33 +182,26 @@ var drawer = createDrawerNavigator(
     Home: {
       screen: Home
     },
-    New: {
-      screen: New
+
+    Login: {
+      screen: Login
     },
-    // Login: {
-    //   screen: Login
+    Signup: {
+      screen: Signup
+    },
+    Entry: {
+      screen: Entry
+    },
+
+    // 'Pending Chats': {
+    //   screen: PendingScreen
     // },
-    // Signup: {
-    //   screen: Signup
+    // 'Pending Meetings': {
+    //   screen: PendingMeetings
     // },
-    // Entry: {
-    //   screen: Entry
+    // 'Active Chats': {
+    //   screen: ActiveScreenStack
     // },
-    // LoginCamera: {
-    //   screen: LoginCamera
-    // },
-    MapV: {
-      screen: MapV
-    },
-    'Pending Chats': {
-      screen: PendingScreen
-    },
-    'Pending Meetings': {
-      screen: PendingMeetings
-    },
-    'Active Chats': {
-      screen: ActiveScreenStack
-    },
     Chats: {
       screen: ChatBottomTab
     },

@@ -9,7 +9,7 @@ const CustomDrawer = props => {
       <Content>
         <Image
           style={styles.drawerImage}
-          // source={require('../assets/images/robot-dev.png')}
+          source={require('../assets/images/PhondrLogos/PhondrLarge.png')}
         />
 
         <DrawerItems {...props} />
@@ -21,8 +21,9 @@ const CustomDrawer = props => {
 const styles = StyleSheet.create({
   drawerImage: {
     marginTop: Platform.OS !== 'ios' ? 15 : 0,
-    height: 50,
-    width: 50,
+    marginLeft: 15,
+    height: 150,
+    width: 150,
     borderRadius: 75
   }
 })
