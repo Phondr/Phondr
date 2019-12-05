@@ -167,7 +167,7 @@ export class UserProfileEdit extends Component {
                   </Item>
                 )}
               </Form>
-              <View style={{width:200,backgroundColor:'#E0115F',alignItems:'center'}}>
+              <View style={{width:200,backgroundColor:'#E0115F', marginTop:10}}>
                 <TouchableOpacity
                   style={styles.buttonContainer}
                   onPress={this.submitHandler}
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   bodyContent: {
     flex: 1,
     alignItems: 'center',
-    padding: 10
+    padding: 10,
   },
   name: {
     fontSize: 28,
@@ -241,8 +241,7 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: 'center',
     color: '#696969',
-    // margin: 10,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   buttonContainer: {
     height: 30,
@@ -250,7 +249,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     borderRadius: 30,
-    backgroundColor: '#E0115F'
+    backgroundColor: '#E0115F',
+    marginTop:10
   },
   input: {
     borderWidth: 1,
