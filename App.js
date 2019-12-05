@@ -66,7 +66,12 @@ const ActiveScreenStack = createStackNavigator({
 
 const EntryStack = createStackNavigator(
   {
-    Entry: Entry,
+    Entry: {
+      screen: Entry,
+      navigationOptions: {
+        header: null
+      }
+    },
     Login: Login,
     Signup: Signup,
     LoginCamera: LoginCamera
