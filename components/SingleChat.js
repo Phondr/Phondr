@@ -224,7 +224,9 @@ class SingleChats extends Component {
   }
 
   async onSend(message, noFormat) {
+    this.setState({loading: true})
     //Format message for input into thunk
+
     let formattedMessage
     if (noFormat) {
       formattedMessage = message
@@ -246,6 +248,7 @@ class SingleChats extends Component {
       message: newMessage,
       chatId: this.props.currentChat.id
     })
+    this.setState({loading: false})
   }
 
   getOtherUserInChat(chat) {
@@ -277,7 +280,7 @@ class SingleChats extends Component {
     }
     return (
       <React.Fragment>
-        <NavigationEvents onDidFocus={this.sendMeeting} />
+        <NavigationEvents onWillFocus={this.sendMeeting} />
 
         {this.state.curMessage.user && (
           <MeetingResponse
@@ -294,7 +297,13 @@ class SingleChats extends Component {
         />
         {calcProgress(this.props.currentChat) >= 100 ? (
           <TouchableOpacity
-            style={Platform.OS === 'ios' ? Dimensions.get('window').height===812 ? styles.iosMike : styles.ios : styles.android}
+            style={
+              Platform.OS === 'ios'
+                ? Dimensions.get('window').height === 812
+                  ? styles.iosMike
+                  : styles.ios
+                : styles.android
+            }
             onPress={() => this.props.navigation.navigate('MeetingModal')}
           >
             <Icon name="meetup" color="blue" type={'FontAwesome'} />

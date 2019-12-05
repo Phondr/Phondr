@@ -35,10 +35,25 @@ const Message = db.define('message', {
 
 const cheerioReq = async link => {
   console.log('link inside cheerioReq: ', link)
-  const html = await axios.get(link)
-  const $ = cheerio.load(html)
-  const image = $('meta[property="og:image"]').attr('content')
-  return image
+  let {data} = await axios.get(link)
+
+  const $ = cheerio.load(data.slice(0, 1000))
+
+  console.log('TCL: data', data.slice(0, 1000))
+  console.log('title', $('title').text())
+  let imageUrl = ''
+  // $('meta').each((i, cur) => {
+  //   console.log('i', i)
+  //   console.log('cur.attr', cur.attribs)
+  //   if (cur.attribs.property === 'og:image') {
+  //     imageUrl = cur.attribs.content
+  //   }
+  // })
+  imageUrl = $('meta[property="og:image"]').attr('content')
+
+  console.log('imageUrl inside of cheerioReq: ', imageUrl)
+
+  return imageUrl
 }
 
 const imageRequest = async ref => {

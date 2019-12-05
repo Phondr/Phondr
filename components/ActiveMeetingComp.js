@@ -63,7 +63,7 @@ const ActiveMeetingComp = ({
               </Text>
 
               <Right>
-                <Image source={cur.imageRef} />
+                {/* <Image source={cur.imageRef} /> */}
 
                 {/* <Icon name="arrow-forward" /> */}
               </Right>
