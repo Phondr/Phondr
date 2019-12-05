@@ -13,6 +13,9 @@ import {
   Body,
   Icon
 } from 'native-base'
+import { connect } from 'react-redux'
+import {url} from '../secrets'
+import axios from 'axios'
 
 const cards = [
   {
@@ -23,36 +26,52 @@ const cards = [
   }
 ]
 
-export default class PicturePicker extends React.Component {
+class PicturePicker extends React.Component {
   constructor() {
     super()
     this.state = {}
   }
 
+  async getPictures() {
+    const {data} = await axios.post(url + '/graphql', {
+      query: `
+        query{
+          allUsers(userId: ${this.props.user.id}, targetId: ${2}, numPeople: ${20}) {
+            id,
+            profilePicture,
+            fullName,
+          }
+        }
+        `
+    })
+    console.log(data.data.allUsers)
+  }
+
   render() {
+    this.getPictures()
     return (
       <Container>
         <Header />
         <View>
           <DeckSwiper
-            dataSource={cards}
+            dataSource={[this.props.user]}
             renderItem={item => (
               <Card style={{elevation: 3}}>
                 <CardItem>
                   <Left>
-                    <Thumbnail source={{uri: item.image}} />
+                    <Thumbnail source={{uri: item.profilePicture}} />
                     <Body>
-                      <Text>{item.text}</Text>
+                      <Text>{item.fullName}</Text>
                       <Text note>NativeBase</Text>
                     </Body>
                   </Left>
                 </CardItem>
                 <CardItem cardBody>
-                  <Image style={{height: 300, flex: 1}} source={{uri: item.image}} />
+                  <Image style={{height: 300, flex: 1}} source={{uri: item.profilePicture}} />
                 </CardItem>
                 <CardItem>
                   <Icon name="heart" style={{color: '#ED4A6A'}} />
-                  <Text>{item.name}</Text>
+                  <Text>{item.fullName}</Text>
                 </CardItem>
               </Card>
             )}
@@ -63,19 +82,4 @@ export default class PicturePicker extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  ios: {
-    position: 'absolute',
-    zIndex: 2,
-    backgroundColor: 'transparent',
-    marginTop: Dimensions.get('window').height * 0.91,
-    marginLeft: Dimensions.get('window').width * 0.9
-  },
-  android: {
-    position: 'absolute',
-    zIndex: 2,
-    backgroundColor: 'transparent',
-    marginTop: Dimensions.get('window').height * 0.87,
-    marginLeft: Dimensions.get('window').width * 0.9
-  }
-})
+export default connect(({user})=>({user}))(PicturePicker)

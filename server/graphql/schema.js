@@ -109,10 +109,23 @@ const rootQuery = new GraphQLObjectType({
   fields: {
     allUsers: {
       type: new GraphQLList(UserType),
+      args: {
+        numPeople: {type: GraphQLInt},
+        userId: {type: GraphQLInt},
+        targetId: {type: GraphQLInt},
+      },
       async resolve(parent, args) {
-        const data = await db.models.user.findAll({
-          include: [{model: db.models.chat}, {model: db.models.message}]
-        })
+        const data = args.numPeople
+          ? await db.models.user.findAll({
+              where: {
+                id: {[Op.notIn]: [args.userId, args.targetId]},
+              },
+              include: [{model: db.models.chat}, {model: db.models.message}],
+              limit: args.numPeople-1
+            })
+          : await db.models.user.findAll({
+              include: [{model: db.models.chat}, {model: db.models.message}]
+            })
         return data
       }
     },

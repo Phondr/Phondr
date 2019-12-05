@@ -253,7 +253,6 @@ class SingleChats extends Component {
   }
 
   renderBubble(props) {
-    console.log('checkmessage', props.currentMessage)
     if (props.currentMessage.audio) {
       //Render the play audio icon if the message has audio along with the timestamp
       return (
@@ -272,6 +271,7 @@ class SingleChats extends Component {
   }
 
   render() {
+    console.log('dimensions', Dimensions.get('window').height)
     if (this.state.loading) {
       return <Spinner />
     }
@@ -294,7 +294,7 @@ class SingleChats extends Component {
         />
         {calcProgress(this.props.currentChat) >= 100 ? (
           <TouchableOpacity
-            style={Platform.OS === 'ios' ? styles.ios : styles.android}
+            style={Platform.OS === 'ios' ? Dimensions.get('window').height===812 ? styles.iosMike : styles.ios : styles.android}
             onPress={() => this.props.navigation.navigate('MeetingModal')}
           >
             <Icon name="meetup" color="blue" type={'FontAwesome'} />
@@ -340,6 +340,13 @@ const styles = StyleSheet.create({
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.87,
+    marginLeft: Dimensions.get('window').width * 0.78
+  },
+  iosMike: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.85,
     marginLeft: Dimensions.get('window').width * 0.78
   },
   android: {
