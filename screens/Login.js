@@ -67,16 +67,20 @@ export class Login extends Component {
   }
 
   async login() {
-    this.setState({loading: true})
+    //this.setState({loading: true})
     const values = this._form.getValue()
     console.log('TCL: values', values)
 
     try {
       await this.props.getUser(values)
-      this.props.navigation.navigate('loggedIn')
+      if (this.props.user.id) {
+        console.log('HEREBOI')
+        this.props.navigation.navigate('loggedIn')
+      }
     } catch (error) {
-      this.setState({loading: false})
+      //this.setState({loading: false})
       alert('COULD NOT LOGIN')
+      //this.props.navigation.navigate('Entry')
       console.log(error)
     }
   }
@@ -87,7 +91,11 @@ export class Login extends Component {
 
   render() {
     // if (this.state.loading) {
-    //   return <Spinner />
+    //   return (
+    //     <View style={styles.spinner}>
+    //       <Spinner />
+    //     </View>
+    //   )
     // }
     return (
       <View style={{backgroundColor: '#343434', height:'100%'}}>
@@ -125,6 +133,10 @@ export class Login extends Component {
             source={require('../assets/images/fog.jpg')}
             resizeMode="cover"
           />
+          <Form ref={c => (this._form = c)} type={User} options={options} />
+          <TouchableOpacity onPress={this.login} style={styles.submitButton}>
+            <Text style={{color: 'white'}}>Login</Text>
+          </TouchableOpacity>
         </View>
       </View>
     )
@@ -132,12 +144,42 @@ export class Login extends Component {
 }
 
 export const styles = StyleSheet.create({
+  buttonContainer: {
+    marginTop: 10,
+    height: 45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: 250,
+    borderRadius: 30,
+    backgroundColor: '#00BFFF'
+  },
+  spinner: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: '#F5FCFF'
+  },
+  input: {
+    margin: 15,
+    height: 40,
+    borderColor: 'black',
+    borderWidth: 1
+  },
   submitButton: {
     backgroundColor: '#E0115F',
     padding: 10,
     margin: 15,
     alignItems: 'center',
-    height: 40
+    height: 40,
+    borderRadius: 30
   },
   submitButtonText: {
     color: 'white'

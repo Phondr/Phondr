@@ -1,12 +1,18 @@
 import React, {Component} from 'react'
-import {Text, View, StyleSheet, Image} from 'react-native'
-import {Button} from 'native-base'
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  Button,
+  TouchableOpacity
+} from 'react-native'
 import Spinner from '../components/Spinner'
 import {navigation} from 'react-navigation'
 import Login from './Login'
 import Signup from './Signup'
 import {AsyncStorage} from 'react-native'
-import {fetchUserLogin, setUser} from '../redux/user'
+import {fetchUserLogin, setUser, fetchUserFromUserId} from '../redux/user'
 import {connect} from 'react-redux'
 
 export class Entry extends Component {
@@ -17,9 +23,6 @@ export class Entry extends Component {
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
 
-    // await this.props.fetchUserFromUserId(userd.id)
-    // const user = this.props.user
-
     //Current Settings
     // if (user) {
     //   await this.props.setUser(user)
@@ -29,11 +32,13 @@ export class Entry extends Component {
         this.setState({user}) //Sets user if user was previously logged in through asyncStorage
       }
       if (this.state.user !== '') {
-        await this.props.setUser(user)
+        await this.props.fetchUserFromUserId(user.id)
+        const userd = this.props.user
 
-        console.log('USER', user)
+        await this.props.setUser(userd)
+        console.log('ENTRY USER', userd)
         setTimeout(() => {
-          this.props.navigation.navigate('Home', {user})
+          this.props.navigation.navigate('Home', {user: userd})
         }, 100)
 
         //this.props.navigation.navigate('Home', {user}) //If previously logged in, skip the entry screen
@@ -57,7 +62,11 @@ export class Entry extends Component {
 
   render() {
     // if (this.state.loading) {
-    //   return <Spinner />
+    //   return (
+    //     <View style={styles.spinner}>
+    //       <Spinner />
+    //     </View>
+    //   )
     // }
     return (
       <View style={styles.container}>
@@ -68,22 +77,34 @@ export class Entry extends Component {
           />
         </View>
         <View style={{width: '50%'}}>
-          <Button
+          <TouchableOpacity
             onPress={() => {
               this.gotToLogin()
             }}
             style={styles.buttonNav}
           >
-            <Text style={{color:'white'}}>Login</Text>
-          </Button>
-          <Button
+            <Text style={{color: 'white'}}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => {
               this.goToSignUp()
             }}
             style={styles.buttonNav}
           >
-            <Text style={{color:'white'}}>Sign Up</Text>
-          </Button>
+            <Text style={{color: 'white'}}>Sign Up</Text>
+          </TouchableOpacity>
+          {/* <Button
+          title="Login"
+          onPress={() => {
+            this.gotToLogin()
+          }}
+        /> */}
+          {/* <Button
+          title="Sign Up"
+          onPress={() => {
+            this.goToSignUp()
+          }}
+        /> */}
         </View>
       </View>
     )
@@ -93,10 +114,11 @@ export class Entry extends Component {
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#353839'
+    backgroundColor: '#353839',
+    paddingLeft: 10,
+    paddingRight: 10
   },
   phonderimage: {
     width: 350,
@@ -115,10 +137,24 @@ export const styles = StyleSheet.create({
     backgroundColor: '#E0115F',
     marginTop: 30,
     justifyContent: 'center'
+  },
+  submitButton: {
+    backgroundColor: '#00BFFF',
+    padding: 10,
+    margin: 15,
+    alignItems: 'center',
+    height: 40,
+    borderRadius: 30
+  },
+  spinner: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
 
 export default connect(({user}) => ({user}), {
   fetchUserLogin,
-  setUser
+  setUser,
+  fetchUserFromUserId
 })(Entry)
