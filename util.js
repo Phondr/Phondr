@@ -37,7 +37,7 @@ export const calcProgress = chat => {
   } else if(secondsSince /60 > 1) { //1 minutes
     progress = (sum*sum) / (secondsSince * 0.003) //.0003
   } else { //Less than a minute
-    progress = (sum * sum) / (secondsSince * 0.01)
+    progress = (sum * sum) / (secondsSince + 20)
   }
   // progress = ((sum / (hoursSince * 0.5)) * sum) / 500
   // console.log('in calcProgress', sum, hoursSince, progress)

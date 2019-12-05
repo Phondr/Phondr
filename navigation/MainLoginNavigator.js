@@ -1,5 +1,9 @@
 import React from 'react'
-import {createAppContainer, createSwitchNavigator} from 'react-navigation'
+import {
+  createAppContainer,
+  createSwitchNavigator,
+  createStackNavigator
+} from 'react-navigation'
 import {Platform} from 'react-native'
 import Login from '../screens/Login'
 import Signup from '../screens/Signup'
@@ -11,7 +15,7 @@ const config = Platform.select({
   default: {}
 })
 
-const EntryStack = createSwitchNavigator(
+const EntryStack = createStackNavigator(
   {
     Entry: Entry,
     Login: Login,
@@ -24,9 +28,7 @@ const EntryStack = createSwitchNavigator(
     navigationOptions: {
       gesturesEnabled: true
     }
-  },
-  config
+  }
 )
 
-const AuthPages = createAppContainer(EntryStack)
-export default AuthPages
+export default EntryStack

@@ -73,7 +73,6 @@ export const newMessage = message => {
     try {
       const imageRef = message.imageRef || ''
       const meetingId = message.meetingId || 0
-      console.log('meeting id', meetingId)
       const {data} = await axios.post(url + '/graphql', {
         query: `
           mutation{

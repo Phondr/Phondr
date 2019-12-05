@@ -27,13 +27,15 @@ import {fetchMeeting} from '../redux/currentMeeting'
 import MeetingResponse from '../components/MeetingResponse'
 import {NavigationEvents} from 'react-navigation'
 import ChatEvent from '../components/ChatEvent'
-
+import {calcProgress} from '../util'
+import Spinner from '../components/Spinner'
 class SingleChats extends Component {
   constructor(props) {
     super(props)
     this.state = {
       reply: false,
-      curMessage: {}
+      curMessage: {},
+      loading: true
     }
     this.onSend = this.onSend.bind(this)
     this.getOtherUserInChat = this.getOtherUserInChat.bind(this)
@@ -79,7 +81,9 @@ class SingleChats extends Component {
       this.props.setNewMessage(message)
     })
 
-    this.props.fetchMessages(this.props.currentChat.id)
+    this.props
+      .fetchMessages(this.props.currentChat.id)
+      .then(() => this.setState({loading: false}))
   }
 
   // async imageRequest(ref) {
@@ -267,6 +271,10 @@ class SingleChats extends Component {
   }
 
   render() {
+    console.log('dimensions', Dimensions.get('window').height)
+    if (this.state.loading) {
+      return <Spinner />
+    }
     return (
       <React.Fragment>
         <NavigationEvents onDidFocus={this.sendMeeting} />
@@ -284,30 +292,22 @@ class SingleChats extends Component {
           title={`${this.getOtherUserInChat(this.props.currentChat).fullName}`}
           currentChat={this.props.currentChat}
         />
-        {/* <Fab
-          active={true}
-          direction="up"
-          containerStyle={{}}
-          style={{backgroundColor: '#5067FF'}}
-          position={''}
-          onPress={() => this.props.navigation.navigate('MeetingModal')}
-        >
-          <Icon name="meetup" type={'FontAwesome'} />
-        </Fab> */}
-
-        <TouchableOpacity
-          style={Platform.OS === 'ios' ? styles.ios : styles.android}
-          onPress={() => this.props.navigation.navigate('MeetingModal')}
-        >
-          <Icon name="meetup" color="blue" type={'FontAwesome'} />
-        </TouchableOpacity>
-
-        <RecordAudio
-          onSend={this.onSend}
-          user={this.props.user}
-          chat={this.props.currentChat}
-          messageLength={this.props.messages.length}
-        />
+        {calcProgress(this.props.currentChat) >= 100 ? (
+          <TouchableOpacity
+            style={Platform.OS === 'ios' ? Dimensions.get('window').height===812 ? styles.iosMike : styles.ios : styles.android}
+            onPress={() => this.props.navigation.navigate('MeetingModal')}
+          >
+            <Icon name="meetup" color="blue" type={'FontAwesome'} />
+          </TouchableOpacity>
+        ) : null}
+        {calcProgress(this.props.currentChat) > 25 ? (
+          <RecordAudio
+            onSend={this.onSend}
+            user={this.props.user}
+            chat={this.props.currentChat}
+            messageLength={this.props.messages.length}
+          />
+        ) : null}
         <GiftedChat
           messages={this.props.messages || []}
           onSend={messages => this.onSend(messages)}
@@ -339,7 +339,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
-    marginTop: Dimensions.get('window').height * 0.83,
+    marginTop: Dimensions.get('window').height * 0.87,
+    marginLeft: Dimensions.get('window').width * 0.78
+  },
+  iosMike: {
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    marginTop: Dimensions.get('window').height * 0.85,
     marginLeft: Dimensions.get('window').width * 0.78
   },
   android: {
