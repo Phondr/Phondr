@@ -69,7 +69,10 @@ const ActiveScreenStack = createStackNavigator(
       }
     },
     PicturePicker: {
-      screen: PicturePicker
+      screen: PicturePicker,
+      navigationOptions:{
+        header: null
+      }
     },
   },
   {
@@ -187,9 +190,9 @@ var drawer = createDrawerNavigator(
     profile: {
       screen: Profile
     },
-    'Picture Picker': {
-      screen: PicturePicker
-    },
+    // 'Picture Picker': {
+    //   screen: PicturePicker
+    // },
     Login: {
       screen: Login
     },
