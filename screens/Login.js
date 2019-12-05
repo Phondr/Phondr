@@ -61,16 +61,20 @@ export class Login extends Component {
   }
 
   async login() {
-    this.setState({loading: true})
+    //this.setState({loading: true})
     const values = this._form.getValue()
     console.log('TCL: values', values)
 
     try {
       await this.props.getUser(values)
-      this.props.navigation.navigate('loggedIn')
+      if (this.props.user.id) {
+        console.log('HEREBOI')
+        this.props.navigation.navigate('loggedIn')
+      }
     } catch (error) {
-      this.setState({loading: false})
+      //this.setState({loading: false})
       alert('COULD NOT LOGIN')
+      //this.props.navigation.navigate('Entry')
       console.log(error)
     }
   }
@@ -80,13 +84,13 @@ export class Login extends Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return (
-        <View style={styles.spinner}>
-          <Spinner />
-        </View>
-      )
-    }
+    // if (this.state.loading) {
+    //   return (
+    //     <View style={styles.spinner}>
+    //       <Spinner />
+    //     </View>
+    //   )
+    // }
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
