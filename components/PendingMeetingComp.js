@@ -29,22 +29,24 @@ const PendingMeetingComp = ({
   // }, [])
   return (
     <View>
-      <CustomHeader title="pendingMeeting" />
+      <CustomHeader title="Pending Meetings" />
       <Card>
         <NavigationEvents
           onWillFocus={payload => {
             fetchAllMeetings(user.id)
           }}
         />
-        <CardItem header style={{backgroundColor: '#E0115F'}}>
-          <Text style={{color: 'white'}}>Pending Meetings</Text>
-        </CardItem>
-
         {pending.map(cur => {
           return (
             <React.Fragment key={cur.id}>
-              <CardItem>
-                <Text style={{color: 'green'}}>Name: {cur.name}</Text>
+              <CardItem
+                style={{
+                  backgroundColor: '#FF0800',
+                  borderColor: 'black',
+                  borderWidth: 2
+                }}
+              >
+                <Text style={{color: 'white'}}>Name: {cur.name}</Text>
               </CardItem>
               <CardItem
                 button
@@ -52,6 +54,7 @@ const PendingMeetingComp = ({
                   await fetchCurrentChat(cur.chat.id)
                   navigation.navigate('SingleChat')
                 }}
+                style={{backgroundColor: '#FF91AF'}}
               >
                 <Text>
                   With:{' '}

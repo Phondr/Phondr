@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
-import {Icon, Left, Body, Right, Card, CardItem, Text} from 'native-base'
+import {Icon, Left, Body, Right, Card, CardItem, Text, View} from 'native-base'
 import {withNavigation, NavigationEvents} from 'react-navigation'
 import {setChat, fetchCurrentChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
 import {fetchAllMeetings} from '../redux/meetings'
-
+import CustomHeader from '../components/CustomHeader'
 const ActiveMeetingComp = ({
   user,
   meetings,
@@ -27,49 +27,55 @@ const ActiveMeetingComp = ({
   //   fetchAllMeetings(user.id)
   // }, [])
   return (
-    <Card>
-      <NavigationEvents
-        onWillFocus={payload => {
-          fetchAllMeetings(user.id)
-        }}
-      />
-      <CardItem header>
-        <Text>Active Meetings</Text>
-      </CardItem>
+    <View>
+      <CustomHeader title="Active Meetings" />
+      <Card>
+        <NavigationEvents
+          onWillFocus={payload => {
+            fetchAllMeetings(user.id)
+          }}
+        />
+        {active.map(cur => {
+          return (
+            <React.Fragment key={cur.id}>
+              <CardItem
+                style={{
+                  backgroundColor: '#FF0800',
+                  borderColor: 'black',
+                  borderWidth: 2
+                }}
+              >
+                <Text style={{color: 'white'}}>Name: {cur.name}</Text>
+              </CardItem>
+              <CardItem
+                button
+                onPress={async () => {
+                  await fetchCurrentChat(cur.chat.id)
+                  navigation.navigate('SingleChat')
+                }}
+                style={{backgroundColor: '#FF91AF'}}
+              >
+                <Text>
+                  With:{' '}
+                  {
+                    cur.users.find(u => {
+                      return u.fullName !== user.fullName
+                    }).fullName
+                  }{' '}
+                  {'\n'}
+                  Date: {cur.date.toString()} {'\n'}
+                  Map Link: {cur.link}
+                </Text>
 
-      {active.map(cur => {
-        return (
-          <React.Fragment key={cur.id}>
-            <CardItem>
-              <Text style={{color: 'blue'}}>Name: {cur.name}</Text>
-            </CardItem>
-            <CardItem
-              button
-              onPress={async () => {
-                await fetchCurrentChat(cur.chat.id)
-                navigation.navigate('SingleChat')
-              }}
-            >
-              <Text>
-                With:{' '}
-                {
-                  cur.users.find(u => {
-                    return u.fullName !== user.fullName
-                  }).fullName
-                }{' '}
-                {'\n'}
-                Date: {cur.date.toString()} {'\n'}
-                Map Link: {cur.link}
-              </Text>
-
-              <Right>
-                <Icon name="arrow-forward" />
-              </Right>
-            </CardItem>
-          </React.Fragment>
-        )
-      })}
-    </Card>
+                <Right>
+                  <Icon name="arrow-forward" />
+                </Right>
+              </CardItem>
+            </React.Fragment>
+          )
+        })}
+      </Card>
+    </View>
   )
 }
 

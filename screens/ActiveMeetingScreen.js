@@ -2,7 +2,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Icon, Left, Card, CardItem, Text, Container, Content} from 'native-base'
 import {ScrollView, Platform} from 'react-native'
-import CustomHeader from '../components/CustomHeader'
 import TabBarIcon from '../components/TabBarIcon'
 import ActiveMeetingComp from '../components/ActiveMeetingComp'
 
@@ -31,8 +30,7 @@ class ActiveScreen extends React.Component {
         }}
       /> */}
         <ScrollView>
-          <CustomHeader title="Active Meetings" />
-          <Content style={{backgroundColor:'#FF91AF'}}>
+          <Content >
             {meetings.length ? (
               <ActiveMeetingComp />
             ) : (

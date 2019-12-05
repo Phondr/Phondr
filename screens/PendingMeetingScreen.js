@@ -35,15 +35,14 @@ class PendingScreen extends React.Component {
           fetchAllMeetings(user.id)
         }}
       /> */}
-        <ScrollView >
-          <CustomHeader title="Pending Meetings" />
+        <ScrollView>
           <Content >
             {meetings.length ? (
               <PendingMeetingComp />
             ) : (
               <Card>
-                <CardItem>
-                  <Text>No Pending Meetings</Text>
+                <CardItem style={{backgroundColor:'#FF91AF'}}>
+                  <Text style={{color:'white'}}>No Pending Meetings</Text>
                 </CardItem>
               </Card>
             )}
