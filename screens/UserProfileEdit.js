@@ -248,7 +248,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   buttonContainer: {
-    marginTop: 10,
     height: 30,
     flexDirection: 'row',
     justifyContent: 'center',
