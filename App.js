@@ -49,7 +49,7 @@ import MeetingModal from './screens/MeetingModal'
 import ActiveMeetingScreen from './screens/ActiveMeetingScreen'
 import PendingMeetingScreen from './screens/PendingMeetingScreen'
 import PicturePicker from './components/picturePicker'
-
+console.disableYellowBox = true
 const ActiveScreenStack = createStackNavigator(
   {
     ActiveScreen: {
@@ -72,7 +72,7 @@ const ActiveScreenStack = createStackNavigator(
     },
     PicturePicker: {
       screen: PicturePicker
-    },
+    }
   },
   {
     initialRouteName: 'ActiveScreen',
@@ -250,14 +250,14 @@ function App(props) {
   const [getData, setGetData] = useState({})
 
   useEffect(() => {
-    setApClient(
-      new ApolloClient({
-        uri: url + '/graphql'
-      })
-    )
+    // setApClient(
+    //   new ApolloClient({
+    //     uri: url + '/graphql'
+    //   })
+    // )
   }, [])
 
-  if ((!isLoadingComplete && !props.skipLoadingScreen) || !apClient) {
+  if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
       <AppLoading
         startAsync={loadResourcesAsync}

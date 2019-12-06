@@ -42,25 +42,9 @@ class SingleChats extends Component {
     this.renderBubble = this.renderBubble.bind(this)
     this.closeDialog = this.closeDialog.bind(this)
     this.sendMeeting = this.sendMeeting.bind(this)
-    //this.renderChatFooter = this.renderChatFooter.bind(this)
+
     //this.renderBubble = this.renderBubble.bind(this)
   }
-  // componentWillMount() {
-  //   this.setState({
-  //     messages: [
-  //       {
-  //         _id: 1,
-  //         text: 'Hello developer',
-  //         createdAt: new Date(),
-  //         user: {
-  //           _id: 1,
-  //           name: 'React Native',
-  //           avatar: 'https://placeimg.com/140/140/any',
-  //         },
-  //       },
-  //     ],
-  //   });
-  // }
 
   static navigationOptions = {
     //This is here so it doesn't show up on the drawer pull out
@@ -68,10 +52,6 @@ class SingleChats extends Component {
   }
 
   componentDidMount() {
-    //this is necessary for users being sent from meetings
-    // if (!this.props.currentChat.users) {
-    //   this.props.fetchCurrentChat(this.props.currentChat.id)
-    // }
     socket.emit('subscribe-to-chat', {chatId: this.props.currentChat.id})
     socket.on('loginLogoutMessage', ({message}) => {
       showMessage({message, type: 'info', duration: 2500, icon: 'info'})
@@ -85,69 +65,6 @@ class SingleChats extends Component {
       .fetchMessages(this.props.currentChat.id)
       .then(() => this.setState({loading: false}))
   }
-
-  // async imageRequest(ref) {
-  //   const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
-  //   const image = await axios.post(url)
-  //   console.log('TCL: image', image)
-
-  //   return image
-  // }
-
-  // UNSAFE_componentWillUpdate(nextProps) {
-  //   if (
-  //     nextProps.currentMeeting !== this.props.currentMeeting &&
-  //     this.props.navigation.getParam('created', 'none') === true
-  //   ) {
-  //     const {
-  //       name,
-  //       address,
-  //       link,
-  //       location,
-  //       date,
-  //       imageRef,
-  //       id
-  //     } = nextProps.currentMeeting
-  //     const formattedMessage = {
-  //       content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
-  //         +date
-  //       ).toString()}++++Long press this message to respond.`,
-  //       imageRef: imageRef,
-  //       meetingId: id,
-  //       userId: nextProps.user.id,
-  //       length: 10,
-  //       chatId: nextProps.currentChat.id
-  //     }
-  //     this.onSend(formattedMessage, true)
-  //   }
-  // }
-  // componentDidUpdate(prevProps) {
-  //   if (
-  //     prevProps.currentMeeting !== this.props.currentMeeting &&
-  //     this.props.navigation.getParam('created', 'none') === true
-  //   ) {
-  //     const {
-  //       name,
-  //       address,
-  //       link,
-  //       location,
-  //       date,
-  //       imageRef,
-  //       id
-  //     } = this.props.currentMeeting
-  //     const formattedMessage = {
-  //       content: `${link}++New Invitation To Meet!++Address: ${address}++Date: ${new Date(
-  //         +date
-  //       ).toString()}++++Long press this message to respond.`,
-  //       imageRef: imageRef,
-  //       meetingId: id,
-  //       userId: this.props.user.id,
-  //       length: 10,
-  //       chatId: this.props.currentChat.id
-  //     }
-  //     this.onSend(formattedMessage, true)
-  //   }
-  // }
 
   async sendMeeting() {
     console.log(
@@ -176,50 +93,18 @@ class SingleChats extends Component {
       }
       console.log('formatted message inside sendmeeting', formattedMessage)
       await this.onSend(formattedMessage, true)
-      setTimeout(()=> {this.props.navigation.setParams({created: false})}, 200)
-      
+      setTimeout(() => {
+        this.props.navigation.setParams({created: false})
+      }, 200)
     }
     this.setState({loading: false})
   }
-
-  // async renderBubble(props) {
-  //   // if (this.props.currentMeeting) {
-  //   //   console.log('props current meeting', this.props.currentMeeting)
-  //   // }
-  //   // if (
-  //   //   props.currentMessage.text.includes('New Invitation To Meet!') &&
-  //   //   this.props.currentMeeting.name
-  //   // ) {
-  //   //   console.log('inside conditional preview link')
-  //   //   return <PreviewLink currentMeeting={this.props.currentMeeting} />
-  //   // }
-  //   // console.log('rendering bubble')
-  //   let image = ''
-  //   if (this.props.currentMeeting && this.props.currentMeeting.name) {
-  //     image = this.imageRequest(this.props.currentMeeting.imageRef)
-  //     props.currentMessage.image = image
-  //   }
-  // }
 
   componentWillUnmount() {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
     socket.off('loginLogoutMessage')
     socket.off('receiveMessage')
   }
-
-  // renderChatFooter() {
-  //   if (this.state.reply) {
-  //     console.log('message inside of renderChatFooter', this.props.messages[0])
-  //     return (
-  //       <ReplyToFooter
-  //         reply_to={this.props.messages[0].user.name}
-  //         closeDialog={this.closeDialog}
-  //         meetingId={this.props.messages[0].meetingId}
-  //       />
-  //     )
-  //   }
-  //   return null
-  // }
 
   closeDialog() {
     this.setState({reply: false})
@@ -249,7 +134,11 @@ class SingleChats extends Component {
       message: newMessage,
       chatId: this.props.currentChat.id
     })
-    socket.emit('sendNewMessageNotification', {otherUser: this.getOtherUserInChat(this.props.currentChat), user: this.props.user})
+    socket.emit('sendNewMessageNotification', {
+      otherUser: this.getOtherUserInChat(this.props.currentChat),
+      user: this.props.user,
+      chatId:this.props.currentChat.id
+    })
   }
 
   getOtherUserInChat(chat) {
@@ -338,7 +227,7 @@ class SingleChats extends Component {
             />
           </TouchableOpacity>
         ) : null}
-        {calcProgress(this.props.currentChat) >= 100 ? (
+        {calcProgress(this.props.currentChat) >= 0 ? (
           <TouchableOpacity
             style={
               Platform.OS === 'ios'
@@ -347,7 +236,10 @@ class SingleChats extends Component {
                   : styles.ios
                 : styles.android
             }
-            onPress={() => {this.setState({loading: true}); this.props.navigation.navigate('MeetingModal')}}
+            onPress={() => {
+              this.setState({loading: true})
+              this.props.navigation.navigate('MeetingModal')
+            }}
           >
             <Icon name="meetup" style={{color: 'blue'}} type={'FontAwesome'} />
           </TouchableOpacity>
@@ -384,21 +276,21 @@ const styles = StyleSheet.create({
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.865,
-    marginLeft: Dimensions.get('window').width * 0.80
+    marginLeft: Dimensions.get('window').width * 0.8
   },
   iosPictureMike: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.85,
-    marginLeft: Dimensions.get('window').width * 0.80
+    marginLeft: Dimensions.get('window').width * 0.8
   },
   androidPicture: {
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.88,
-    marginLeft: Dimensions.get('window').width * 0.80
+    marginLeft: Dimensions.get('window').width * 0.8
   },
   ios: {
     position: 'absolute',
@@ -420,7 +312,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     marginTop: Dimensions.get('window').height * 0.88,
     marginLeft: Dimensions.get('window').width * 0.7
-  },
+  }
 })
 
 const MapStateToProps = state => {

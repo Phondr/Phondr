@@ -135,7 +135,7 @@ io.on('connection', socket => {
   socket.on('unsubscribe-to-chat', ({chatId}) => {
     console.log(`You have left chat room ${chatId}.`)
     socket.leave(chatId)
-    rooms = rooms.filter((room)=>room!==chatId)
+    rooms = rooms.filter(room => room !== chatId)
     socket
       .to(chatId)
       .emit('loginLogoutMessage', {message: 'A user has left the room'})
@@ -152,19 +152,43 @@ io.on('connection', socket => {
     io.to(chatId).emit('receiveMessage', {message})
   })
 
-  socket.on('sendNewChat', ({chat, otherUser})=>{
+  socket.on('sendNewChat', ({chat, otherUser}) => {
     console.log(chat) //Send only to other user that had that pending chat
     socket.to(`${otherUser.fullName}`).emit('receiveNewChat', {chat})
   })
 
-  socket.on('sendNewMessageNotification', ({otherUser, user})=>{
-    console.log(otherUser)
-    socket.to(`${otherUser.fullName}`).emit('receiveNewMessageNotification', {message: `Got a new message from ${user.fullName}`})
+  socket.on('sendNewMessageNotification', ({otherUser, user, chatId}) => {
+    console.log(
+      'room stuff',
+      socket.rooms,
+      'client in room',
+      socket,
+      'chat id',
+      chatId
+    )
+
+    io.of(`/`)
+      .in(`${chatId}`)
+      .clients((e, c) => {
+        console.log('clients', c)
+
+        if (c.length < 2) {
+          socket
+            .to(`${otherUser.fullName}`)
+            .emit('receiveNewMessageNotification', {
+              message: `Got a new message from ${user.fullName}`
+            })
+        }
+      })
   })
 
   socket.on('disconnect', () => {
     console.log('User has left')
-    rooms.map((room)=>{io.to(room).emit('loginLogoutMessage', {message: 'A user has left the room'})})
+    rooms.map(room => {
+      io.to(room).emit('loginLogoutMessage', {
+        message: 'A user has left the room'
+      })
+    })
   })
 })
 

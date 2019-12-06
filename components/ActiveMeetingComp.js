@@ -19,20 +19,7 @@ const ActiveMeetingComp = ({
 }) => {
   const active = meetings.filter(meeting => meeting.status === 'active')
 
-  // useEffect(() => {
-  //   navigation.addListener('didFocus', () => {
-  //     if (user && user.id) {
-  //       fetchMyChats(user.id)
-  //     }
-  //   })
-  // }, [])
-  // useEffect(() => {
-  //   fetchAllMeetings(user.id)
-  // }, [])
-
-  // if (loading) {
-  //   return <Spinner />
-  // }
+  
   if (!active.length) {
     return (
       <Card>

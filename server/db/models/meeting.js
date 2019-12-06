@@ -14,8 +14,7 @@ const Meeting = db.define('meeting', {
     get() {
       const ref = this.getDataValue('link')
       if (ref && ref.length) {
-        // const googleImage = await imageRequest(ref)
-        // return googleImage
+      
         const cheerioImage = cheerioReq(ref)
         return cheerioImage
       }

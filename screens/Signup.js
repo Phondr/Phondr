@@ -4,7 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Platform
+  Platform,
+  KeyboardAvoidingView
 } from 'react-native'
 import {
   Container,
@@ -259,6 +260,9 @@ export class Signup extends Component {
             <Text style={styles.submitButtonText}>Proceed to Photo</Text>
           </TouchableOpacity>
         </View>
+        {Platform.OS === 'android' && (
+          <KeyboardAvoidingView behavior="padding" />
+        )}
       </ScrollView>
     )
   }
