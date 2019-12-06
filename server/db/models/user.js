@@ -63,10 +63,6 @@ const User = db.define('user', {
   isNoob: {
     type: Sequelize.BOOLEAN,
     defaultValue: true
-  },
-  maxPhondnessAchieved: {
-    type: Sequelize.INTEGER,
-    defaultValue: 0
   }
 })
 

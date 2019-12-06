@@ -155,8 +155,8 @@ export const userSignUp = (
        *   }
        * }
        */
-      let {data} = await client.mutate({
-        mutation: gql`mutation{
+      let {data} = await axios.post(`${url}/graphql`, {
+        query: `mutation{
           userSignup(fullName: "${fullName}", email: "${email}", iAm: "${iAm}", age: ${age}, distPref: ${distPref}, homeLocation: [${homeLocation.map(
           i => `${i}`
         )}], iPrefer: [${iPrefer.map(
@@ -192,10 +192,11 @@ export const userSignUp = (
 
 export const fetchUserFromAsync = () => async dispatch => {
   try {
+    console.log('user before parse', await getData('userKey'))
     const user = JSON.parse(await getData('userKey'))
-
-    let {data} = await client.query({
-      query: gql`query{
+    console.log('user after parse', user)
+    let {data} = await axios.post(`${url}/graphql`, {
+      query: `{
         user(id: ${user.id}) {
           id
           email
@@ -216,7 +217,7 @@ export const fetchUserFromAsync = () => async dispatch => {
       dispatch(setUser(data.user))
     }
   } catch (error) {
-    alert('Async: COULD NOT GET PROFILE DATA')
+    alert('COULD NOT GET PROFILE DATA, fetch user from async')
     console.log(error)
   }
 }
@@ -244,7 +245,7 @@ export const fetchUserFromUserId = userid => async dispatch => {
       dispatch(setUser(data.data.user))
     }
   } catch (error) {
-    alert('fetchuserid: COULD NOT GET PROFILE DATA')
+    alert('COULD NOT GET PROFILE DATA,fetch user from user id')
     console.log(error)
   }
 }
@@ -287,7 +288,7 @@ export const EditUser = (user, userId) => async dispatch => {
       dispatch(setUser(data.editUser))
     }
   } catch (error) {
-    alert('Edit: COULD NOT GET PROFILE DATA')
+    alert('COULD NOT GET PROFILE DATA, edit user')
     console.log(error)
   }
 }
@@ -328,7 +329,7 @@ export const ConvertUser = () => async dispatch => {
       dispatch(updateN(data.updateNoob))
     }
   } catch (error) {
-    alert('convrt: COULD NOT GET PROFILE DATA')
+    alert('COULD NOT GET PROFILE DATA, convert user')
     console.log(error)
   }
 }

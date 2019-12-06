@@ -15,13 +15,7 @@ const cheerioReq = async link => {
   const $ = cheerio.load(data)
 
   let imageUrl = ''
-  // $('meta').each((i, cur) => {
-  //   console.log('i', i)
-  //   console.log('cur.attr', cur.attribs)
-  //   if (cur.attribs.property === 'og:image') {
-  //     imageUrl = cur.attribs.content
-  //   }
-  // })
+
   imageUrl = $('meta[property="og:image"]').attr('content')
 
   return imageUrl

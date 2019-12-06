@@ -1,5 +1,12 @@
 import React, {Component} from 'react'
-import {ImageBackground, View, StatusBar, StyleSheet, Text, Dimensions} from 'react-native'
+import {
+  ImageBackground,
+  View,
+  StatusBar,
+  StyleSheet,
+  Text,
+  Dimensions
+} from 'react-native'
 import {Container, Button, Icon, Content, Left, Right} from 'native-base'
 import CustomHeader from '../components/CustomHeader'
 import {connect} from 'react-redux'
@@ -43,7 +50,7 @@ class Home extends Component {
     }
     socket.emit('subscribe-to-user-room', {name: this.props.user.fullName}) //Subscribe to a room revolving around their name(notifications for new name and change pending chats to active)
     socket.on('receiveNewChat', () => {
-      //Refetch chats to make a pending chat to active when other user matches into their chat. 
+      //Refetch chats to make a pending chat to active when other user matches into their chat.
       this.props.fetchMyChats(this.props.user.id)
     })
     socket.on('receiveNewMessageNotification', ({message}) => {
@@ -173,7 +180,15 @@ class Home extends Component {
                 <PendingComp />
               </>
             ) : (
-              <Text style={{alignSelf: 'center', fontSize: 20, marginTop: Dimensions.get('window').height*0.35}}>Click below to start growing Phondr!</Text>
+              <Text
+                style={{
+                  alignSelf: 'center',
+                  fontSize: 20,
+                  marginTop: Dimensions.get('window').height * 0.35
+                }}
+              >
+                Click below to start growing Phondr!
+              </Text>
             )}
 
             <Right>
@@ -188,7 +203,8 @@ class Home extends Component {
                   const otherUser = chat.users.find(
                     user => user.fullName !== this.props.user.fullName
                   )
-                  if (otherUser) { //Only emit this chat, if the chat created is active. Emits so that other user knows they have to refetch to change their pending chat to active.
+                  if (otherUser) {
+                    //Only emit this chat, if the chat created is active. Emits so that other user knows they have to refetch to change their pending chat to active.
                     socket.emit('sendNewChat', {chat, otherUser})
                   }
                 }}
@@ -204,7 +220,6 @@ class Home extends Component {
     )
   }
 }
-
 
 export default connect(({myChats, user}) => ({myChats, user}), {
   fetchMyChats,

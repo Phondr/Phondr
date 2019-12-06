@@ -9,7 +9,8 @@ import {
   Keyboard,
   Dimensions,
   ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native'
 import t from 'tcomb-form-native'
 import {connect} from 'react-redux'
@@ -106,6 +107,9 @@ export class Login extends Component {
             <Text style={{color: 'white'}}>Login</Text>
           </TouchableOpacity>
         </View>
+        {Platform.OS === 'android' && (
+          <KeyboardAvoidingView behavior="padding" />
+        )}
       </TouchableWithoutFeedback>
     )
   }

@@ -21,6 +21,7 @@ import {updatePendingLocation} from '../redux/invitation'
 import {createMeeting} from '../redux/currentMeeting'
 import axios from 'axios'
 import Spinner from '../components/Spinner'
+import info from 'expo-constants'
 
 const MeetingModal = ({
   invitation,
@@ -52,7 +53,7 @@ const MeetingModal = ({
     updatePendingLocation(
       coords,
       name,
-      formatted_address,
+      `${name}, ${formatted_address}`,
       rating,
       url,
       imageRef
@@ -75,19 +76,25 @@ const MeetingModal = ({
 
   const setLocation = inv => {
     if (!inv) {
-      navigator.geolocation.getCurrentPosition(position => {
-        console.log('navigator geolo', position.coords)
-        setRegion({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
-        })
-        setCurrentCoord({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        })
-      })
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          console.log('navigator geolo', position.coords)
+          setRegion({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          })
+          setCurrentCoord({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          })
+        },
+        error => {
+          console.error('error in location', error, info.isDevice)
+        },
+        {enableHighAccuracy: !info.isDevice}
+      )
     } else {
       setRegion({
         latitude: inv.coords[0],
@@ -155,6 +162,7 @@ const MeetingModal = ({
     //console.log('TCL: invitation', invitation)
     //console.log('formated invitation', formatRegion(invitation))
   }
+  console.log('current coordinates', currentCoord)
 
   if (loading || !currentCoord.latitude || !region.latitude) {
     return (
@@ -191,7 +199,7 @@ const MeetingModal = ({
           {region.latitude && currentCoord.latitude && (
             <MapView
               style={{
-                height: 150,
+                height: 250,
                 margin: 10,
                 borderWidth: 1,
                 borderColor: '#000000'
