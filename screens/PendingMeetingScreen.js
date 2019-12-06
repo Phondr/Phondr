@@ -6,7 +6,6 @@ import CustomHeader from '../components/CustomHeader'
 import TabBarIcon from '../components/TabBarIcon'
 
 import PendingMeetingComp from '../components/PendingMeetingComp'
-
 import {withNavigation, NavigationEvents} from 'react-navigation'
 import {fetchAllMeetings} from '../redux/meetings'
 class PendingScreen extends React.Component {
@@ -35,6 +34,7 @@ class PendingScreen extends React.Component {
           fetchAllMeetings(user.id)
         }}
       /> */}
+      <CustomHeader title="Pending Meetings" />
         <ScrollView>
           <Content >
             {meetings.length ? (

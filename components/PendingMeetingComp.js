@@ -5,7 +5,7 @@ import {withNavigation, NavigationEvents} from 'react-navigation'
 import {setChat, fetchCurrentChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
 import {fetchAllMeetings} from '../redux/meetings'
-import CustomHeader from './CustomHeader'
+
 
 const PendingMeetingComp = ({
   user,
@@ -29,7 +29,6 @@ const PendingMeetingComp = ({
   // }, [])
   return (
     <View>
-      <CustomHeader title="Pending Meetings" />
       <Card>
         <NavigationEvents
           onWillFocus={payload => {

@@ -5,7 +5,7 @@ import {withNavigation, NavigationEvents} from 'react-navigation'
 import {setChat, fetchCurrentChat} from '../redux/currentChat'
 import ProgressBar from './ProgressBar'
 import {fetchAllMeetings} from '../redux/meetings'
-import CustomHeader from '../components/CustomHeader'
+
 const ActiveMeetingComp = ({
   user,
   meetings,
@@ -28,7 +28,6 @@ const ActiveMeetingComp = ({
   // }, [])
   return (
     <View>
-      <CustomHeader title="Active Meetings" />
       <Card>
         <NavigationEvents
           onWillFocus={payload => {
