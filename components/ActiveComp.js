@@ -61,6 +61,7 @@ const ActiveChats = ({
             <Left>
               <Icon name="person" />
             </Left>
+            {console.log('chatid in cur', cur.id)}
             <Text>
               {
                 cur.users.find(u => {

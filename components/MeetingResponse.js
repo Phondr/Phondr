@@ -66,7 +66,9 @@ const MeetingResponse = ({
           style={{
             backgroundColor: '#F7F7F8'
           }}
-        ></DialogContent>
+        >
+          {<View></View>}
+        </DialogContent>
       </Dialog>
     </View>
   )

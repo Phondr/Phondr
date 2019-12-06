@@ -20,6 +20,8 @@ import gql from 'graphql-tag'
 import {throwServerError} from 'apollo-link-http-common'
 import {navigate, NavigationEvents} from 'react-navigation'
 import Spinner from '../components/Spinner'
+import {LinearGradient} from 'expo-linear-gradient'
+import * as Font from 'expo-font'
 
 const User = t.struct({
   email: t.String,
@@ -44,12 +46,17 @@ const Form = t.form.Form
 export class Login extends Component {
   constructor() {
     super()
-    this.state = {loading: false}
+    this.state = {fontsLoaded: false}
     this.login = this.login.bind(this)
     this.navigateHome = this.navigateHome.bind(this)
   }
 
-  componentDidMount() {}
+  async componentDidMount() {
+    await Font.loadAsync({
+      lobster: require('../assets/fonts/Lobster/Lobster-Regular.ttf')
+    })
+    this.setState({fontsLoaded: true})
+  }
 
   //this is what eric changed
   // componentDidUpdate(prevProps) {
@@ -86,36 +93,59 @@ export class Login extends Component {
   }
 
   render() {
-    if (this.state.loading) {
+    // if (this.state.loading) {
+    //   return (
+    //     <View style={styles.spinner}>
+    //       <Spinner />
+    //     </View>
+    //   )
+    // }
+    if (this.state.fontsLoaded) {
       return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.topcontainer}>
+            <View style={styles.container}>
+              <NavigationEvents
+                onDidFocus={async payload => {
+                  if (this.props.user.id) {
+                    console.log('go home')
+                    this.navigateHome()
+                  }
+                }}
+              />
+              <Form ref={c => (this._form = c)} type={User} options={options} />
+            </View>
+            <TouchableOpacity onPress={this.login}>
+              <LinearGradient
+                colors={['#60dee7', '#75c6e5']}
+                style={styles.submitButton}
+              >
+                <Text
+                  style={{color: 'white', fontFamily: 'lobster', fontSize: 20}}
+                >
+                  Login
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </TouchableWithoutFeedback>
+      )
+    } else {
+      return (
+        <View style={styles.spinner}>
           <Spinner />
+        </View>
       )
     }
-    return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.container}>
-          <NavigationEvents
-            onDidFocus={async payload => {
-              if (this.props.user.id) {
-                console.log('go home')
-                this.navigateHome()
-              }
-            }}
-          />
-          <Form ref={c => (this._form = c)} type={User} options={options} />
-          <TouchableOpacity onPress={this.login} style={styles.submitButton}>
-            <Text style={{color: 'white'}}>Login</Text>
-          </TouchableOpacity>
-        </View>
-        {Platform.OS === 'android' && (
-          <KeyboardAvoidingView behavior="padding" />
-        )}
-      </TouchableWithoutFeedback>
-    )
   }
 }
 
 export const styles = StyleSheet.create({
+  topcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#F5FCFF'
+  },
   buttonContainer: {
     marginTop: 10,
     height: 45,
@@ -147,11 +177,11 @@ export const styles = StyleSheet.create({
   },
   submitButton: {
     backgroundColor: '#00BFFF',
-    padding: 10,
-    margin: 15,
+    justifyContent: 'center',
     alignItems: 'center',
-    height: 40,
-    borderRadius: 30
+    height: 80,
+    flexDirection: 'row',
+    width: Dimensions.get('window').width
   },
   submitButtonText: {
     color: 'white'

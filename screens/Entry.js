@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Image,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import Spinner from '../components/Spinner'
 import {navigation} from 'react-navigation'
@@ -14,14 +15,21 @@ import Signup from './Signup'
 import {AsyncStorage} from 'react-native'
 import {fetchUserLogin, setUser, fetchUserFromUserId} from '../redux/user'
 import {connect} from 'react-redux'
+import {LinearGradient} from 'expo-linear-gradient'
+import * as Font from 'expo-font'
 
 export class Entry extends Component {
   constructor() {
     super()
-    this.state = {user: '', loading: true}
+    this.state = {user: '', loading: true, fontsLoaded: false}
   }
   async componentDidMount() {
     const user = JSON.parse(await AsyncStorage.getItem('userKey'))
+
+    await Font.loadAsync({
+      lobster: require('../assets/fonts/Lobster/Lobster-Regular.ttf')
+    })
+    this.setState({fontsLoaded: true})
 
     //Current Settings
     // if (user) {
@@ -69,60 +77,93 @@ export class Entry extends Component {
     //     </View>
     //   )
     // }
-    return (
-      <View style={styles.container}>
-        <View style={styles.title}>
-          <Image
-            style={styles.phonderimage}
-            source={require('../assets/images/PhondrLogos/PhondrLarge-removebg-preview.png')}
-          />
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            this.gotToLogin()
-          }}
-          style={styles.submitButton}
-        >
-          <Text style={{color: 'white'}}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            this.goToSignUp()
-          }}
-          style={styles.submitButton}
-        >
-          <Text style={{color: 'white'}}>Sign Up</Text>
-        </TouchableOpacity>
-        {/* <Button
+    if (this.state.fontsLoaded) {
+      return (
+        <View style={styles.topcontainer}>
+          <View style={styles.container}>
+            <View style={styles.title}>
+              <Image
+                style={styles.phonderimage}
+                source={require('../assets/images/PhondrLogos/Phondr-logo.png')}
+              />
+            </View>
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.gotToLogin()
+            }}
+          >
+            <LinearGradient
+              colors={['#60dee7', '#75c6e5']}
+              style={styles.submitButton}
+            >
+              <Text
+                style={{color: 'white', fontFamily: 'lobster', fontSize: 20}}
+              >
+                Login
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.goToSignUp()
+            }}
+          >
+            <LinearGradient
+              colors={['#75c6e5', '#60dee7']}
+              style={styles.submitButton}
+            >
+              <Text
+                style={{color: 'white', fontFamily: 'lobster', fontSize: 20}}
+              >
+                Sign Up
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+          {/* <Button
           title="Login"
           onPress={() => {
             this.gotToLogin()
           }}
         /> */}
-        {/* <Button
+          {/* <Button
           title="Sign Up"
           onPress={() => {
             this.goToSignUp()
           }}
         /> */}
-      </View>
-    )
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.spinner}>
+          <Spinner />
+        </View>
+      )
+    }
   }
 }
 
 export const styles = StyleSheet.create({
+  topcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#F5FCFF'
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingLeft: 10,
-    paddingRight: 10,
+    padding: 15,
     backgroundColor: '#F5FCFF'
   },
   phonderimage: {
-    width: 350,
-    height: 350,
+    width: 500/1.5,
+    height: 97/1.5,
     position: 'relative',
-    justifyContent: 'center'
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
   logintext: {
     margin: 2,
@@ -137,11 +178,11 @@ export const styles = StyleSheet.create({
   },
   submitButton: {
     backgroundColor: '#00BFFF',
-    padding: 10,
-    margin: 15,
+    justifyContent: 'center',
     alignItems: 'center',
-    height: 40,
-    borderRadius: 30
+    height: 80,
+    flexDirection: 'row',
+    width: Dimensions.get('window').width
   },
   spinner: {
     flex: 2,

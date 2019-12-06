@@ -29,7 +29,7 @@ import {NavigationEvents} from 'react-navigation'
 import ChatEvent from '../components/ChatEvent'
 import {calcProgress} from '../util'
 import Spinner from '../components/Spinner'
-console.disableYellowBox=true
+
 class SingleChats extends Component {
   constructor(props) {
     super(props)
@@ -178,12 +178,6 @@ class SingleChats extends Component {
     }
     return (
       <React.Fragment>
-        {/* <NavigationEvents
-          onDidFocus={() => {
-            this.sendMeeting()
-          }}
-        /> */}
-
         {this.state.curMessage.user && (
           <MeetingResponse
             reply={this.state.reply}
@@ -227,7 +221,7 @@ class SingleChats extends Component {
             />
           </TouchableOpacity>
         ) : null}
-        {calcProgress(this.props.currentChat) >= 0 ? (
+        {calcProgress(this.props.currentChat) >= 100 ? (
           <TouchableOpacity
             style={
               Platform.OS === 'ios'

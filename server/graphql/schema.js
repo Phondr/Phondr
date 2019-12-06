@@ -147,7 +147,9 @@ const rootQuery = new GraphQLObjectType({
         password: {type: GraphQLString}
       },
       async resolve(parent, args) {
+        console.log('args emmail', args.email.toLowerCase())
         let usermodel = await db.models.user.findOne({
+          
           where: {email: args.email}
           // where: { email: args.email, password: args.password },
         })

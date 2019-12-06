@@ -63,8 +63,12 @@ export class LoginCamera extends React.Component {
 
   componentDidUpdate() {
     const user = this.props.user
-    if (this.props.user.id) {
-      this.props.navigation.navigate('loggedIn', {user})
+    try {
+      if (this.props.user.id) {
+        this.props.navigation.navigate('loggedIn', {user})
+      }
+    } catch (err) {
+      this.props.navigation.navigate('Signup')
     }
   }
 

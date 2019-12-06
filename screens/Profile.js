@@ -8,14 +8,17 @@ import {
   StatusBar,
   ScrollView,
   Dimensions,
+  Platform
 } from 'react-native'
 import {connect} from 'react-redux'
 import {fetchUserFromAsync} from '../redux/user'
 import CustomHeader from '../components/CustomHeader'
 import Geocoder from 'react-native-geocoding'
 const {placesAPI} = require('../secrets')
+import {LinearGradient} from 'expo-linear-gradient'
 import axios from 'axios'
 import Spinner from '../components/Spinner'
+import * as Font from 'expo-font'
 
 export class Profile extends Component {
   constructor() {
@@ -23,7 +26,7 @@ export class Profile extends Component {
     this.state = {
       user: '',
       address: '',
-      loading: true,
+      fontsLoaded: false
     }
   }
 
@@ -39,6 +42,10 @@ export class Profile extends Component {
     try {
       await this.props.getUser()
       this.setState({loading: false})
+      await Font.loadAsync({
+        lobster: require('../assets/fonts/Lobster/Lobster-Regular.ttf')
+      })
+      this.setState({fontsLoaded: true})
     } catch (error) {
       alert('COULD NOT LOGIN')
       console.log(error)
@@ -68,42 +75,72 @@ export class Profile extends Component {
 
   render() {
     const user = this.props.user
-    if(this.state.loading) {return <Spinner />}
-    return (
-      <ScrollView style={styles.container}>
-        <StatusBar barStyle="light-content" />
-        <CustomHeader title="Profile" />
-        <View style={styles.header}></View>
-        <Image style={Dimensions.get('window').height >= 812 ? styles.avatarMike : styles.avatar} source={{uri: user.profilePicture}} />
-        <View style={styles.body}>
-          <View style={styles.bodyContent}>
-            <Text style={styles.name}>{user.fullName}</Text>
-            <Text style={styles.info}>
-              {user.iAm} | {user.age}
-            </Text>
-            <View style={styles.bodyDescription}>
-              <Text style={styles.description}>Email: {user.email}</Text>
-              <Text style={styles.description}>
-                Location: {this.state.address}
-              </Text>
+    //console.log('USER', user)
+    if (this.state.fontsLoaded) {
+      return (
+        <View style={styles.topcontainer}>
+          <ScrollView style={styles.container}>
+            <StatusBar barStyle="light-content" />
+            <CustomHeader title="Profile" />
+            <View style={styles.header}>
+              <LinearGradient
+                colors={['#fb9fd9', '#60dee7', '#75c6e5']}
+                style={styles.header}
+              ></LinearGradient>
             </View>
-
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={() => {
-                this.props.navigation.navigate('UserProfileEdit', {user})
-              }}
+            <Image
+              style={
+                Dimensions.get('window').height >= 812
+                  ? styles.avatarMike
+                  : styles.avatar
+              }
+              source={{uri: user.profilePicture}}
+            />
+            <View style={styles.body}>
+              <View style={styles.bodyContent}>
+                <Text style={styles.name}>{user.fullName}</Text>
+                <Text style={styles.info}>
+                  {user.iAm} | {user.age}
+                </Text>
+                <View style={styles.bodyDescription}>
+                  <Text style={styles.description}>Email: {user.email}</Text>
+                  <Text style={styles.description}>
+                    Location: {this.state.address}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate('UserProfileEdit', {user})
+            }}
+          >
+            <LinearGradient
+              colors={['#60dee7', '#75c6e5']}
+              style={styles.submitButton}
             >
-              <Text style={{color: 'white'}}>Edit Profile</Text>
-            </TouchableOpacity>
-          </View>
+              <Text
+                style={{color: 'white', fontFamily: 'lobster', fontSize: 20}}
+              >
+                Edit
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-    )
+      )
+    } else {
+      return <Spinner />
+    }
   }
 }
 
 const styles = StyleSheet.create({
+  topcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#F5FCFF'
+  },
   header: {
     backgroundColor: '#00BFFF',
     height: 200
@@ -176,8 +213,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     width: 250,
-    borderRadius: 30,
+    borderRadius: 20,
     backgroundColor: '#00BFFF'
+  },
+  submitButton: {
+    backgroundColor: '#00BFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 80,
+    flexDirection: 'row',
+    width: Dimensions.get('window').width
   }
 })
 

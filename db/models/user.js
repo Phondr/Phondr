@@ -76,6 +76,10 @@ const setSaltAndPassword = user => {
   }
 };
 User.beforeCreate(setSaltAndPassword);
+User.beforeValidate((user)=>{
+   user.email = user.email.toLowerCase()
+   user.gender=user.gender.toLowerCase()
+})
 User.beforeUpdate(setSaltAndPassword);
 User.beforeBulkCreate(users => {
   users.forEach(setSaltAndPassword);

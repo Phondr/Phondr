@@ -68,7 +68,7 @@ export const removeData = async key => {
 //thunk
 export const fetchUserLogin = values => async dispatch => {
   try {
-    const email = values.email
+    const email = values.email.toLowerCase()
     const password = values.password
 
     if (getData('userKey')) {
@@ -178,11 +178,11 @@ export const userSignUp = (
                 }`
       })
 
-      if (data.userSignup) {
-        storeData('userKey', JSON.stringify(data.userSignup))
+      if (data.data.userSignup) {
+        storeData('userKey', JSON.stringify(data.data.userSignup))
       }
 
-      dispatch(setUser(data.userSignup))
+      dispatch(setUser(data.data.userSignup))
     })
   } catch (error) {
     alert('COULD NOT SIGN-UP')
@@ -213,8 +213,8 @@ export const fetchUserFromAsync = () => async dispatch => {
               }`
     })
 
-    if (data.user) {
-      dispatch(setUser(data.user))
+    if (data.data.user) {
+      dispatch(setUser(data.data.user))
     }
   } catch (error) {
     alert('COULD NOT GET PROFILE DATA, fetch user from async')

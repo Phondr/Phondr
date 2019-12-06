@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Dimensions
 } from 'react-native'
 import {
   Container,
@@ -19,8 +20,7 @@ import {
   ListItem,
   Body,
   Left,
-  Right,
-  Dimensions
+  Right
 } from 'native-base'
 import {connect} from 'react-redux'
 import {userSignUp} from '../redux/user'
@@ -29,8 +29,10 @@ import Geocoder from 'react-native-geocoding'
 import Constants from 'expo-constants'
 import * as Location from 'expo-location'
 import * as Permissions from 'expo-permissions'
-
+import {LinearGradient} from 'expo-linear-gradient'
 import t, {MultiSelectExample} from 'tcomb-form-native'
+import * as Font from 'expo-font'
+import Spinner from '../components/Spinner'
 
 // const Choices = {
 //   Male: 'Male',
@@ -98,7 +100,8 @@ export class Signup extends Component {
       preferences: [],
       location: null,
       errorMessage: null,
-      address: []
+      address: [],
+      fontsLoaded: false
     }
 
     this.doitchecked1 = this.doitchecked1.bind(this)
@@ -111,7 +114,7 @@ export class Signup extends Component {
     drawerLabel: () => null
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage:
@@ -120,6 +123,10 @@ export class Signup extends Component {
     } else {
       this._getLocationAsync()
     }
+    await Font.loadAsync({
+      lobster: require('../assets/fonts/Lobster/Lobster-Regular.ttf')
+    })
+    this.setState({fontsLoaded: true})
   }
 
   _getLocationAsync = async () => {
@@ -196,79 +203,97 @@ export class Signup extends Component {
   }
 
   render() {
-    return (
-      <ScrollView>
-        <View style={styles.container}>
-          {/* <View style={styles.locationcontainer}>
+    if (this.state.fontsLoaded) {
+      return (
+        <View style={styles.topcontainer}>
+          <ScrollView>
+            <View style={styles.container}>
+              {/* <View style={styles.locationcontainer}>
             <Text style={styles.paragraph}>{text}</Text>
           </View> */}
-          <View styles={styles.checkboxcontainer}>
-            <Header>
-              <Left>
-                <Title>Gender Preference</Title>
-              </Left>
-            </Header>
-            <Content style={styles.checkboxcontent}>
-              <ListItem>
-                <CheckBox
-                  checked={this.state.checked1}
-                  color="blue"
-                  onPress={() => {
-                    this.doitchecked1()
-                  }}
-                ></CheckBox>
+              <View styles={styles.checkboxcontainer}>
+                <Header>
+                  <Left>
+                    <Title>Gender Preference</Title>
+                  </Left>
+                </Header>
+                <Content style={styles.checkboxcontent}>
+                  <ListItem>
+                    <CheckBox
+                      checked={this.state.checked1}
+                      color="blue"
+                      onPress={() => {
+                        this.doitchecked1()
+                      }}
+                    ></CheckBox>
 
-                <Body>
-                  <Text>Male</Text>
-                </Body>
-              </ListItem>
-              <ListItem>
-                <CheckBox
-                  checked={this.state.checked2}
-                  color="pink"
-                  onPress={() => {
-                    this.doitchecked2()
-                  }}
-                ></CheckBox>
-                <Body>
-                  <Text>Female</Text>
-                </Body>
-              </ListItem>
-              <ListItem>
-                <CheckBox
-                  checked={this.state.checked3}
-                  color="purple"
-                  onPress={() => {
-                    this.doitchecked3()
-                  }}
-                ></CheckBox>
-                <Body>
-                  <Text>Non-Binary</Text>
-                </Body>
-              </ListItem>
-            </Content>
-          </View>
-          <Form
-            ref={c => (this._form = c)}
-            type={User}
-            options={options}
-            style={styles.formcontainer}
-          />
-
-          {/* <CameraComponent /> */}
-          <TouchableOpacity style={styles.submitButton} onPress={this.signup}>
-            <Text style={styles.submitButtonText}>Proceed to Photo</Text>
+                    <Body>
+                      <Text>Male</Text>
+                    </Body>
+                  </ListItem>
+                  <ListItem>
+                    <CheckBox
+                      checked={this.state.checked2}
+                      color="pink"
+                      onPress={() => {
+                        this.doitchecked2()
+                      }}
+                    ></CheckBox>
+                    <Body>
+                      <Text>Female</Text>
+                    </Body>
+                  </ListItem>
+                  <ListItem>
+                    <CheckBox
+                      checked={this.state.checked3}
+                      color="purple"
+                      onPress={() => {
+                        this.doitchecked3()
+                      }}
+                    ></CheckBox>
+                    <Body>
+                      <Text>Non-Binary</Text>
+                    </Body>
+                  </ListItem>
+                </Content>
+              </View>
+              <Form
+                ref={c => (this._form = c)}
+                type={User}
+                options={options}
+                style={styles.formcontainer}
+              />
+            </View>
+          </ScrollView>
+          <TouchableOpacity onPress={this.signup}>
+            <LinearGradient
+              colors={['#60dee7', '#75c6e5']}
+              style={styles.submitButton}
+            >
+              <Text style={styles.submitButtonText}>Proceed To Photo</Text>
+            </LinearGradient>
           </TouchableOpacity>
+          {Platform.OS === 'android' && (
+            <KeyboardAvoidingView behavior="padding" />
+          )}
         </View>
-        {Platform.OS === 'android' && (
-          <KeyboardAvoidingView behavior="padding" />
-        )}
-      </ScrollView>
-    )
+      )
+    } else {
+      return (
+        <View style={styles.spinner}>
+          <Spinner />
+        </View>
+      )
+    }
   }
 }
 
 export const styles = StyleSheet.create({
+  topcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#F5FCFF'
+  },
   container: {
     flex: 1,
     paddingTop: 35,
@@ -296,14 +321,16 @@ export const styles = StyleSheet.create({
   },
   submitButton: {
     backgroundColor: '#00BFFF',
-    padding: 10,
-    margin: 15,
+    justifyContent: 'center',
     alignItems: 'center',
-    height: 40,
-    borderRadius: 30
+    height: 80,
+    flexDirection: 'row',
+    width: Dimensions.get('window').width
   },
   submitButtonText: {
-    color: 'white'
+    color: 'white',
+    fontFamily: 'lobster',
+    fontSize: 20
   },
   paragraph: {
     margin: 24,

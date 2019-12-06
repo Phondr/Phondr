@@ -121,6 +121,10 @@ User.beforeCreate(user => {
     user.iPrefer = ['non-binary']
   }
 })
+User.beforeValidate((user)=>{
+  user.email = user.email.toLowerCase()
+  user.iAm=user.iAm.toLowerCase()
+})
 User.beforeUpdate(setSaltAndPassword)
 User.beforeBulkCreate(users => {
   users.forEach(setSaltAndPassword)

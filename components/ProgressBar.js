@@ -40,13 +40,14 @@ const ProgressBar = ({
               progress={currentProgress / 100}
               width={100}
               animated={false}
+              color = {'#75c6e5'}
             />
           ) : (
-            <Bar progress={progress / 100} width={100} animated={false} />
+            <Bar progress={progress / 100} width={100} animated={false} color={'#75c6e5'}/>
           )}
         </Left>
         <Body>
-          <Text style={{color: 'blue'}}>{progress}%</Text>
+          <Text style={{color: '#75c6e5'}}>{progress}%</Text>
         </Body>
         <Right />
       </Content>
