@@ -216,37 +216,35 @@ export const fetchUserFromAsync = () => async dispatch => {
       dispatch(setUser(data.user))
     }
   } catch (error) {
-    alert('COULD NOT GET PROFILE DATA')
+    alert('Async: COULD NOT GET PROFILE DATA')
     console.log(error)
   }
 }
 
 export const fetchUserFromUserId = userid => async dispatch => {
   try {
-    //const user = JSON.parse(await getData('userKey'))
-
-    let {data} = await client.query({
-      query: gql`query{
-        user(id: ${userid}) {
-          id
-          email
-          fullName
-          homeLocation
-          incentivePoints
-          profilePicture
-          age
-          iAm
-          iPrefer
-          isNoob
-        }
-              }`
+    let {data} = await axios.post(`${url}/graphql`, {
+      query: `{
+           user(id: ${userid}) {
+              id
+              email
+              fullName
+              homeLocation
+              incentivePoints
+              profilePicture
+              age
+              iAm
+              iPrefer
+              isNoob
+            }
+                  }`
     })
 
-    if (data.user) {
-      dispatch(setUser(data.user))
+    if (data.data.user) {
+      dispatch(setUser(data.data.user))
     }
   } catch (error) {
-    alert('COULD NOT GET PROFILE DATA')
+    alert('fetchuserid: COULD NOT GET PROFILE DATA')
     console.log(error)
   }
 }
@@ -289,7 +287,7 @@ export const EditUser = (user, userId) => async dispatch => {
       dispatch(setUser(data.editUser))
     }
   } catch (error) {
-    alert('COULD NOT GET PROFILE DATA')
+    alert('Edit: COULD NOT GET PROFILE DATA')
     console.log(error)
   }
 }
@@ -330,7 +328,7 @@ export const ConvertUser = () => async dispatch => {
       dispatch(updateN(data.updateNoob))
     }
   } catch (error) {
-    alert('COULD NOT GET PROFILE DATA')
+    alert('convrt: COULD NOT GET PROFILE DATA')
     console.log(error)
   }
 }

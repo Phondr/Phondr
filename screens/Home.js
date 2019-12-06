@@ -1,20 +1,14 @@
 import React, {Component} from 'react'
 import {ImageBackground, View, StatusBar, StyleSheet, Text, Dimensions} from 'react-native'
 import {Container, Button, Icon, Content, Left, Right} from 'native-base'
-import {Platform} from '@unimodules/core'
-import {withNavigation} from 'react-navigation'
 import CustomHeader from '../components/CustomHeader'
 import {connect} from 'react-redux'
-import {useQuery} from '@apollo/react-hooks'
-import gql from 'graphql-tag'
 import {fetchMyChats, findOrCreateChat} from '../redux/myChats'
 import ActiveComp from '../components/ActiveComp'
 import PendingComp from '../components/PendingComp'
 import {ScrollView} from 'react-native-gesture-handler'
 import {setUser, ConvertUser} from '../redux/user'
 import {fetchUserLogin, fetchUserFromAsync} from '../redux/user'
-import {setLoading} from '../redux/loading'
-import Loading from './Loading'
 import Dialog, {
   DialogTitle,
   DialogContent,
@@ -40,20 +34,10 @@ class Home extends Component {
     }
   }
 
-  // componentDidMount() {
-  //this is just for testing
-  // this.props.setUser(this.state.user)
-
-  // if (!this.props.user.id) {
-  //   this.props.setUser(this.props.navigation.getParam('user', 'no-user'))
-  // }
-  // if (this.props.user.id) {
-  //   console.log('in comp did mouth fmc')
   async componentDidMount() {
     this.setState({loading: true})
     if (this.props.user.id) {
       //If brought from login screen, there is already user data on redux. Just grab chats.
-      console.log('props.user.id', this.props.user.id)
       await this.props.fetchMyChats(this.props.user.id)
       this.setState({loading: false})
     }
@@ -70,7 +54,6 @@ class Home extends Component {
 
   async componentDidUpdate(prevProps) {
     if (prevProps.user.id !== this.props.user.id && this.props.user.id) {
-      console.log('in comp did update fmc')
       await this.props.fetchMyChats(this.props.user.id)
       try {
         await this.props.fetchUserFromAsync()
@@ -83,7 +66,6 @@ class Home extends Component {
 
   render() {
     const user = this.props.user || {}
-    // console.log('HOME USER', user)
     if (this.state.loading) {
       return <Spinner />
     }

@@ -39,6 +39,7 @@ export default class renderAudio extends React.Component {
     }
     this.soundObject = new Audio.Sound()
     this.setState({isPlaying: true})
+    console.log('gotaudiolink',this.props.message.audio)
     await this.soundObject
       .loadAsync(
         {
@@ -54,6 +55,7 @@ export default class renderAudio extends React.Component {
       .playAsync()
       .then(async playbackStatus => {
         setTimeout(() => {
+          console.log('playstat', playbackStatus)
           this.soundObject.unloadAsync()
           this.setState({isPlaying: false})
         }, playbackStatus.durationMillis)

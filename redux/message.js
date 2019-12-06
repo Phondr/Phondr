@@ -18,7 +18,6 @@ export const fetchMessages = chatId => {
   return async dispatch => {
     try {
       //Add in user{avatar: profilePicture} when they unlock this to show profile picture in chat instead of initials
-      console.log('chat id in fetchMessages', chatId)
       const {data} = await axios({
         url: url + '/graphql',
         method: 'POST',
@@ -64,7 +63,7 @@ export const fetchMessages = chatId => {
 const imageRequest = async ref => {
   const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
   const image = await axios.post(url)
-  console.log('TCL: image', image)
+  
 
   return image.config.url
 }
@@ -104,7 +103,6 @@ export const newMessage = message => {
       //   data.data.newMessage.image = googleImage
       // }
       //Format into readable date by gifted chat
-      console.log('data.data.newMessage', data.data.newMessage)
       if (data.data.newMessage.text.includes('++New Invitation To Meet!')) {
         data.data.newMessage.text = data.data.newMessage.text
           .split('++')

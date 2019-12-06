@@ -159,6 +159,10 @@ io.on('connection', socket => {
 
   socket.on('sendNewMessageNotification', ({otherUser, user})=>{
     console.log(otherUser)
+    io.of('/').in(`${1}`).clients((error, clients) => {
+      if (error) throw error;
+      console.log(clients); // => [Anw2LatarvGVVXEIAAAD]
+    });
     socket.to(`${otherUser.fullName}`).emit('receiveNewMessageNotification', {message: `Got a new message from ${user.fullName}`})
   })
 

@@ -32,6 +32,7 @@ export class Entry extends Component {
         this.setState({user}) //Sets user if user was previously logged in through asyncStorage
       }
       if (this.state.user !== '') {
+        console.log('testomg', user)
         await this.props.fetchUserFromUserId(user.id)
         const userd = this.props.user
 

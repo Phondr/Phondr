@@ -5,7 +5,6 @@ const cheerio = require('cheerio')
 const imageRequest = async ref => {
   const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${ref}&key=${placesAPI}`
   const image = await axios.post(url)
-  //console.log('TCL: image', image)
 
   return image.config.url
 }
@@ -13,7 +12,7 @@ const imageRequest = async ref => {
 const cheerioReq = async link => {
   let {data} = await axios.get(link)
 
-  const $ = cheerio.load(data.slice(0, 10000))
+  const $ = cheerio.load(data)
 
   let imageUrl = ''
   // $('meta').each((i, cur) => {

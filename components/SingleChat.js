@@ -29,6 +29,7 @@ import {NavigationEvents} from 'react-navigation'
 import ChatEvent from '../components/ChatEvent'
 import {calcProgress} from '../util'
 import Spinner from '../components/Spinner'
+console.disableYellowBox=true
 class SingleChats extends Component {
   constructor(props) {
     super(props)
@@ -155,6 +156,7 @@ class SingleChats extends Component {
       this.props.navigation.getParam('created')
     )
     if (this.props.navigation.getParam('created')) {
+      console.log('gothere')
       const {
         name,
         address,
@@ -177,9 +179,8 @@ class SingleChats extends Component {
       console.log('formatted message inside sendmeeting', formattedMessage)
       await this.onSend(formattedMessage, true)
       setTimeout(()=> {this.props.navigation.setParams({created: false})}, 200)
-      
+      this.setState({loading: false})
     }
-    this.setState({loading: false})
   }
 
   // async renderBubble(props) {
@@ -289,11 +290,11 @@ class SingleChats extends Component {
     }
     return (
       <React.Fragment>
-        <NavigationEvents
+        {/* <NavigationEvents
           onDidFocus={() => {
             this.sendMeeting()
           }}
-        />
+        /> */}
 
         {this.state.curMessage.user && (
           <MeetingResponse
