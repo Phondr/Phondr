@@ -95,16 +95,15 @@ async function seed() {
   console.log('db synced!')
 
   const user1 = await User.create({
-    fullName: `Avaree Warrick`,
+    fullName: `Kip Dynamite`,
     age: 24,
     homeLocation: [
-      round(faker.address.latitude()),
-      round(faker.address.longitude())
+      41.878112999999999,-87.6297990000000055
     ],
     incentivePoints: faker.random.number(),
     created_at: faker.date.recent(),
     profilePicture:
-      'https://phondr.s3.us-east-2.amazonaws.com/images/Hhskshdkdkfprofile_image.jpg',
+      'https://vignette.wikia.nocookie.net/napoleondynamite/images/0/04/Kip_Dynamite.jpg/revision/latest?cb=20120117222921',
     email: 'test@test.com',
     password: 'test',
     iAm: idents[randomizer(2)],
@@ -116,8 +115,7 @@ async function seed() {
     fullName: `Mike Lim`,
     age: 24,
     homeLocation: [
-      round(faker.address.latitude()),
-      round(faker.address.longitude())
+      41.878112999999999,-87.6297990000000055
     ],
     incentivePoints: faker.random.number(),
     created_at: faker.date.recent(),

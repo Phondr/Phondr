@@ -1,5 +1,5 @@
 import React, {Component, useState, useEffect} from 'react'
-import {Text, StyleSheet, View, ScrollView} from 'react-native'
+import {Text, StyleSheet, View, ScrollView, Dimensions, TouchableOpacity} from 'react-native'
 import {
   Container,
   Content,
@@ -22,6 +22,8 @@ import {createMeeting} from '../redux/currentMeeting'
 import axios from 'axios'
 import Spinner from '../components/Spinner'
 import info from 'expo-constants'
+import * as Font from 'expo-font'
+import {LinearGradient} from 'expo-linear-gradient'
 
 const MeetingModal = ({
   invitation,
@@ -177,6 +179,7 @@ const MeetingModal = ({
     //   isVisible={true} // this will be tied to state from parent
     //   onBackdropPress={() => {}}
     // >
+    <View style={styles.topcontainer}>
     <Container>
       <Content contentContainerStyle={{marginTop: 30}}>
         <Card>
@@ -260,24 +263,67 @@ const MeetingModal = ({
             </CardItem>
           </Card>
         )}
-        {!!invitation.date && !!invitation.name ? (
-          <Button
-            onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
-          >
-            <Text>Send</Text>
-          </Button>
-        ) : (
-          <Button disabled bordered>
-            <Text>Send</Text>
-          </Button>
-        )}
       </Content>
     </Container>
+    {!!invitation.date && !!invitation.name ? (
+          // <Button
+          //   onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
+          // >
+          //   <Text>Send</Text>
+          // </Button>
+          <TouchableOpacity
+          onPress={() => {
+            submitMeeting(currentChat.id, user.id, invitation)
+          }}
+        >
+          <LinearGradient
+            colors={['#60dee7', '#75c6e5']}
+            style={styles.submitButton}
+          >
+            <Text
+              style={{color: 'white', fontFamily: 'lobster', fontSize: 20}}
+            >
+              Send
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        ) : (
+          // <Button disabled bordered>
+          //   <Text>Send</Text>
+          // </Button>
+          <TouchableOpacity>
+          <LinearGradient
+            colors={['#ebebeb', '#999999']}
+            style={styles.submitButton}
+          >
+            <Text
+              style={{color: 'white', fontFamily: 'lobster', fontSize: 20}}
+            >
+              Send
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        )}
+    </View>
     // </Modal>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  topcontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#F5FCFF'
+  },
+  submitButton: {
+    backgroundColor: '#00BFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 80,
+    flexDirection: 'row',
+    width: Dimensions.get('window').width
+  }
+})
 
 export default connect(
   ({invitation, user, currentChat}) => ({invitation, user, currentChat}),
