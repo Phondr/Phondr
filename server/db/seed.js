@@ -35,7 +35,7 @@ const createUser = async () => {
       ],
       incentivePoints: faker.random.number({max: 100}),
       created_at: faker.date.recent(),
-      profilePicture: faker.random.image(),
+      profilePicture: faker.image.avatar(),
       email: faker.internet.email(),
       password: '123',
       iAm: idents[randomizer(2)],
@@ -94,7 +94,7 @@ async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
 
-  await User.create({
+  const user1 = await User.create({
     fullName: `Avaree Warrick`,
     age: 24,
     homeLocation: [
@@ -103,15 +103,16 @@ async function seed() {
     ],
     incentivePoints: faker.random.number(),
     created_at: faker.date.recent(),
-    profilePicture: faker.random.image(),
+    profilePicture:
+      'https://phondr.s3.us-east-2.amazonaws.com/images/Hhskshdkdkfprofile_image.jpg',
     email: 'test@test.com',
     password: 'test',
     iAm: idents[randomizer(2)],
-    iPrefer: ['male', 'female'],
+    iPrefer: ['male', 'female', 'non-binary'],
     distPref: randomizer(50),
     isNoob: true
   })
-  await User.create({
+  const user2 = await User.create({
     fullName: `Mike Lim`,
     age: 24,
     homeLocation: [
@@ -124,10 +125,11 @@ async function seed() {
     email: 'mike@email.com',
     password: '123',
     iAm: idents[randomizer(2)],
-    iPrefer: ['male', 'female'],
+    iPrefer: ['male', 'female', 'non-binary'],
     distPref: randomizer(50),
     isNoob: true
   })
+
   for (let i = 0; i < 50; i++) {
     const user = await createUser()
 
@@ -159,6 +161,30 @@ async function seed() {
   }
   for (let i = 0; i < 500; i++) {
     await createMessages()
+  }
+  let chat1 = await Chat.create({
+    expirationDate: Date.now(),
+    progress: parseFloat((Math.random() * 100).toFixed(2)),
+    created_at: faker.random.words(),
+    status: 'active'
+  })
+  chat1.addUsers([user1, user2])
+  chat1.update({
+    sinceCreation: (d => new Date(d.setDate(d.getDate() - 1)))(new Date())
+  })
+  for (let i = 0; i < 9; i++) {
+    await Message.create({
+      content: faker.random.words(),
+      length: faker.random.number(),
+      userId: 1,
+      chatId: chat1.id
+    })
+    await Message.create({
+      content: faker.random.words(),
+      length: faker.random.number(),
+      userId: 2,
+      chatId: chat1.id
+    })
   }
   console.log(`seeded successfully`)
 }

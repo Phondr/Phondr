@@ -60,18 +60,18 @@ export class Profile extends Component {
     this.setState({address})
   }
 
-  async componentDidUpdate(prevProps) {
-    if (prevProps.user !== this.props.user && this.props.user.id) {
-      try {
-        this.setState({loading: true})
-        await this.props.getUser()
-        this.setState({loading: false})
-      } catch (error) {
-        alert('COULD NOT GET USER AFTER EDITING')
-        console.log(error)
-      }
-    }
-  }
+  // async componentDidUpdate(prevProps) {
+  //   if (prevProps.user !== this.props.user && this.props.user.id) {
+  //     try {
+  //       this.setState({loading: true})
+  //       await this.props.getUser()
+  //       this.setState({loading: false})
+  //     } catch (error) {
+  //       alert('COULD NOT GET USER AFTER EDITING')
+  //       console.log(error)
+  //     }
+  //   }
+  // }
 
   render() {
     const user = this.props.user
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 22,
-    color: '#FFFFFF',
+    // color: '#FFFFFF',
     fontWeight: '600'
   },
   body: {
