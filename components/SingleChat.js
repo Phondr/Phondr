@@ -95,7 +95,9 @@ class SingleChats extends Component {
       }
       console.log('formatted message inside sendmeeting', formattedMessage)
       await this.onSend(formattedMessage, true)
-      setTimeout(()=> {this.props.navigation.setParams({created: false})}, 200)
+      setTimeout(() => {
+        this.props.navigation.setParams({created: false})
+      }, 200)
       this.setState({loading: false})
     }
   }
@@ -104,6 +106,16 @@ class SingleChats extends Component {
     socket.emit('unsubscribe-to-chat', {chatId: this.props.currentChat.id})
     socket.off('loginLogoutMessage')
     socket.off('receiveMessage')
+  }
+
+  async componentDidUpdate(prevProps) {
+    if (prevProps.currentChat.id !== this.props.currentChat.id && this.props.currentChat.id) {
+      this.setState({loading: true})
+      await this.props
+        .fetchMessages(this.props.currentChat.id)
+        .then(() => this.setState({loading: false}))
+      this.setState({loading:false})
+    }
   }
 
   closeDialog() {
@@ -137,7 +149,7 @@ class SingleChats extends Component {
     socket.emit('sendNewMessageNotification', {
       otherUser: this.getOtherUserInChat(this.props.currentChat),
       user: this.props.user,
-      chatId:this.props.currentChat.id
+      chatId: this.props.currentChat.id
     })
   }
 
@@ -178,6 +190,16 @@ class SingleChats extends Component {
     }
     return (
       <React.Fragment>
+        <NavigationEvents
+          onDidFocus={() => {
+            this.sendMeeting();
+          }}
+          onDidBlur={() => {
+            this.props
+              .fetchMessages(this.props.currentChat.id)
+              .then(() => this.setState({loading: false}))
+          }}
+        />
         {this.state.curMessage.user && (
           <MeetingResponse
             reply={this.state.reply}
