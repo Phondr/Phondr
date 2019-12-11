@@ -109,12 +109,15 @@ class SingleChats extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if (prevProps.currentChat.id !== this.props.currentChat.id && this.props.currentChat.id) {
+    if (
+      prevProps.currentChat.id !== this.props.currentChat.id &&
+      this.props.currentChat.id
+    ) {
       this.setState({loading: true})
       await this.props
         .fetchMessages(this.props.currentChat.id)
         .then(() => this.setState({loading: false}))
-      this.setState({loading:false})
+      this.setState({loading: false})
     }
   }
 
@@ -192,7 +195,7 @@ class SingleChats extends Component {
       <React.Fragment>
         <NavigationEvents
           onDidFocus={() => {
-            this.sendMeeting();
+            this.sendMeeting()
           }}
           onDidBlur={() => {
             this.props

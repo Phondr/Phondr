@@ -338,6 +338,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#00BFFF',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 5,
     height: 80,
     flexDirection: 'row',
     width: Dimensions.get('window').width
