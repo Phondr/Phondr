@@ -1,5 +1,12 @@
 import React, {Component, useState, useEffect} from 'react'
-import {Text, StyleSheet, View, ScrollView, Dimensions, TouchableOpacity} from 'react-native'
+import {
+  Text,
+  StyleSheet,
+  View,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity
+} from 'react-native'
 import {
   Container,
   Content,
@@ -180,63 +187,66 @@ const MeetingModal = ({
     //   onBackdropPress={() => {}}
     // >
     <View style={styles.topcontainer}>
-    <Container>
-      <Content contentContainerStyle={{marginTop: 30}}>
-        <Card>
-          <CardItem header>
-            <Text>Search a place or click on the map for recommendations</Text>
-          </CardItem>
-        </Card>
-
-        <PlaceSearch />
-
-        <View>
-          {invitation.name && (
+      <ScrollView>
+        <Container>
+          <Content contentContainerStyle={{marginTop: 30}}>
             <Card>
-              <CardItem>
-                <Text>Selected: {invitation.address}</Text>
+              <CardItem header>
+                <Text>
+                  Search a place or click on the map for recommendations
+                </Text>
               </CardItem>
             </Card>
-          )}
 
-          {region.latitude && currentCoord.latitude && (
-            <MapView
-              style={{
-                height: 250,
-                margin: 10,
-                borderWidth: 1,
-                borderColor: '#000000'
-              }}
-              region={region}
-              onPress={createMarker}
-              provider={PROVIDER_GOOGLE}
-            >
-              <Marker
-                coordinate={currentCoord}
-                title={
-                  `${invitation.name}(${invitation.rating} rating)` ||
-                  'Your Location'
-                }
-                description={invitation.address || ''}
-              />
-              {nearby.length > 0 &&
-                nearby.map((x, i) => {
-                  //console.log('mapping')
-                  return (
-                    <Marker
-                      key={x.id}
-                      coordinate={{
-                        latitude: x.geometry.location.lat,
-                        longitude: x.geometry.location.lng
-                      }}
-                      title={`${x.name}(${x.rating} rating)`}
-                      description={`${x.name}, ${x.vicinity} `}
-                      //pinColor={colors[i]}
-                      //style={{position: 'absolute'}}
-                      onPress={() => updateInvitation(x)}
-                      onCalloutPress={() => updateInvitation(x)}
-                    >
-                      {/* <Callout tooltip>
+            <PlaceSearch />
+
+            <View>
+              {invitation.name && (
+                <Card>
+                  <CardItem>
+                    <Text>Selected: {invitation.address}</Text>
+                  </CardItem>
+                </Card>
+              )}
+
+              {region.latitude && currentCoord.latitude && (
+                <MapView
+                  style={{
+                    height: 250,
+                    margin: 10,
+                    borderWidth: 1,
+                    borderColor: '#000000'
+                  }}
+                  region={region}
+                  onPress={createMarker}
+                  provider={PROVIDER_GOOGLE}
+                >
+                  <Marker
+                    coordinate={currentCoord}
+                    title={
+                      `${invitation.name}(${invitation.rating} rating)` ||
+                      'Your Location'
+                    }
+                    description={invitation.address || ''}
+                  />
+                  {nearby.length > 0 &&
+                    nearby.map((x, i) => {
+                      //console.log('mapping')
+                      return (
+                        <Marker
+                          key={x.id}
+                          coordinate={{
+                            latitude: x.geometry.location.lat,
+                            longitude: x.geometry.location.lng
+                          }}
+                          title={`${x.name}(${x.rating} rating)`}
+                          description={`${x.name}, ${x.vicinity} `}
+                          //pinColor={colors[i]}
+                          //style={{position: 'absolute'}}
+                          onPress={() => updateInvitation(x)}
+                          onCalloutPress={() => updateInvitation(x)}
+                        >
+                          {/* <Callout tooltip>
                         <View>
                           <Text>
                             {`${x.name}(${x.rating} rating)`}
@@ -245,65 +255,74 @@ const MeetingModal = ({
                           </Text>
                         </View>
                       </Callout> */}
-                    </Marker>
-                  )
-                })}
-            </MapView>
-          )}
-        </View>
+                        </Marker>
+                      )
+                    })}
+                </MapView>
+              )}
+            </View>
 
-        <CustomDatePicker />
+            <CustomDatePicker />
 
-        {!!invitation.date && (
-          <Card>
-            <CardItem>
-              <Text>
-                Chosen Date: {invitation.date.toString().substr(4, 12)}
-              </Text>
-            </CardItem>
-          </Card>
-        )}
-      </Content>
-    </Container>
-    {!!invitation.date && !!invitation.name ? (
-          // <Button
-          //   onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
-          // >
-          //   <Text>Send</Text>
-          // </Button>
-          <TouchableOpacity
-          onPress={() => {
-            submitMeeting(currentChat.id, user.id, invitation)
-          }}
-        >
-          <LinearGradient
-            colors={['#60dee7', '#75c6e5']}
-            style={styles.submitButton}
-          >
-            <Text
-              style={{color: 'white', fontFamily: 'lobster', fontSize: 20}}
-            >
-              Send
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
-        ) : (
-          // <Button disabled bordered>
-          //   <Text>Send</Text>
-          // </Button>
-          <TouchableOpacity>
-          <LinearGradient
-            colors={['#ebebeb', '#999999']}
-            style={styles.submitButton}
-          >
-            <Text
-              style={{color: 'white', fontFamily: 'lobster', fontSize: 20}}
-            >
-              Send
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
-        )}
+            {!!invitation.date && (
+              <Card>
+                <CardItem>
+                  <Text>
+                    Chosen Date: {invitation.date.toString().substr(4, 12)}
+                  </Text>
+                </CardItem>
+              </Card>
+            )}
+            {!!invitation.date && !!invitation.name ? (
+              // <Button
+              //   onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
+              // >
+              //   <Text>Send</Text>
+              // </Button>
+              <TouchableOpacity
+                onPress={() => {
+                  submitMeeting(currentChat.id, user.id, invitation)
+                }}
+              >
+                <LinearGradient
+                  colors={['#60dee7', '#75c6e5']}
+                  style={styles.submitButton}
+                >
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: 'lobster',
+                      fontSize: 20
+                    }}
+                  >
+                    Send
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            ) : (
+              // <Button disabled bordered>
+              //   <Text>Send</Text>
+              // </Button>
+              <TouchableOpacity>
+                <LinearGradient
+                  colors={['#ebebeb', '#999999']}
+                  style={styles.submitButton}
+                >
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: 'lobster',
+                      fontSize: 20
+                    }}
+                  >
+                    Send
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            )}
+          </Content>
+        </Container>
+      </ScrollView>
     </View>
     // </Modal>
   )
