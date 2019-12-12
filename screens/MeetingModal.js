@@ -274,11 +274,6 @@ const MeetingModal = ({
               </Card>
             )}
             {!!invitation.date && !!invitation.name ? (
-              // <Button
-              //   onPress={() => submitMeeting(currentChat.id, user.id, invitation)}
-              // >
-              //   <Text>Send</Text>
-              // </Button>
               <TouchableOpacity
                 onPress={() => {
                   submitMeeting(currentChat.id, user.id, invitation)
@@ -324,7 +319,6 @@ const MeetingModal = ({
         </Container>
       </ScrollView>
     </View>
-    // </Modal>
   )
 }
 
@@ -340,7 +334,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 5,
     height: 80,
-    flexDirection: 'row',
+    marginTop: 5,
     width: Dimensions.get('window').width
   }
 })
