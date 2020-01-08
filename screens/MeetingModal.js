@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     width: Dimensions.get('window').width
   }
-})
+});
 
 export default connect(
   ({invitation, user, currentChat}) => ({invitation, user, currentChat}),
